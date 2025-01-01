@@ -1,0 +1,274 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+.roboto-thin {
+    font-family: "Roboto", sans-serif;
+    font-weight: 100;
+    font-style: normal;
+  }
+  /* Avatar */
+  .avatar .avatar1{
+    margin-top:20px;
+    width:25px;
+    height:25px;
+  }
+  .avatar .avatar2{
+ 
+    width:25px;
+    height:25px;
+  }
+  .fa-icon{
+    margin-right:10px !important;
+  }
+  /* Menu */
+  .menu-vertical{
+    background:#1E2761 !important;
+    color:white !important;
+  }
+  .menu-vertical .title{
+
+    color:white !important;
+  }
+  .menu-vertical ul li a{
+    color:white !important;
+    font-size:14px !important;
+  }
+  .menu-vertical .dashboard-text{
+    color:white !important;
+    background:#408EC6  !important;
+  }
+  .menu-vertical ul li a{
+    color:white !important;
+    padding-top:20px !important;
+  }
+  .menu-vertical ul li ul li a:hover{
+    color:white !important;
+    background:#408EC6  !important;
+  }
+  .menu-vertical ul li a::after{
+    color:white !important;
+  }
+  /* Dashboard Icons */
+   .icon-section .members-icon{
+    width:50px !important;
+    height:50px !important;
+    margin-left:10px !important;
+    filter: invert(66%) sepia(77%) saturate(847%) hue-rotate(358deg) brightness(102%) contrast(104%);
+ 
+
+  }
+  .icon-section .share-icon{
+    width:50px !important;
+    height:50px !important;
+    margin-left:10px !important;
+    filter: invert(37%) sepia(10%) saturate(3018%) hue-rotate(177deg) brightness(88%) contrast(90%);
+  }
+  .icon-section .loan-icon{
+    width:50px !important;
+    height:50px !important;
+    margin-left:10px !important;
+    filter: invert(55%) sepia(37%) saturate(5165%) hue-rotate(335deg) brightness(103%) contrast(97%);
+  }
+  
+
+ .icon-text p,h5{
+    color:white !important;
+  }
+  .icon-blockMember{
+  
+    left:0px !important;
+    border:1px solid rgb(243, 238, 238);
+    height:100px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background-color: #FB6542;
+  }
+  .icon-blockShares{
+    border:1px solid rgb(243, 238, 238);
+    height:100px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background-color: #FFBB00;
+  }
+  .icon-blockLoan{
+ 
+    border:1px solid rgb(243, 238, 238);
+    height:100px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    background-color: #375E97;
+
+  }
+/* Barchart Dashboard */
+.barchart-dashboard{
+  display: flex !important;
+  flex-direction: row !important;
+}
+  /* Tabs */
+  .navbar-nav {
+    list-style: none !important;
+    }
+    .nav-tabs {
+    list-style-type: none !important;
+    padding-left: 0; /* Optional: Removes any padding if applied */
+    border-bottom: 1px solid #dee2e6; 
+    }
+    
+    
+    .nav-tabs .nav-link {
+    border: 1px solid transparent; 
+    border-radius: 0; 
+    
+    }
+    /* .nav-tabs .nav-item  {
+        border-left: 1px solid;
+        } */
+    .nav-tabs .nav-item  .active {
+    /* border: 1px solid; */
+    }
+    .nav-tabs .nav-link.active {
+    border-color: #007bff; /* Active tab border color */
+    border-bottom-color: transparent; /* Prevent border on bottom */
+    }
+    
+    .nav-tabs .nav-link:not(.active):hover {
+    border-color: #dee2e6; /* Border on hover for inactive tabs */
+    }
+  /* Fields */
+  .first-block{
+    display:flex !important;
+    flex-direction: row !important;
+  }
+  .second-block{
+    display:flex !important;
+    flex-direction: row !important;
+  }
+  .third-block{
+    display:flex !important;
+    flex-direction: row !important;
+  }
+  .fourth-block{
+    display:flex !important;
+    flex-direction: row !important;
+  }
+  .mobile, .fname, .mname, .day, .month, .address, .nin, .gender{
+    margin-right:10px !important;
+  }
+  #mobileField, #fnameField, #mnameField,#lnameField, #yearField,#dayField, #monthField, #addressField, #ninField, #genderField
+  ,#uploadField{
+  background:white !important;
+  }
+  .uploadBtn{
+    margin-top:10px !important;
+  }
+  #uploadField{
+    width:400px !important;
+  }
+  .addBtn{
+    float:right !important;
+    background-color: #1E2761 ;
+    color:white;
+
+  }
+  .addBtn a{
+    float:right !important;
+    background-color: #1E2761 !important;
+    color:white;
+
+  }
+  .addBtn:hover{
+    float:right !important;
+    background-color: #1E2761 !important ;
+    color:white;
+
+  }
+  .submitBtn{
+  
+    background-color: #1E2761 ;
+    color:white;
+
+  }
+  .submitBtn:hover{
+  
+    background-color: #1E2761 ;
+    color:white;
+
+  }
+  #receiverField{
+    width:350px !important;
+  }
+  #messageField{
+    width:350px !important;
+  }
+  .message, .receiver{
+    margin-left:20px;
+  }
+  .composeBtn{
+    margin-left:20px;
+    margin-bottom:10px;
+  }
+  #membersTable{
+    background:#fdfbfb !important;
+  }
+.tabForms{
+  background-color:#fdfbfb ; margin-top:20px;
+}
+.mobile-number input['type:text']
+{
+
+}
+/* table data selected */
+tr {
+  cursor: pointer !important;
+}
+.selected {
+  background-color: red !important; /* Highlight selected row */
+}
+
+.dataRow:hover {
+  background-color:rgb(202, 209, 224) !important; /* Change color on hover */
+  color:white !important;
+}
+/* .tableData:hover {
+ 
+  color:white !important;
+} */
+/* tr:focus {
+  background-color:#375E97 !important; /* Change color on hover */
+/* } */ */
+#delete-button, #updateButton {
+  display: none !important; /* Hide buttons initially */
+
+} 
+    
+/* Members update form */
+.block1, .block2, .block3, .block4{
+  display:flex ;
+  flex-direction: row;;
+}
+#nin,#fname,#mname,#lname,#gend,#phone,#day,#month,#year,#address,#gender,#email,#dash-input,#mobile-number{
+  width:300px;
+}
+#phone,#fname,#day,#year,#lname,#mobile-number,#gender{
+  margin-right:10px;
+}
+input[type="email"]
+{
+  background-color:white !important;
+}
+.url:hover{
+  text-decoration:underline !important;
+}
+/* Datatable Buttons */
+.col-md-3{
+  width:220px !important;
+}
+.dt-buttons{
+  position:absolute !important;
+
+  /* margin-right:100px !important; */
+}
+.dt-search label{
+  margin-left:400px !important;
+}
+.dt-search input[type="search"]{
+  width:120px !important;
+  margin-left:10px !important;
+  position: absolute !important;
+
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Left-Side Toggle Menu</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Styles for left menu */
+        #leftMenu {
+            width: 250px;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: -250px; /* Hidden by default */
+            background-color: #343a40;
+            color: white;
+            overflow-x: hidden;
+            transition: 0.3s; /* Smooth transition */
+            padding-top: 60px;
+        }
+        /* Show the menu by changing left to 0 */
+        #leftMenu.show {
+            left: 0;
+        }
+        /* Style for close button */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container mt-3">
+    <!-- Toggle Button -->
+    <button id="menuToggleBtn" class="btn btn-primary">Toggle Menu</button>
+</div>
+
+<!-- Left Menu -->
+<div id="leftMenu">
+    <span class="close-btn" id="closeMenu">&times;</span>
+    <h3 class="text-center">Menu</h3>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item bg-dark text-light">Menu Item 1</li>
+        <li class="list-group-item bg-dark text-light">Menu Item 2</li>
+        <li class="list-group-item bg-dark text-light">Menu Item 3</li>
+        <li class="list-group-item bg-dark text-light">Menu Item 4</li>
+    </ul>
+</div>
+
+<script>
+    // JavaScript to toggle menu display
+    const menuToggleBtn = document.getElementById("menuToggleBtn");
+    const leftMenu = document.getElementById("leftMenu");
+    const closeMenuBtn = document.getElementById("closeMenu");
+
+    // Toggle menu visibility on button click
+    menuToggleBtn.addEventListener("click", function() {
+        leftMenu.classList.toggle("show");
+    });
+
+    // Close menu when clicking the close button
+    closeMenuBtn.addEventListener("click", function() {
+        leftMenu.classList.remove("show");
+    });
+
+    // Optional: Hide menu if clicking outside of it
+    document.addEventListener("click", function(event) {
+        if (!leftMenu.contains(event.target) && event.target !== menuToggleBtn) {
+            leftMenu.classList.remove("show");
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,428 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*,::after,
+   ::before {
+    box-sizing: border-box;
+  
+   }
+body{
+    font-family: 'Poppins',sans-serif;
+    background:url('images/img2.jpg');
+    background-size:cover;
+    background-repeat:no-repeat;
+	
+}
+a{
+    cursor: pointer;
+    text-decoration:none;
+    font-family: 'Poppins',sans-serif;
+
+}
+li{
+    list-style:none;
+}
+/* Structure */
+.wrapper{
+    display:flex;
+}
+.main{
+  display:flex;
+    flex-direction:column;
+    min-height:100vh;
+    width:100%;
+    overflow:hidden;
+    transition: all 0.35s ease-in-out;
+    background:#fff;
+    min-width:0;
+
+
+}
+#sidebar{
+  width: 350px;
+  min-width:70px;
+  z-index:1000;
+  transition: all .25s ease-in-out;
+  background-color:#007083;
+  padding-top:60px;
+  display:flex;
+  flex-direction: column;
+
+}
+/* Sidebar expand*/
+#sidebar.expand{
+    width:260px;
+    min-width:260px;
+}
+#toggle-btn{
+    background-color: transparent;
+    cursor:pointer;
+    border: 0;
+    padding: 1rem 1.5rem;
+}
+#toggle-btn i{
+    font-size:1.5rem;
+    color:#fff;
+}
+.sidebar-logo{
+margin:auto 0;
+color:white;
+
+}
+
+.side-bar-logo a{
+color:#fff;
+font-size:1.15rem;
+font-weight:600;
+}
+
+#sidebar:not(.expand).sidebar-logo,
+#sidebar:not(.expand) a.sidebar-link span{
+    display:none;
+}
+
+#sidebar.exapand.sidebar-logo,
+#sidebar.expand a.sidebar-link span{
+    animation:fadeIn .25s ease;
+}
+@keyframes fadeIn{
+    0%{
+        opacity:0;
+    }
+    100%{
+        opacity:1;
+    }
+}
+
+.sidebar-nav{
+    padding: 1rem;
+    flex: 1 1 auto;
+}
+
+a.sidebar-link{
+padding: .625rem 1.625rem;
+color:#fff;
+display:block;
+font-size:0.9rem;
+white-space:nowrap;
+border-left:3px solid transparent;
+
+}
+
+.sidebar-link i,
+.dropdown-item i{
+    font-size:1.1rem;
+    margin-right:.75rem;
+    color:white;
+}
+
+a.sidebar-link:hover{
+    background-color: #EB8921;
+  
+
+}
+
+.sidebar-item{
+    position:relative;
+}
+#sidebar.expand.sidebar-link[data-bs-toggle="collapse"].collapsed::after{
+    transform:rotate(45deg);
+    transition: all .2s ease-in-out;
+}
+
+#sidebar.expand.sidebar-link[data-bs-toggle="collapse"]::after{
+  border: solid;
+  border-width: 0 .075rem .075rem 0;
+  content: "";
+  display:inline-block;
+  padding: 2px;
+  position: absolute;
+  right: 1.5rem;
+  top:1.4rem;
+  transform: rotate(-135deg);
+  transition: all .2s ease-in-out;
+}
+
+#sidebar:not(.expand).sidebar-item:hover .has-dropdown+.sidebar-dropdown{
+    display:block;
+    max-height:15em;
+    width:100%;
+    opacity:1;
+}
+
+#sidebar:not(.expand).sidebar-item.sidebar-dropdown{
+    position: absolute;
+    top: 0;
+    left:70px;
+    background-color:purple;
+    padding: 0;
+    min-width: 15rem;
+    display: none;
+}
+.navbar{
+    background-color:#007083;
+   
+}
+.navbar-expand.navbar-collapse{
+    min-width: 200px;
+}
+.avatar{
+    height:40px;
+    width:40px;
+}
+.card{
+    background-color: #007083;
+    transition: .4s;
+    cursor:pointer;
+    color:rgb(36, 17, 17);
+    margin-bottom: 1rem;
+    box-shadow:0 3px 4px #ddd;
+    width:300px;
+    height:200px;
+    margin-top:10px;
+}
+
+}
+.card:hover{
+    background-color: #EB8921;
+    color:#fff;
+    transform: translateY(-10.5px);
+}
+.text-success{
+    background-color:bisque;
+    padding:0.25rem 0.35rem;
+    font-size: 0.715rem;
+    color: #fff !important;
+    border-radius: 5px;
+}
+.table>thead tr{
+    color:#fff;
+    text-align:left;
+}
+tr.highlight th{
+background-color: #293b5f;
+color: #fff;
+}
+.content{
+flex: 1 1 auto;
+}
+footer{
+    background-color: #f5f5f5;
+    padding: 1rem .875rem;
+
+}
+@media(min-width:768px){
+    .navbar form{
+        max-width: 320px;
+    }
+    .input-group-navbar .form-control:focus{
+        outline: none;
+        box-shadow: 0 0 0 0 #293b5f;
+        border: none;
+    }
+    .input-group-navbar.form-control{
+        color: #3e4455;
+
+
+    }
+    .form-control::placeholder{
+        background-color: #fff;
+    }
+    .input-group-navbar .btn{
+        background-color: #727cf5;
+        color: #fff;
+        font-family: 'Poppins',sans-serif;
+        cursor: pointer;
+        z-index: 1000;
+    }
+    .navbar-expand .navbar-nav .dropdown-menu{
+        box-shadow: 0 .1rem;
+    }
+    }
+    .sidebar-link[data-bs-toggle="collapse"]::after{
+        border:solid;
+        border-width:0 .075rem .075rem 0;
+        content:"";
+        display:inline-block;
+        padding:2px;
+        position:absolute;
+        right:1.5rem;
+        top:1.4rem;
+        transform:rotate(-135deg);
+        transition: all .2s ease-in-out;
+        }
+        .sidebar-link[data-bs-toggle="collapse"].collapsed::after{
+            transform:rotate(45deg);
+        transition: all .2s ease-in-out;
+        }
+        .card-body i{
+            text-align:center;
+           padding-left:100px;
+           padding-bottom:10px;
+        }
+        .card-body i{
+            text-align:center;
+           padding-left:100px;
+           padding-right:100px;
+           padding-bottom:10px;
+        }
+        .card-body span{
+          
+           padding-left:60px;
+           padding-right:60px;
+           padding-bottom:10px;
+           font-size:16px;
+       
+        }
+
+        /* Card Icon Admin dashboard */
+
+        .farmer{
+    
+            margin-left:200px;
+            width:40px;
+            filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+        }
+        .weather{
+        
+            margin-left:200px;
+            width:50px;
+            filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+        }
+        .officer{
+        
+            margin-left:200px;
+            width:50px;
+            filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+        }
+     
+    .link a{
+        color:white;
+        text-decoration:underline;
+    }
+    .tenant{
+        
+        margin-left:200px;
+        width:40px;
+        filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+    }
+    
+    .card-body-farmers{
+        background-color:#B0FC38;
+        height:150px;
+        padding:10px;
+    }
+    .card-body-agroinput{
+        background-color:#98bf64;
+        height:150px;
+        padding:10px;
+    }
+    .card-body-weather{
+        background-color:#EB8921;
+        height:150px;
+        padding:10px;
+    }
+    .total-accumulation{
+        
+        margin-left:200px;
+        width:40px;
+        filter: brightness(0) saturate(100%) invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+    }
+    
+    .pdf{
+        filter:brightness(0) saturate(100%) invert(29%) sepia(14%) saturate(2104%) hue-rotate(170deg) brightness(95%) contrast(91%);
+        width:30px;
+        height:32px;
+        float:right;
+        padding-left:0px;
+        font-weight:bold;
+    
+    }
+    .download{
+        filter:brightness(0) saturate(100%) invert(29%) sepia(14%) saturate(2104%) hue-rotate(170deg) brightness(95%) contrast(91%);
+        width:32px;
+        height:32px;
+        float:right;
+       
+    
+    }
+    .table {
+    font-size:14px;
+    font-family:'Times New Roman', Times, serif;
+    }
+    .table th{
+         background-color:#007083;
+         color:#fff;
+    }
+    .weather-details{
+        padding-top:30px;
+        color:#fff;
+    }
+     
+    .pdf{
+    filter:brightness(0) saturate(100%) invert(29%) sepia(14%) saturate(2104%) hue-rotate(170deg) brightness(95%) contrast(91%);
+    width:30px;
+    height:32px;
+    float:right;
+    padding-left:0px;
+    font-weight:bold;
+
+}
+.download{
+    filter:brightness(0) saturate(100%) invert(29%) sepia(14%) saturate(2104%) hue-rotate(170deg) brightness(95%) contrast(91%);
+    width:32px;
+    height:32px;
+    float:right;
+   
+
+}
+.card-body{
+background-color:white;
+}
+.top-content
+{
+    display:flex;
+    flex-direction: row;
+}
+.form-block{
+    float:right;
+    margin-left:450px;
+
+}
+.date-fee-accumulation{
+    display:flex;
+    flex-direction: row;
+    
+}
+.card-body-agroinput .from .date-valueFrom input[type=date]{
+width:130px;
+    
+}
+.card-body-agroinput .to .date-valueTo input[type=date]{
+    width:130px;
+    margin-left:5px;
+    margin-bottom:20px;
+        
+    }
+    .date-fee-accumulation .to{
+   top:0;
+    }
+
+    
+    
+    
+     
+    
+     
+    
+    
+    
+    
+
+        
+        
+ 
+
+ 
+
+
+
