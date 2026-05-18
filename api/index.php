@@ -106,7 +106,7 @@ background-color:#EB8921;
           <form class="card-bodycolor  p-lg-5" name="form" action="authenticate.php" method="POST">
 
             <div class="text-center">
-              <img src="/mylogo.png" height="50px" class="img-fluid profile-image-pic img-thumbnail rounded-circle"
+           
                 width="150px" alt="profile">
             </div>
 
