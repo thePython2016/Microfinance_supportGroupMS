@@ -11,9 +11,9 @@ function finance_password_hash(string $plainPassword): string
 
 function finance_password_is_hashed(string $stored): bool
 {
-    $algo = password_get_info($stored)['algo'] ?? null;
+    $info = password_get_info($stored);
 
-    return is_int($algo) && $algo !== 0;
+    return ($info['algoName'] ?? 'unknown') !== 'unknown';
 }
 
 function finance_password_verify(string $plainPassword, string $stored): bool
