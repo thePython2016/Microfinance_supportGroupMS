@@ -139,11 +139,6 @@ if(!isset($_SESSION['username']))
 <hr>
 
 
-
-
-
-
-
                 <!-- Members List -->
 
                 <!-- Data Tables -->
@@ -175,7 +170,8 @@ if(!isset($_SESSION['username']))
             background-color: white; /* Light blue background for select field */
         }
     </style>
-       <!-- Members Form -->
+
+       <!-- ===== FLASH MESSAGES — displayed at the very top of the form ===== -->
        <?php if (isset($_SESSION['flash_success'])): ?>
 <div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
   <i class="fas fa-check-circle me-2"></i>
@@ -190,81 +186,121 @@ if(!isset($_SESSION['username']))
   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <?php endif; ?>
+
+       <!-- Members Form — field names now match DB columns exactly -->
        <form name="" method="POST" action="membersAdd.php">
         <div class="first-block">
-              <div class="mb-3 mobile">
-    <label for="exampleInputEmail1" class="form-label" >Mobile number</label>
-    <input type="text" id="mobilenumber"  name="phone" class="form-control" maxlength="12" placeholder="0761237891" required>
 
+          <!-- DB col: mobilenumber -->
+          <div class="mb-3 mobile">
+            <label for="mobilenumber" class="form-label">Mobile number</label>
+            <input type="text" id="mobilenumber" name="mobilenumber" class="form-control"
+                   maxlength="20" placeholder="0761237891" required>
+          </div>
 
-  </div>
-  <div class="mb-3 nin">
+          <!-- DB col: email -->
+          <div class="mb-3 nin">
+            <label for="email" class="form-label">Email</label>
+            <input type="text" id="email" name="email" class="form-control"
+                   maxlength="120" placeholder="user@gmail.com" required>
+          </div>
 
-    <label for="exampleInputEmail1" class="form-label" >Email</label>
-    <input type="text" id="email"  name="email" class="form-control"  maxlength="23" placeholder="user@gmail.com" required>
- </div>
- <div class="mb-3 nin">
+          <!-- DB col: nin -->
+          <div class="mb-3 nin">
+            <label for="dash-input" class="form-label">NIN</label>
+            <input type="text" id="dash-input" name="nin" class="form-control"
+                   required placeholder="12345678-12345-12345-09">
+          </div>
 
-<label for="exampleInputEmail1" class="form-label" >NIN</label>
-<input type="text" id="dash-input" name="nin" class="form-control"  required placeholder="12345678-12345-12345-09" required>
-</div>
-</div>
-  <div class="second-block">
-  <div class="mb-3 fname">
-    <label for="exampleInputPassword1" class="form-label">First name</label>
-    <input type="text" class="form-control"  name="fname" id="fname" required>
-  </div>
+        </div>
 
-  <div class="mb-3 mname">
-    <label for="exampleInputPassword1" class="form-label">Middle name</label>
-    <input type="text" class="form-control" name="mname" id="mname" required>
-  </div>
-  <div class="mb-3 lname">
-    <label for="exampleInputPassword1" class="form-label">Last name</label>
-    <input type="text" class="form-control" name="lname" id="lname" required>
-  </div>
-</div>
-<label for="exampleInputPassword1" class="form-label">Birth date</label>
-<div class="third-block">
-  <div class="mb-3 day">
-  <select class="form-select" id="day" name="day" required>
-        <option selected disabled>Choose a day</option>
-    </select>
-  </div>
-  <div class="mb-3 month">
+        <div class="second-block">
 
+          <!-- DB col: fname -->
+          <div class="mb-3 fname">
+            <label for="fname" class="form-label">First name</label>
+            <input type="text" class="form-control" name="fname" id="fname" required>
+          </div>
 
-    <select class="form-select"  id="month" name="month" required>
-        <option selected disabled>Choose a month</option>
-    </select>
-  </div>
+          <!-- DB col: mname -->
+          <div class="mb-3 mname">
+            <label for="mname" class="form-label">Middle name</label>
+            <input type="text" class="form-control" name="mname" id="mname" required>
+          </div>
 
+          <!-- DB col: lname -->
+          <div class="mb-3 lname">
+            <label for="lname" class="form-label">Last name</label>
+            <input type="text" class="form-control" name="lname" id="lname" required>
+          </div>
 
-  <div class="mb-3 year">
-  <select class="form-select" id="year" name="year" required>
-        <option selected disabled>Choose a year</option>
-    </select>
-  </div>
-</div>
-<div class="fourth-block">
-<div class="mb-3 address">
-    <label for="exampleInputPassword1"   class="form-label">Gender</label>
-    <select id="gender" class="form-control" name="gender" required >
-                <option value="" disabled>--Select Gender--</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+        </div>
 
+        <label class="form-label">Birth date</label>
+        <div class="third-block">
+
+          <!-- DB col: day -->
+          <div class="mb-3 day">
+            <select class="form-select" id="day" name="day" required>
+              <option selected disabled>Choose a day</option>
             </select>
-  </div>
+          </div>
 
-  <div class="mb-3 address">
-    <label for="exampleInputPassword1"  class="form-label" >Physical address</label>
-    <input type="text" class="form-control" id="address" name="address" required>
-  </div>
-</div>
+          <!-- DB col: month -->
+          <div class="mb-3 month">
+            <select class="form-select" id="month" name="month" required>
+              <option selected disabled>Choose a month</option>
+            </select>
+          </div>
 
-  <input type="submit" name="addMembers" class="btn  submitBtn" value="Submit">
-</form>
+          <!-- DB col: year -->
+          <div class="mb-3 year">
+            <select class="form-select" id="year" name="year" required>
+              <option selected disabled>Choose a year</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="fourth-block">
+
+          <!-- DB col: gender -->
+          <div class="mb-3 address">
+            <label for="gender" class="form-label">Gender</label>
+            <select id="gender" class="form-control" name="gender" required>
+              <option value="" disabled selected>--Select Gender--</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+
+          <!-- DB col: address -->
+          <div class="mb-3 address">
+            <label for="address" class="form-label">Physical address</label>
+            <input type="text" class="form-control" id="address" name="address" required>
+          </div>
+
+        </div>
+
+        <!-- DB col: status (varchar 8) — active / inactive -->
+        <div class="mb-3">
+          <label for="status" class="form-label">Status</label>
+          <select id="status" class="form-control" name="status" required>
+            <option value="" disabled selected>--Select Status--</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+
+        <!-- DB col: joined_at (timestamp) — let the user pick or default to NOW() in PHP -->
+        <div class="mb-3">
+          <label for="joined_at" class="form-label">Date Joined</label>
+          <input type="date" class="form-control" id="joined_at" name="joined_at"
+                 value="<?php echo date('Y-m-d'); ?>" required>
+        </div>
+
+        <input type="submit" name="addMembers" class="btn submitBtn" value="Submit">
+      </form>
 
 
 
@@ -283,31 +319,44 @@ if(!isset($_SESSION['username']))
                     <th>Birth date</th>
                     <th>Gender</th>
                     <th>Physical address</th>
-
+                    <th>Status</th>
+                    <th>Date Joined</th>
+                    <th>Email</th>
                 </tr>
             </thead>
             <tbody>
-              <!-- hIDE nav buttons -->
 
             <?php
             require "connectDB.php";
 $selectMembers=finance_db_query($connection,"select * from members");
 foreach($selectMembers as $members)
 {
-  echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] .
-               "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname']
-               . "' data-gender='" .$members['lname'] . "' data-day='" . $members['day'] . "'. data-month='" . $members['month'] . "'
-               data-year='" . $members['year'] . "'data-gender='" . $members['gender']  . "'data-address='" . $members['address'] ."'>";
+  echo "<tr class='dataRow'
+               data-phone='" . htmlspecialchars($members['mobilenumber']) . "'
+               data-nin='" . htmlspecialchars($members['nin']) . "'
+               data-fname='" . htmlspecialchars($members['fname']) . "'
+               data-mname='" . htmlspecialchars($members['mname']) . "'
+               data-lname='" . htmlspecialchars($members['lname']) . "'
+               data-day='" . htmlspecialchars($members['day']) . "'
+               data-month='" . htmlspecialchars($members['month']) . "'
+               data-year='" . htmlspecialchars($members['year']) . "'
+               data-gender='" . htmlspecialchars($members['gender']) . "'
+               data-address='" . htmlspecialchars($members['address']) . "'
+               data-status='" . htmlspecialchars($members['status']) . "'
+               data-joined='" . htmlspecialchars($members['joined_at']) . "'
+               data-email='" . htmlspecialchars($members['email']) . "'>";
                ?>
-                    <td><?php echo $members['mobileNumber']?></td>
-                    <td><?php echo $members['nin']?></td>
-                    <td><?php echo $members['fname']?></td>
-                    <td><?php echo $members['mname']?></td>
-                    <td><?php echo $members['lname']?></td>
-                    <td><?php echo $members['day']. ' /'.$members['month'].'/ '.$members['year']?></td>
-                    <td><?php echo $members['address']?></td>
-                    <td><?php echo $members['address']?></td>
-
+                    <td><?php echo htmlspecialchars($members['mobilenumber'])?></td>
+                    <td><?php echo htmlspecialchars($members['nin'])?></td>
+                    <td><?php echo htmlspecialchars($members['fname'])?></td>
+                    <td><?php echo htmlspecialchars($members['mname'])?></td>
+                    <td><?php echo htmlspecialchars($members['lname'])?></td>
+                    <td><?php echo htmlspecialchars($members['day']). ' /'.htmlspecialchars($members['month']).'/ '.htmlspecialchars($members['year'])?></td>
+                    <td><?php echo htmlspecialchars($members['gender'])?></td>
+                    <td><?php echo htmlspecialchars($members['address'])?></td>
+                    <td><?php echo htmlspecialchars($members['status'])?></td>
+                    <td><?php echo htmlspecialchars($members['joined_at'])?></td>
+                    <td><?php echo htmlspecialchars($members['email'])?></td>
                 </tr>
 
              <?php
@@ -390,7 +439,6 @@ foreach($selectMembers as $members)
     <!-- build:js assets/vendor/js/core.js -->
     <script src="assets/vendor/libs/jquery/jquery.js"></script>
     <script src="assets/vendor/libs/popper/popper.js"></script>
-    <!-- <script src="assets/vendor/js/bootstrap.js"></script> -->
     <script src="assets/vendor/libs/node-waves/node-waves.js"></script>
     <script src="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
     <script src="assets/vendor/js/menu.js"></script>
@@ -405,7 +453,7 @@ foreach($selectMembers as $members)
 <script src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
 <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
-<link href="hhttps://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" rel="stylesheet">
+<link href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.dataTables.css" rel="stylesheet">
 
 
 
@@ -415,11 +463,10 @@ foreach($selectMembers as $members)
     <!-- Page JS -->
     <script src="assets/js/dashboards-analytics.js"></script>
 
-    <!-- Place this tag before closing body tag for github widget button. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
 
 
-    <!-- Dataset SECRIPTS -->
+    <!-- Dataset SCRIPTS -->
     <script>
       $('#myTable').dataTable( {
         layout: {
@@ -428,219 +475,154 @@ foreach($selectMembers as $members)
         }
     },
         info:false,
-      // paging:false,
       pagingType:"simple",
       "language": {
         "decimal":        "",
         "emptyTable":     "No data available in table",
         "info":         "",
-        // "infoEmpty":      "Showing 0 to 0 of 0 entries",
         "infoFiltered":   "",
         "infoPostFix":    "",
         "thousands":      ",",
         "lengthMenu":     "Show _MENU_ entries",
-        // "loadingRecords": "Loading...",
         "processing":     "",
         "search":         "Search:",
-
         "zeroRecords":    "No matching records found",
-
-
            "bProcessing": true,
         "sAutoWidth": false,
         "bDestroy":true,
-        "sPaginationType": "bootstrap", // full_numbers
+        "sPaginationType": "bootstrap",
         "iDisplayStart ": 10,
         "iDisplayLength": 10,
-        "bPaginate": false, //hide pagination
-        "bFilter": false, //hide Search bar
-        "bInfo": false, // hide showing entries
+        "bPaginate": false,
+        "bFilter": false,
+        "bInfo": false,
         "paginate": {
-            // "first":      "First",
-            // "last":       "Last",
             "next":       "<button style='border:1px solid grey !important;color:grey;column-gap:0px'>Next</button>",
             "previous":   "<button style='border:1px solid grey !important;color:grey;column-gap:0px'>Previous</button>",
-
         }
       }
 
     } );
 
-    // new DataTable('#myTable', {
-    //     language: {
-    //         paginate: {
-    //             first: 'First page'
-    //         }
-    //     }
-    // });
-
-    // table one
+    // members table
     $('#membersTable').dataTable( {
-
       info:false,
-      // paging:false,
       pagingType:"simple",
       "language": {
         "decimal":        "",
         "emptyTable":     "No data available in table",
         "info":" ",
-        // "infoEmpty":      "Showing 0 to 0 of 0 entries",
         "infoFiltered":   "",
         "infoPostFix":    "",
         "thousands":      ",",
         "lengthMenu":     "Show _MENU_ entries",
-        // "loadingRecords": "Loading...",
         "ordering":"",
         "processing":     "",
         "search":         "Search:",
         "zeroRecords":    "No matching records found",
-
-        //    "bProcessing": true,
-        // "sAutoWidth": false,
-        // "bDestroy":true,
-        // "sPaginationType": "bootstrap", // full_numbers
-        // "iDisplayStart ": 10,
-        // "iDisplayLength": 10,
-        // "bPaginate": false, //hide pagination
-        // "bFilter": false, //hide Search bar
-        // "bInfo": false, // hide showing entries
         "paginate": {
-            // "first":      "First",
-            // "last":       "Last",
             "next":       "<button  class='paging-button' style='border:1px solid grey !important;color:grey;margin:0'>Next</button>",
             "previous":   "<button class='paging-button' style='border:1px solid grey !important;color:grey'>Previous</button>",
-
         }
       }
-
-
-
     } );
 
     </script>
 
     <!-- Get Years -->
 <script>
-    // Set the starting and ending year
     const startYear = 1950;
     const endYear = 2006;
-
-    // Get the dropdown element
     const yearSelect = document.getElementById('year');
-
-    // Loop through the years from startYear to endYear
     for (let year = startYear; year <= endYear; year++) {
         let option = document.createElement('option');
-        option.value = year; // Set the value as the year
-        option.textContent = year; // Set the display text as the year
-        yearSelect.appendChild(option); // Append the option to the select element
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
     }
 </script>
-<!-- Months -->
 
- <!-- Script -->
+<!-- Months -->
  <script>
-    // Array of month names
     const months = [
         "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
-
-    // Get the dropdown element
     const monthSelect = document.getElementById('month');
-
-    // Loop through the months array and add options dynamically
     months.forEach((month, index) => {
         let option = document.createElement('option');
-        option.value = index + 1; // Set the value as the month number
-        option.textContent = month; // Set the display text as the month name
-        monthSelect.appendChild(option); // Append the option to the select element
+        option.value = index + 1;
+        option.textContent = month;
+        monthSelect.appendChild(option);
     });
 </script>
 
 <!-- Generate Days -->
 <script>
-    // Get the day dropdown element
     const daySelect = document.getElementById('day');
-
-    // Populate day dropdown with values from 1 to 31
     for (let day = 1; day <= 31; day++) {
         let option = document.createElement('option');
-        option.value = day; // Set the value as the day number
-        option.textContent = day; // Set the display text as the day number
-        daySelect.appendChild(option); // Append the option to the select element
+        option.value = day;
+        option.textContent = day;
+        daySelect.appendChild(option);
     }
 </script>
 
        <!-- TABS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- nida form scripts -->
+    <!-- NIN auto-dash script -->
     <script>
         $(document).ready(function() {
             $('#dash-input').on('input', function() {
-                var input = $(this).val().replace(/-/g, ''); // Remove existing dashes
+                var input = $(this).val().replace(/-/g, '');
                 var formatted = '';
-
-                // Format the string to follow the pattern: 12345678-12345-12345-09
                 for (var i = 0; i < input.length; i++) {
                     if (i === 8 || i === 13 || i === 18) {
-                        formatted += '-'; // Add dash after 8th, 13th, and 18th characters
+                        formatted += '-';
                     }
                     formatted += input[i];
                 }
-
-                // Limit the formatted string to 19 characters + 3 dashes (total of 22 characters)
                 $(this).val(formatted.slice(0, 23));
             });
         });
     </script>
 
-
-<!-- Mobilenumber field scripts -->
+<!-- Mobile number field script -->
 <script>
         $(document).ready(function() {
-            $('#mobile-number').on('input', function() {
-                var input = $(this).val().replace(/-/g, ''); // Remove existing dashes
+            $('#mobilenumber').on('input', function() {
+                var input = $(this).val().replace(/-/g, '');
                 var formatted = '';
-
-                // Format the string to follow the pattern: XXX-XXX-XXXX
                 for (var i = 0; i < input.length; i++) {
                     if (i === 3 || i === 6) {
-                        formatted += '-'; // Add dash after 3rd and 6th characters
+                        formatted += '-';
                     }
                     formatted += input[i];
                 }
-
-                // Limit the formatted string to 12 characters (XXX-XXX-XXXX)
                 $(this).val(formatted.slice(0, 12));
             });
         });
-
-        // selected record behaviour SCRIPTS
-
     </script>
 
-
+    <!-- Row selection / delete -->
     <script>
         $(document).ready(function() {
-            let selectedId = null; // Variable to hold the selected record ID
+            let selectedId = null;
 
-            // Row click event
             $("tr").click(function() {
-                $("tr").removeClass("selected"); // Deselect previously selected row
-                $(this).addClass("selected"); // Highlight the selected row
-                selectedId = $(this).data("phone"); // Get the ID of the clicked row
+                $("tr").removeClass("selected");
+                $(this).addClass("selected");
+                selectedId = $(this).data("phone");
             });
 
-            // Delete button click event
             $("#delete-button").click(function() {
                 if (selectedId === null) {
                     alert("Please select a record to delete.");
                     return;
                 }
                 if (confirm("Are you sure you want to delete this record?")) {
-                    window.location.href = 'deleteMembers.php?id=' + selectedId; // Redirect to delete.php
+                    window.location.href = 'deleteMembers.php?id=' + selectedId;
                 }
             });
         });
