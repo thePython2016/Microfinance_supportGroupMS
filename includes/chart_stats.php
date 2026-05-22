@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/connectDB.php';
+
 /**
  * Monthly chart series for loans and shares. Requires $connection from connectDB.
  */
