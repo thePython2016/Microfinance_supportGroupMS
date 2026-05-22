@@ -7,14 +7,14 @@
   </style>
       <div style="margin-right:50px !important;margin-top:30px ">
   <i class="fas fa-bell fs-3"></i>
-  <span class="position-absolute translate-middle badge rounded-pill  notification-badge" 
+  <span class="position-absolute translate-middle badge rounded-pill  notification-badge"
   style="background:#FB6542;" id="notification-badge" title="Sent Messages">
     <?php
 require 'connectDB.php';
 $countMessage=finance_db_query($connection,"select count(id) as messageCount from sent_sms");
 foreach($countMessage as $message)
 {
-  $totalSMS=$message['messageCount'];
+  $totalSMS=$message['messageCount'] ?? 0;
   echo $totalSMS;
 }
     ?>
@@ -53,7 +53,7 @@ foreach($countMessage as $message)
                             <h6 class="mb-0 align-middle" style="padding-bottom:15px !important;
                             padding-right:100px !important
                             "><?php echo $_SESSION['username']?></h6>
-                         
+
                           </div>
                         </div>
                       </a>
@@ -73,7 +73,7 @@ foreach($countMessage as $message)
                         <span class="align-middle">Settings</span>
                       </a>
                     </li>
-                  
+
                     <li>
                       <div class="dropdown-divider"></div>
                     </li>
