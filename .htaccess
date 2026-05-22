@@ -1,0 +1,4 @@
+# Ensure PHP uses XAMPP configuration when mod_env is available.
+<IfModule mod_env.c>
+    SetEnv PHPRC "C:/xampp/php"
+</IfModule>

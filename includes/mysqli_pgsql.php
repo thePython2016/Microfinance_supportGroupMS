@@ -70,12 +70,22 @@ function finance_db_connect(): FinanceDbConnection
     require_once $root . '/includes/load_env.php';
     finance_load_env($root . '/.env');
 
-    $host = finance_env('DB_HOST', 'localhost');
-    $port = finance_env('DB_PORT', '5432');
-    $dbname = finance_env('DB_NAME', 'postgres');
-    $user = finance_env('DB_USER', 'postgres');
-    $password = finance_env('DB_PASSWORD', '');
-    $sslmode = finance_env('DB_SSLMODE');
+    $fromUrl = finance_database_url_config();
+    if ($fromUrl !== null) {
+        $host = $fromUrl['host'];
+        $port = $fromUrl['port'];
+        $dbname = $fromUrl['dbname'];
+        $user = $fromUrl['user'];
+        $password = $fromUrl['password'];
+        $sslmode = $fromUrl['sslmode'];
+    } else {
+        $host = finance_env('DB_HOST', 'localhost');
+        $port = finance_env('DB_PORT', '5432');
+        $dbname = finance_env('DB_NAME', 'postgres');
+        $user = finance_env('DB_USER', 'postgres');
+        $password = finance_env('DB_PASSWORD', '');
+        $sslmode = finance_env('DB_SSLMODE');
+    }
 
     if ($sslmode === null || $sslmode === '') {
         $sslmode = ($host !== 'localhost' && $host !== '127.0.0.1') ? 'require' : 'prefer';
@@ -102,11 +112,15 @@ function finance_db_connect(): FinanceDbConnection
         $message = $e->getMessage();
 
         if (stripos($message, 'could not find driver') !== false) {
-            $ini = php_ini_loaded_file() ?: '(unknown php.ini)';
             $drivers = extension_loaded('pdo') ? implode(', ', PDO::getAvailableDrivers()) : 'PDO not loaded';
-            $message .= '. Enable extension=pdo_pgsql in ' . $ini
-                . ', copy C:\\xampp\\php\\libpq.dll to C:\\xampp\\apache\\bin\\, then restart Apache.'
-                . ' Available PDO drivers: ' . $drivers;
+            if (getenv('RENDER') || getenv('RENDER_SERVICE_ID')) {
+                $message .= '. On Render: set Runtime to Docker, use the project Dockerfile'
+                    . ' (installs pdo_pgsql), then redeploy. PDO drivers: ' . $drivers;
+            } else {
+                $ini = php_ini_loaded_file() ?: '(not loaded)';
+                $message .= '. Local XAMPP: enable extension=pdo_pgsql, copy libpq.dll to apache\\bin,'
+                    . ' restart Apache. PDO drivers: ' . $drivers . '. php.ini: ' . $ini;
+            }
         }
 
         die('Failed to connect to PostgreSQL: ' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));

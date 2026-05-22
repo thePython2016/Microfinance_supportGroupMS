@@ -1,4 +1,8 @@
-.venv/
+.env
 .git
-node_modules
-vendor
+.gitignore
+database/test_*.php
+database/check_*.php
+database/inspect_db.php
+database/enable_postgresql_php.bat
+*.md

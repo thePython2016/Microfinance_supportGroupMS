@@ -39,9 +39,40 @@ function finance_load_env(string $envPath): void
     }
 }
 
+/**
+ * @return array{host:string,port:string,dbname:string,user:string,password:string,sslmode:string}|null
+ */
+function finance_database_url_config(): ?array
+{
+    $url = finance_env('DATABASE_URL');
+    if ($url === null || $url === '') {
+        return null;
+    }
+
+    $parts = parse_url($url);
+    if ($parts === false || empty($parts['host'])) {
+        return null;
+    }
+
+    $query = [];
+    if (!empty($parts['query'])) {
+        parse_str($parts['query'], $query);
+    }
+
+    return [
+        'host' => $parts['host'],
+        'port' => isset($parts['port']) ? (string) $parts['port'] : '5432',
+        'dbname' => ltrim($parts['path'] ?? '/postgres', '/') ?: 'postgres',
+        'user' => $parts['user'] ?? '',
+        'password' => $parts['pass'] ?? '',
+        'sslmode' => $query['sslmode'] ?? 'require',
+    ];
+}
+
 function finance_env(string $key, ?string $default = null): ?string
 {
     $aliases = [
+        'DATABASE_URL' => ['DATABASE_URL', 'SUPABASE_DB_URL', 'POSTGRES_URL'],
         'DB_HOST' => ['DB_HOST', 'host', 'HOST'],
         'DB_PORT' => ['DB_PORT', 'port', 'PORT'],
         'DB_NAME' => ['DB_NAME', 'database', 'dbname', 'postgres', 'POSTGRES_DB'],
