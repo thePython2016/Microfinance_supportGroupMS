@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require 'connectDB.php';
 if(isset($_POST["addShares"]))
 {

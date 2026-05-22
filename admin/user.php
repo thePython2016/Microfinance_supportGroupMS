@@ -1,4 +1,4 @@
-﻿
+
 <style>
     /* Style for the notification badge */
     .notification-badge {

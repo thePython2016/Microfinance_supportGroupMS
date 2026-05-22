@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 // Count members
 $selectMembers=finance_db_query($connection,"select count(mobileNumber) as Count from members");
 foreach($selectMembers as $count)

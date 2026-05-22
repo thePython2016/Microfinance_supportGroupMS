@@ -1,5 +1,7 @@
-﻿<?php
-session_start();
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require "admin/connectDB.php";
 
 if (isset($_POST['submit'])) {

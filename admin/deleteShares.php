@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 require "connectDB.php";
 $id=$_GET['id'];

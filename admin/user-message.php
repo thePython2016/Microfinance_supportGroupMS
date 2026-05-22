@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 use PHPMAILER\PHPMAILER\PHPMAILER;
 use PHPMAILER\PHPMAILER\exception;
 

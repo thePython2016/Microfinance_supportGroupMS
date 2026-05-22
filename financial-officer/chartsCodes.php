@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 // Monthly loans
 require "connectDB.php";
