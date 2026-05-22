@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 session_start();
 if(!isset($_SESSION['username']))
@@ -142,7 +142,7 @@ a:hover{
              $phone=$_POST['phone'];
              if($selected=='share')
              {
-           $selectMembers=mysqli_query($connection,"select * from members
+           $selectMembers=finance_db_query($connection,"select * from members
            
            INNER join shares ON members.mobileNumber=shares.member
            where members.mobileNumber='$phone'");
@@ -219,7 +219,7 @@ foreach($selectMembers as $members)
 
        else  if($selected=='loan')
         {
-      $selectMembers=mysqli_query($connection,"select * from members
+      $selectMembers=finance_db_query($connection,"select * from members
       
       INNER join loans ON members.mobileNumber=loans.member
       where members.mobileNumber='$phone'");

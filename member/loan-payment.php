@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 session_start();
 if(!isset($_SESSION['username']))
@@ -213,7 +213,7 @@ if(!isset($_SESSION['username']))
                 <?php
 // SELECT MEMBERS FROM DB
 require "connectDB.php";
-$selectMember=mysqli_query($connection,"select * from members");
+$selectMember=finance_db_query($connection,"select * from members");
 foreach($selectMember as $member)
 {
                 ?>
@@ -272,7 +272,7 @@ foreach($selectMember as $member)
             <tbody>
               <?php
                  require "connectDB.php";
-                 $selectShares=mysqli_query($connection,"select * from loanPayments");
+                 $selectShares=finance_db_query($connection,"select * from loanPayments");
                  foreach($selectShares as $shares)
                  {
                    ?>

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 session_start();
 if(!isset($_SESSION['username']))
@@ -178,7 +178,7 @@ if(!isset($_SESSION['username']))
             <tbody>
               <?php
                  require "connectDB.php";
-                 $selectShares=mysqli_query($connection,"select * from shares");
+                 $selectShares=finance_db_query($connection,"select * from shares");
                  foreach($selectShares as $shares)
                  {
                 

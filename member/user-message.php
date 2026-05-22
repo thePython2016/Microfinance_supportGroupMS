@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 use PHPMAILER\PHPMAILER\PHPMAILER;
 use PHPMAILER\PHPMAILER\exception;
 
@@ -11,7 +11,7 @@ $sql = "select * from members where  email='$_POST[email]' OR '$_POST[email]'=''
 
   
 // Query for the making the connection. 
-$res = mysqli_query($connection, $sql); 
+$res = finance_db_query($connection, $sql); 
 if(isset($_POST['send']))
 {
     $mail=new PHPMailer(true);
@@ -25,8 +25,8 @@ if(isset($_POST['send']))
     $mail->setFrom('lucysamwel765@gmail.com');
 
   
-if(mysqli_num_rows($res) > 0) { 
-    while($x = mysqli_fetch_assoc($res)) { 
+if(finance_db_num_rows($res) > 0) { 
+    while($x = finance_db_fetch_assoc($res)) { 
         $mail->addAddress($x['email']); 
  
     } 

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require "admin/connectDB.php";
 
 
@@ -8,12 +8,12 @@ if(isset($_POST['submit']))
   $username=$_POST['username'];
   $pass=$_POST['password'];
   //Secure
-$username=mysqli_real_escape_string($connection,$username);
-$pass=mysqli_real_escape_string($connection,$pass);
+$username=finance_db_escape($connection,$username);
+$pass=finance_db_escape($connection,$pass);
 
   $selectuser="select username,password,user_category from profile where username='$username' AND password='$pass'";
-  $user=mysqli_query($connection,$selectuser);
-  $usercat=mysqli_fetch_array($user);
+  $user=finance_db_query($connection,$selectuser);
+  $usercat=finance_db_fetch_array($user);
   $returncat=$usercat['user_category'];
   
   echo $returncat;

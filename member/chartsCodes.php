@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 
 // Monthly loans
 require "connectDB.php";
-$selectLoans=mysqli_query($connection, "select monthname(date) as months,sum(amount) as Total  from loans 
-GROUP BY monthname(date)");
+$selectLoans=finance_db_query($connection, "select TRIM(TO_CHAR(\"date\", 'Month')) as months, sum(amount) as Total from loans 
+GROUP BY TRIM(TO_CHAR(\"date\", 'Month')), EXTRACT(MONTH FROM \"date\") ORDER BY EXTRACT(MONTH FROM \"date\")");
 foreach($selectLoans as $loans)
 {
     $months[]=$loans['months'];
@@ -11,8 +11,8 @@ foreach($selectLoans as $loans)
 }
 
 // Monthly shares
-$selectShares=mysqli_query($connection, "select monthname(date) as months,sum(amount) as Total  from shares
-GROUP BY monthname(date)");
+$selectShares=finance_db_query($connection, "select TRIM(TO_CHAR(\"date\", 'Month')) as months, sum(amount) as Total from shares
+GROUP BY TRIM(TO_CHAR(\"date\", 'Month')), EXTRACT(MONTH FROM \"date\") ORDER BY EXTRACT(MONTH FROM \"date\")");
 foreach($selectShares as $shares)
 {
     $shareMonths[]=$shares['months'];

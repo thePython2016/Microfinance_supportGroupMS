@@ -1,4 +1,4 @@
-
+﻿
 <?php
 
 session_start();
@@ -192,7 +192,7 @@ if(!isset($_SESSION['username']))
            </style>
             <?php 
             require "connectDB.php";
-$selectMembers=mysqli_query($connection,"select members.mobileNumber,members.nin,
+$selectMembers=finance_db_query($connection,"select members.mobileNumber,members.nin,
 members.fname,members.mname,members.lname,members.gender,members.day,
 members.month,members.year,members.gender,members.address,sum(shares.amount) as totalShares,shares.member
  from members INNER JOIN shares ON members.mobileNumber=shares.member GROUP BY shares.member");

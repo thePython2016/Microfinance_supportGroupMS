@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 session_start();
 if(!isset($_SESSION['username']))
@@ -205,7 +205,7 @@ $(document).ready(function() {
                
     <?php
     require "connectDB.php";
-    $selectMessage=mysqli_query($connection,"select * from sent_sms");
+    $selectMessage=finance_db_query($connection,"select * from sent_sms");
     foreach($selectMessage as $messages)
     {
       $phone=$messages['receiver_name'];

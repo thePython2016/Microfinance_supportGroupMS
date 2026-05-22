@@ -1,4 +1,4 @@
-
+﻿
 <?php
 
 session_start();
@@ -199,7 +199,7 @@ if(!isset($_SESSION['username']))
            </style>
             <?php 
             require "connectDB.php";
-$selectOfficers=mysqli_query($connection,"select * from officers");
+$selectOfficers=finance_db_query($connection,"select * from officers");
 foreach($selectOfficers as $members)
 {
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 

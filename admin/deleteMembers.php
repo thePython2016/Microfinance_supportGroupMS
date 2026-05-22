@@ -1,9 +1,9 @@
-<?php
+﻿<?php
 
 require "connectDB.php";
 $id=$_GET['id'];
   
-$delete=mysqli_query($connection,"delete from members where mobileNumber='$id'");
+$delete=finance_db_query($connection,"delete from members where mobileNumber='$id'");
 if($delete)
 {
     echo "<script>

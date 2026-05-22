@@ -1,4 +1,4 @@
-
+﻿
 <style>
     /* Style for the notification badge */
     .notification-badge {
@@ -11,7 +11,7 @@
   style="background:#FB6542;" id="notification-badge" title="Sent Messages">
     <?php
 require 'connectDB.php';
-$countMessage=mysqli_query($connection,"select count(id) as messageCount from sent_sms");
+$countMessage=finance_db_query($connection,"select count(id) as messageCount from sent_sms");
 foreach($countMessage as $message)
 {
   $totalSMS=$message['messageCount'];

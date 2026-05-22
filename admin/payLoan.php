@@ -1,13 +1,13 @@
-<?php
+﻿<?php
 require 'connectDB.php';
 if(isset($_POST["payLoan"]))
 {
   
 
-$id=mysqli_real_escape_string($connection,$_POST['id']);
-$date=mysqli_real_escape_string($connection,$_POST['date']);
-$member=mysqli_real_escape_string($connection,$_POST['member']);
-$amount=mysqli_real_escape_string($connection,$_POST['amount']);
+$id=finance_db_escape($connection,$_POST['id']);
+$date=finance_db_escape($connection,$_POST['date']);
+$member=finance_db_escape($connection,$_POST['member']);
+$amount=finance_db_escape($connection,$_POST['amount']);
 
 
 
@@ -20,10 +20,10 @@ $payLoan="insert into loanPayments(paymentID,date,member,amount)
  values('$id','$date',(select mobileNumber from members where mobileNumber='$member'),'$amount')";
 
 
- if( mysqli_query($connection, $payLoan)==true ){
+ if( finance_db_query($connection, $payLoan)==true ){
   //  update LOANS table after payment
   $updateQuery = "UPDATE loans SET amount=amount-$amount  where member='$member'";
-  mysqli_query($connection, $updateQuery);
+  finance_db_query($connection, $updateQuery);
 }
 
 

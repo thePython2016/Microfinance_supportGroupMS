@@ -1,4 +1,4 @@
-
+﻿
 <!doctype html>
 
 <html
@@ -185,7 +185,7 @@
             $phone=$_GET['phone'];
             echo $phone;
             require "connectDB.php";
-            $selectMember=mysqli_query($connection,"select distinct mobileNumber,nin,fname,lname
+            $selectMember=finance_db_query($connection,"select distinct mobileNumber,nin,fname,lname
             from members where mobileNumber='$phone' GROUP BY mobileNumber");
             foreach($selectMember as $member)
             {
@@ -208,7 +208,7 @@ $fname=$member['fname'];
  </tr>
 
    <?php        
-$selectShares=mysqli_query($connection,"select loanID,date,amount from loans where member='$phone'");
+$selectShares=finance_db_query($connection,"select loanID,date,amount from loans where member='$phone'");
 foreach($selectShares as $shares)
 {
   
@@ -231,7 +231,7 @@ foreach($selectShares as $shares)
 
 <!-- Find total shares -->
   <?php
-  $loanTotal=mysqli_query($connection,"select sum(amount) as totalLoan from loans where member='$phone'");
+  $loanTotal=finance_db_query($connection,"select sum(amount) as totalLoan from loans where member='$phone'");
   foreach($loanTotal as $sum)
   {
     $sumLoan=$sum['totalLoan'];

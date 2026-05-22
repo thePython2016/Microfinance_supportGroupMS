@@ -1,4 +1,4 @@
-
+﻿
 <?php
 require "connectDB.php";
 function simplePhoneFromat($phones){
@@ -62,7 +62,7 @@ if (curl_errno($ch)) {
     $phone2=json_encode($phone);
     $subject=$_POST['subject'];
     $message=$_POST['message'];
-    $insertSentmessage=mysqli_query($connection,"insert into sent_sms(id,date,sender_name,receiver_name,subject,message)
+    $insertSentmessage=finance_db_query($connection,"insert into sent_sms(id,date,sender_name,receiver_name,subject,message)
             
     values('$id','$date','$sender','$phone2','$subject','$message')");
     $_SESSION['message']="<p style='color:grey;font-size:14px;margin-left:200px;font-weight:bold'>Your Message has been sent</p>";

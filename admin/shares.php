@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 
 <html
   lang="en"
@@ -180,7 +180,7 @@
                 <?php
 // SELECT MEMBERS FROM DB
 require "connectDB.php";
-$selectMember=mysqli_query($connection,"select * from members");
+$selectMember=finance_db_query($connection,"select * from members");
 foreach($selectMember as $member)
 {
                 ?>
@@ -226,7 +226,7 @@ foreach($selectMember as $member)
                
                   <?php 
                   require "connectDB.php";
-                  $selectShares=mysqli_query($connection,"select * from shares");
+                  $selectShares=finance_db_query($connection,"select * from shares");
                   foreach($selectShares as $shares)
                   {
                     ?>

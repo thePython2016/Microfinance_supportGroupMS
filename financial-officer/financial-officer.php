@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 session_start();
 if(!isset($_SESSION['username']))
@@ -124,7 +124,7 @@ margin-left:1050px !important;
            </style>
             <?php 
             require "connectDB.php";
-$selectMembers=mysqli_query($connection,"select members.mobileNumber,members.nin,
+$selectMembers=finance_db_query($connection,"select members.mobileNumber,members.nin,
 members.fname,members.mname,members.lname,members.gender,members.day,
 members.month,members.year,members.gender,members.address,sum(shares.amount) as totalShares,shares.member
  from members INNER JOIN shares ON members.mobileNumber=shares.member GROUP BY shares.member");
@@ -158,7 +158,7 @@ $totalShares=$members['totalShares'];
              
               <tr>
                 <?php
-$findTotal=mysqli_query($connection,"select sum(amount) as Total from shares");
+$findTotal=finance_db_query($connection,"select sum(amount) as Total from shares");
 foreach($findTotal as $shares)
 {
     $Total=$shares['Total'];
@@ -210,7 +210,7 @@ foreach($findTotal as $shares)
            </style>
             <?php 
            
-$selectMembers=mysqli_query($connection,"select members.mobileNumber,members.nin,
+$selectMembers=finance_db_query($connection,"select members.mobileNumber,members.nin,
 members.fname,members.mname,members.lname,members.gender,members.day,
 members.month,members.year,members.gender,members.address,sum(loans.amount) as totalLoans,loans.member
  from members INNER JOIN loans ON members.mobileNumber=loans.member GROUP BY loans.member");
@@ -242,7 +242,7 @@ $totalLoans=$members['totalLoans'];
 ?>           
        <tr>
                 <?php
-$findTotal=mysqli_query($connection,"select sum(amount) as Total from loans");
+$findTotal=finance_db_query($connection,"select sum(amount) as Total from loans");
 foreach($findTotal as $loans)
 {
     $loanTotal=$loans['Total'];

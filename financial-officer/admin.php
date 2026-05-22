@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 session_start();
 if(!isset($_SESSION['username']))
@@ -216,7 +216,7 @@ margin-left:1050px !important;
             <?php
             require 'connection.php';
 $selectOfficers="select * from agroofficers";
-$runSelectstmt=mysqli_query($conn,$selectOfficers);
+$runSelectstmt=finance_db_query($conn,$selectOfficers);
 foreach($runSelectstmt as $officers)
 {
 

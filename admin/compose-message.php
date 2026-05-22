@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 session_start();
 if(!isset($_SESSION['username']))
@@ -177,7 +177,7 @@ if(!isset($_SESSION['username']))
  
   <?php 
              require 'connectDB.php';
-$selectEmail=mysqli_query($connection,"select * from members");
+$selectEmail=finance_db_query($connection,"select * from members");
              ?>
             <div class="form-group mt-3">
                 <label for="newItemSelect">Select receiver:</label>

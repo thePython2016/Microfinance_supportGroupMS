@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 require 'connectDB.php';
 if(isset($_POST['updateMembers']))
 {
@@ -8,7 +8,7 @@ if(isset($_POST['updateMembers']))
     $mname=$_POST['mname'];
  
     
-    $updateMembers =mysqli_query($connection,"update members
+    $updateMembers =finance_db_query($connection,"update members
     set 
 
    fname='$fname',
@@ -49,7 +49,7 @@ if(isset($_POST['updateShares']))
 
  
     
-    $updateShares =mysqli_query($connection,"update shares
+    $updateShares =finance_db_query($connection,"update shares
     set 
 
    date='$date',
@@ -90,7 +90,7 @@ if(isset($_POST['updateOfficers']))
     $middlename=$_POST['middlename'];
     $address=$_POST['address'];
 
-    $updateOfficers =mysqli_query($connection,"update officers
+    $updateOfficers =finance_db_query($connection,"update officers
     set 
 
    fname='$firstname',

@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 session_start();
 if(!isset($_SESSION['username']))
@@ -264,7 +264,7 @@ if(!isset($_SESSION['username']))
            </style>
             <?php 
             require "connectDB.php";
-$selectMembers=mysqli_query($connection,"select * from members");
+$selectMembers=finance_db_query($connection,"select * from members");
 foreach($selectMembers as $members)
 {
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
@@ -362,7 +362,7 @@ foreach($selectMembers as $members)
            </style>
             <?php 
             require "connectDB.php";
-$selectMembers=mysqli_query($connection,"select * from members");
+$selectMembers=finance_db_query($connection,"select * from members");
 foreach($selectMembers as $members)
 {
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
@@ -461,7 +461,7 @@ foreach($selectMembers as $members)
            </style>
             <?php 
             require "connectDB.php";
-$selectMembers=mysqli_query($connection,"select * from members");
+$selectMembers=finance_db_query($connection,"select * from members");
 foreach($selectMembers as $members)
 {
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 

@@ -1,32 +1,32 @@
-<?php
+﻿<?php
 require 'connectDB.php';
 if(isset($_POST["addShares"]))
 {
   
 
-$id=mysqli_real_escape_string($connection,$_POST['id']);
-$date=mysqli_real_escape_string($connection,$_POST['date']);
-$member=mysqli_real_escape_string($connection,$_POST['member']);
-$amount=mysqli_real_escape_string($connection,$_POST['amount']);
+$id=finance_db_escape($connection,$_POST['id']);
+$date=finance_db_escape($connection,$_POST['date']);
+$member=finance_db_escape($connection,$_POST['member']);
+$amount=finance_db_escape($connection,$_POST['amount']);
 
 
 
 
 
 // INSERT TO TABLE
-$insertShares=mysqli_query($connection,"insert into shares
+$insertShares=finance_db_query($connection,"insert into shares
 (shareID,date,member,amount)
  values('$id','$date',(select mobileNumber from members where mobileNumber='$member'),'$amount')");
 
 //  update shareTable table after INSERTION
 $amount=0;
-$updateLoan=mysqli_query($connection,"update shares
+$updateLoan=finance_db_query($connection,"update shares
 
 SET amount=amount-$amount where member='$member'");
 
 
 
-// $count=mysqli_num_rows($farmersQuery);
+// $count=finance_db_num_rows($farmersQuery);
 
 if($insertShares)
 {
