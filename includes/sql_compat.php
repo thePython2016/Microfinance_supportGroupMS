@@ -9,8 +9,6 @@ function finance_compat_sql(string $sql): string
         return $sql;
     }
 
-    $sql = preg_replace('/\bmobileNumber\b/', 'mobilenumber', $sql);
-
     $fromReplacements = [
         '/\bfrom\s+members\b/i' => 'FROM app_members',
         '/\bfrom\s+shares\b/i' => 'FROM app_shares',
@@ -36,6 +34,11 @@ function finance_compat_sql(string $sql): string
 
     foreach ($fromReplacements as $pattern => $replacement) {
         $sql = preg_replace($pattern, $replacement, $sql);
+    }
+
+    // Base members table uses mobilenumber; app_members view exposes "mobileNumber".
+    if (!preg_match('/\bapp_members\b/i', $sql)) {
+        $sql = preg_replace('/\bmobileNumber\b/', 'mobilenumber', $sql);
     }
 
     // Legacy share/loan inserts reference member phone; map to member_id.
@@ -97,6 +100,8 @@ function finance_normalize_row(array $row): array
         'share_date' => 'date',
         'loan_date' => 'date',
         'member_phone' => 'member',
+        'count' => 'Count',
+        'total' => 'Total',
     ];
 
     $normalized = [];

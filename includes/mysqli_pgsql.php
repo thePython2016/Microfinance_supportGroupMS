@@ -209,3 +209,30 @@ function finance_db_connect_error(): string
 
     return $finance_db_last_error ?? '';
 }
+
+/**
+ * Read one column from the first row of a query result (safe when query fails or is empty).
+ *
+ * @param FinanceDbResult|bool $result
+ */
+function finance_db_scalar($result, string $column, int|float|string $default = 0): int|float|string
+{
+    if (!$result instanceof FinanceDbResult || $result->num_rows === 0) {
+        return $default;
+    }
+
+    $row = $result->current();
+    if (!is_array($row)) {
+        return $default;
+    }
+
+    if (array_key_exists($column, $row)) {
+        $value = $row[$column];
+    } elseif (array_key_exists(strtolower($column), $row)) {
+        $value = $row[strtolower($column)];
+    } else {
+        return $default;
+    }
+
+    return $value ?? $default;
+}
