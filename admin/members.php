@@ -353,8 +353,19 @@ foreach ($selectMembers as $members) {
     $joined_at    = $members['joined_at']    ?? '';
     $email        = $members['email']        ?? '';
 
-    $yearDisplay   = !empty($yearRaw)   ? date('Y', strtotime($yearRaw))       : '';
-    $joinedDisplay = !empty($joined_at) ? date('Y-m-d', strtotime($joined_at)) : '';
+    // year is a timestamp — extract 4-digit year safely
+    $yearDisplay = '';
+    if (!empty($yearRaw)) {
+        $dt = date_create($yearRaw);
+        $yearDisplay = $dt ? date_format($dt, 'Y') : $yearRaw;
+    }
+
+    // joined_at — try date_create first, fallback to raw value so something always shows
+    $joinedDisplay = '';
+    if (!empty($joined_at)) {
+        $dt = date_create($joined_at);
+        $joinedDisplay = $dt ? date_format($dt, 'Y-m-d') : $joined_at;
+    }
 
     echo "<tr class='dataRow'
                data-phone='"   . htmlspecialchars($mobilenumber) . "'
@@ -379,8 +390,8 @@ foreach ($selectMembers as $members) {
         <td><?php echo htmlspecialchars($day) . ' / ' . htmlspecialchars($month) . ' / ' . htmlspecialchars($yearDisplay); ?></td>
         <td><?php echo htmlspecialchars($gender);       ?></td>
         <td><?php echo htmlspecialchars($address);      ?></td>
-        <td><?php echo htmlspecialchars($status);       ?></td>
-        <td><?php echo htmlspecialchars($joinedDisplay);?></td>
+  
+        <td><?php echo htmlspecialchars($joinedDisplay); ?></td>
         <td class="email-cell" title="<?php echo htmlspecialchars($email); ?>">
             <?php echo htmlspecialchars($email); ?>
         </td>
@@ -389,42 +400,7 @@ foreach ($selectMembers as $members) {
 }
 ?>
 
-<style>
-    /* Prevent any single column from blowing out the table width */
-    #membersTable {
-        table-layout: fixed;
-        width: 100%;
-    }
 
-    /* Column width distribution */
-    #membersTable th:nth-child(1)  { width: 11%; } /* Mobile number */
-    #membersTable th:nth-child(2)  { width: 13%; } /* NIN */
-    #membersTable th:nth-child(3)  { width: 7%;  } /* First name */
-    #membersTable th:nth-child(4)  { width: 7%;  } /* Middle name */
-    #membersTable th:nth-child(5)  { width: 7%;  } /* Last name */
-    #membersTable th:nth-child(6)  { width: 9%;  } /* Birth date */
-    #membersTable th:nth-child(7)  { width: 6%;  } /* Gender */
-    #membersTable th:nth-child(8)  { width: 10%; } /* Address */
-    #membersTable th:nth-child(9)  { width: 7%;  } /* Status */
-    #membersTable th:nth-child(10) { width: 9%;  } /* Date joined */
-    #membersTable th:nth-child(11) { width: 14%; } /* Email */
-
-    /* Truncate all cells that overflow, show ellipsis */
-    #membersTable td {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width: 0; /* required for text-overflow to work with table-layout:fixed */
-    }
-
-    /* Email cell — truncate with ellipsis, full address visible on hover via title attr */
-    #membersTable td.email-cell {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        cursor: default;
-    }
-</style>
 
 
             </tbody>
