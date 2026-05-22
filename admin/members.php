@@ -329,10 +329,8 @@ if(!isset($_SESSION['username']))
             <?php
 require "connectDB.php";
 
-// Simple select — handle all formatting in PHP, not SQL
 $selectMembers = finance_db_query($connection, 'SELECT * FROM members');
 
-// Query failed — show error and stop
 if ($selectMembers === false) {
     global $finance_db_last_error;
     echo '<tr><td colspan="11" class="text-danger">Query error: ' . htmlspecialchars($finance_db_last_error ?? 'Unknown error') . '</td></tr>';
@@ -341,7 +339,6 @@ if ($selectMembers === false) {
 
 foreach ($selectMembers as $members) {
 
-    // Handle both camelCase and lowercase key names from the DB driver
     $mobilenumber = $members['mobileNumber'] ?? $members['mobilenumber'] ?? '';
     $nin          = $members['nin']          ?? '';
     $fname        = $members['fname']        ?? '';
@@ -356,8 +353,7 @@ foreach ($selectMembers as $members) {
     $joined_at    = $members['joined_at']    ?? '';
     $email        = $members['email']        ?? '';
 
-    // year is stored as timestamp — extract just the 4-digit year
-    $yearDisplay   = !empty($yearRaw)   ? date('Y', strtotime($yearRaw))   : '';
+    $yearDisplay   = !empty($yearRaw)   ? date('Y', strtotime($yearRaw))       : '';
     $joinedDisplay = !empty($joined_at) ? date('Y-m-d', strtotime($joined_at)) : '';
 
     echo "<tr class='dataRow'
@@ -385,11 +381,50 @@ foreach ($selectMembers as $members) {
         <td><?php echo htmlspecialchars($address);      ?></td>
         <td><?php echo htmlspecialchars($status);       ?></td>
         <td><?php echo htmlspecialchars($joinedDisplay);?></td>
-        <td><?php echo htmlspecialchars($email);        ?></td>
+        <td class="email-cell" title="<?php echo htmlspecialchars($email); ?>">
+            <?php echo htmlspecialchars($email); ?>
+        </td>
     </tr>
     <?php
 }
 ?>
+
+<style>
+    /* Prevent any single column from blowing out the table width */
+    #membersTable {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    /* Column width distribution */
+    #membersTable th:nth-child(1)  { width: 11%; } /* Mobile number */
+    #membersTable th:nth-child(2)  { width: 13%; } /* NIN */
+    #membersTable th:nth-child(3)  { width: 7%;  } /* First name */
+    #membersTable th:nth-child(4)  { width: 7%;  } /* Middle name */
+    #membersTable th:nth-child(5)  { width: 7%;  } /* Last name */
+    #membersTable th:nth-child(6)  { width: 9%;  } /* Birth date */
+    #membersTable th:nth-child(7)  { width: 6%;  } /* Gender */
+    #membersTable th:nth-child(8)  { width: 10%; } /* Address */
+    #membersTable th:nth-child(9)  { width: 7%;  } /* Status */
+    #membersTable th:nth-child(10) { width: 9%;  } /* Date joined */
+    #membersTable th:nth-child(11) { width: 14%; } /* Email */
+
+    /* Truncate all cells that overflow, show ellipsis */
+    #membersTable td {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 0; /* required for text-overflow to work with table-layout:fixed */
+    }
+
+    /* Email cell — truncate with ellipsis, full address visible on hover via title attr */
+    #membersTable td.email-cell {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        cursor: default;
+    }
+</style>
 
 
             </tbody>
