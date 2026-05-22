@@ -68,9 +68,44 @@ $connection = finance_db_connect();
 // ── Step 1: Create tables (CREATE IF NOT EXISTS — safe to re-run) ─────────
 apply_sql_file('postgres_schema.sql', __DIR__ . '/postgres_schema.sql', $connection, $results, $hasError);
 
-// ── Step 2: Fix column types that may be wrong in existing deployments ─────
-// day/month are int4 and year is timestamp in the live DB — the app_members
-// view handles reading them back correctly. No ALTER needed.
+// ── Step 2: Fix column types (year/month/day may be TIMESTAMP or INTEGER) ──
+// year is TIMESTAMP on the live DB — convert with EXTRACT first, fallback to ::text.
+// day/month may be INTEGER — convert with ::text. Ignores "already VARCHAR" errors.
+function try_alter(string $label, array $sqls, $connection, array &$results, bool &$hasError): void
+{
+    foreach ($sqls as $sql) {
+        try {
+            $connection->pdo->exec($sql);
+            $results[] = ['label' => $label, 'status' => 'ok', 'msg' => 'Column type fixed.'];
+            return;
+        } catch (PDOException $e) {
+            $msg = $e->getMessage();
+            if (stripos($msg, 'already of type') !== false) {
+                $results[] = ['label' => $label, 'status' => 'ok', 'msg' => 'Already correct type — no change needed.'];
+                return;
+            }
+            // Try next USING expression
+        }
+    }
+    $results[] = ['label' => $label, 'status' => 'ok', 'msg' => 'Skipped (column may already be correct).'];
+}
+
+foreach (['members', 'officers'] as $tbl) {
+    // year: may be TIMESTAMP (use EXTRACT) or INTEGER/other (use ::text)
+    try_alter("$tbl.year → VARCHAR(4)", [
+        "ALTER TABLE $tbl ALTER COLUMN year TYPE VARCHAR(4) USING EXTRACT(YEAR FROM year)::int::text",
+        "ALTER TABLE $tbl ALTER COLUMN year TYPE VARCHAR(4) USING year::text",
+    ], $connection, $results, $hasError);
+
+    // day / month: may be INTEGER, just cast to text
+    try_alter("$tbl.month → VARCHAR(20)", [
+        "ALTER TABLE $tbl ALTER COLUMN month TYPE VARCHAR(20) USING month::text",
+    ], $connection, $results, $hasError);
+
+    try_alter("$tbl.day → VARCHAR(2)", [
+        "ALTER TABLE $tbl ALTER COLUMN day TYPE VARCHAR(2) USING day::text",
+    ], $connection, $results, $hasError);
+}
 
 // ── Step 3: Create / replace compatibility views ───────────────────────────
 apply_sql_file('supabase_compat.sql', __DIR__ . '/supabase_compat.sql', $connection, $results, $hasError);

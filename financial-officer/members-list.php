@@ -177,6 +177,7 @@ if(!isset($_SESSION['username']))
                 <tr>
                     <th>Mobile number</th>
                     <th>NIN</th>
+                    <th>Email</th>
                     <th>First name</th>
                     <th>Middle name</th>
                     <th>Last name</th>
@@ -184,8 +185,8 @@ if(!isset($_SESSION['username']))
                     <th>Birth day</th>
                     <th>Birth month</th>
                     <th>Birth year</th>
-
                     <th>Physical address</th>
+                    <th>Date Joined</th>
 
                 </tr>
             </thead>
@@ -208,6 +209,9 @@ foreach($selectMembers as $members)
                ?>
                     <td><?php echo $members['mobileNumber']?></td>
                     <td><?php echo $members['nin']?></td>
+                    <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="<?php echo htmlspecialchars($members['email'] ?? '')?>">
+                      <?php echo htmlspecialchars($members['email'] ?? '')?>
+                    </td>
                     <td><?php echo $members['fname']?></td>
                     <td><?php echo $members['mname']?></td>
                     <td><?php echo $members['lname']?></td>
@@ -215,8 +219,8 @@ foreach($selectMembers as $members)
                     <td><?php echo $members['day']?></td>
                     <td><?php echo $members['month']?></td>
                     <td><?php echo $members['year']?></td>
-
                     <td><?php echo $members['address']?></td>
+                    <td><?php echo isset($members['date_joined']) && $members['date_joined'] ? date('d M Y', strtotime($members['date_joined'])) : 'N/A'?></td>
 
                 </tr>
 

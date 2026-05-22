@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS members (
     month        VARCHAR(20),
     year         VARCHAR(4),
     gender       VARCHAR(20),
-    address      TEXT
+    address      TEXT,
+    date_joined  TIMESTAMP DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS officers (

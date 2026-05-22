@@ -2,8 +2,9 @@
 -- These views translate base-table column names to the names the PHP code expects.
 -- Run this after postgres_schema.sql (install_schema.php does both automatically).
 
--- Ensure email column exists (safe to re-run)
+-- Ensure email and date_joined columns exist (safe to re-run)
 ALTER TABLE members ADD COLUMN IF NOT EXISTS email VARCHAR(120);
+ALTER TABLE members ADD COLUMN IF NOT EXISTS date_joined TIMESTAMP DEFAULT NOW();
 
 -- app_members: exposes mobilenumber as "mobileNumber" for legacy PHP code
 CREATE OR REPLACE VIEW app_members AS
@@ -14,11 +15,12 @@ SELECT
     fname,
     mname,
     lname,
-    day::text                              AS day,
-    month::text                            AS month,
-    EXTRACT(YEAR FROM year)::int::text     AS year,
+    day::text        AS day,
+    month::text      AS month,
+    year::text       AS year,
     gender,
-    address
+    address,
+    date_joined
 FROM members;
 
 -- app_shares: joins shares → members to expose phone as "member"
