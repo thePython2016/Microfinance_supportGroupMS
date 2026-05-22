@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -6,8 +6,8 @@ require "admin/connectDB.php";
 require_once dirname(__FILE__) . "/includes/auth.php";
 
 if (isset($_POST['submit'])) {
-    $username = $_POST['username'] ?? '';
-    $plainPassword = $_POST['password'] ?? '';
+    $username = trim((string) ($_POST['username'] ?? ''));
+    $plainPassword = (string) ($_POST['password'] ?? '');
 
     if ($username === '' || $plainPassword === '') {
         $_SESSION['login_error'] = 'Invalid username or password.';

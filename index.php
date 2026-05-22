@@ -129,9 +129,9 @@ background-color:#EB8921;
 
                 <select class="form-select form-control"  id="floatingInput" name="username" id="Username" aria-label="Default select example" name="username" id="Username">
   <option selected disabled>--Username--</option>
-  <option value="admin">Administrator</option>
-  <option value="member">Member</option>
-  <option value="officer">Financial Officer</option>
+  <option value="Administrator">Administrator</option>
+  <option value="Member">Member</option>
+  <option value="Financial">Financial Officer</option>
 </select>
          
             </div>
