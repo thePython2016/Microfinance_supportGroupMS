@@ -1,15 +1,18 @@
 <?php
 /**
- * One-time database setup page.
- * Visit this URL once to create/recreate all tables and compatibility views.
- * Access: https://your-app.onrender.com/database/setup.php
+ * One-time database setup / migration page.
+ * Safe to re-run at any time — uses CREATE IF NOT EXISTS, CREATE OR REPLACE VIEW,
+ * and gracefully skips ALTER COLUMN when the column is already the correct type.
+ *
+ * Visit: https://your-app.onrender.com/database/setup.php
  */
 
 require_once dirname(__DIR__) . '/includes/mysqli_pgsql.php';
 
-$results = [];
+$results  = [];
 $hasError = false;
 
+// ── Helper: apply a .sql file statement-by-statement ──────────────────────
 function apply_sql_file(string $label, string $path, $connection, array &$results, bool &$hasError): void
 {
     $sql = file_get_contents($path);
@@ -38,10 +41,50 @@ function apply_sql_file(string $label, string $path, $connection, array &$result
     }
 }
 
+// ── Helper: ALTER COLUMN TYPE, ignoring "already correct type" errors ──────
+function fix_column_type(string $table, string $column, string $type, string $using,
+                          $connection, array &$results, bool &$hasError): void
+{
+    $sql = "ALTER TABLE $table ALTER COLUMN $column TYPE $type USING $using";
+    try {
+        $connection->pdo->exec($sql);
+        $results[] = ['label' => "Column $table.$column", 'status' => 'ok',
+            'msg' => "Set to $type."];
+    } catch (PDOException $e) {
+        $msg = $e->getMessage();
+        // PostgreSQL says "already of type" when no change is needed — not a real error
+        if (stripos($msg, 'already of type') !== false || stripos($msg, 'No changes') !== false) {
+            $results[] = ['label' => "Column $table.$column", 'status' => 'ok',
+                'msg' => "Already $type — no change needed."];
+        } else {
+            $results[] = ['label' => "Column $table.$column", 'status' => 'error', 'msg' => $msg];
+            $hasError = true;
+        }
+    }
+}
+
 $connection = finance_db_connect();
 
-apply_sql_file('postgres_schema.sql',   __DIR__ . '/postgres_schema.sql',   $connection, $results, $hasError);
-apply_sql_file('supabase_compat.sql',   __DIR__ . '/supabase_compat.sql',   $connection, $results, $hasError);
+// ── Step 1: Create tables (CREATE IF NOT EXISTS — safe to re-run) ─────────
+apply_sql_file('postgres_schema.sql', __DIR__ . '/postgres_schema.sql', $connection, $results, $hasError);
+
+// ── Step 2: Fix column types that may be wrong in existing deployments ─────
+//    The production DB may have day/month/year as INTEGER or TIMESTAMP instead
+//    of VARCHAR. ALTER COLUMN TYPE with USING converts the data safely.
+$varchar_cols = [
+    ['members',  'year',  'VARCHAR(4)',  "COALESCE(year::text, '')"],
+    ['members',  'month', 'VARCHAR(20)', "COALESCE(month::text, '')"],
+    ['members',  'day',   'VARCHAR(2)',  "COALESCE(day::text, '')"],
+    ['officers', 'year',  'VARCHAR(4)',  "COALESCE(year::text, '')"],
+    ['officers', 'month', 'VARCHAR(20)', "COALESCE(month::text, '')"],
+    ['officers', 'day',   'VARCHAR(2)',  "COALESCE(day::text, '')"],
+];
+foreach ($varchar_cols as [$table, $col, $type, $using]) {
+    fix_column_type($table, $col, $type, $using, $connection, $results, $hasError);
+}
+
+// ── Step 3: Create / replace compatibility views ───────────────────────────
+apply_sql_file('supabase_compat.sql', __DIR__ . '/supabase_compat.sql', $connection, $results, $hasError);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,21 +93,33 @@ apply_sql_file('supabase_compat.sql',   __DIR__ . '/supabase_compat.sql',   $con
   <title>Database Setup</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="p-4">
-  <h3>Database Setup</h3>
-  <p class="text-muted">This page creates all tables and compatibility views. Safe to re-run — uses <code>CREATE IF NOT EXISTS</code> and <code>CREATE OR REPLACE VIEW</code>.</p>
+<body class="p-4" style="max-width:860px">
+  <h3>🛠 Database Setup &amp; Migration</h3>
+  <p class="text-muted">
+    Creates all tables, fixes column types, and creates the compatibility views the app needs.
+    <strong>Safe to re-run at any time.</strong>
+  </p>
   <hr>
+
   <?php foreach ($results as $r): ?>
-    <div class="alert alert-<?php echo $r['status'] === 'ok' ? 'success' : 'danger'; ?>">
+    <div class="alert alert-<?php echo $r['status'] === 'ok' ? 'success' : 'danger'; ?> py-2 mb-2">
       <strong><?php echo htmlspecialchars($r['label']); ?>:</strong>
       <?php echo htmlspecialchars($r['msg']); ?>
     </div>
   <?php endforeach; ?>
+
+  <hr>
   <?php if (!$hasError): ?>
-    <div class="alert alert-success fw-bold">✅ Setup complete! All tables and views are ready.</div>
+    <div class="alert alert-success fw-bold">
+      ✅ Setup complete! All tables, column types, and views are ready.
+    </div>
     <a href="../admin/admin.php" class="btn btn-primary">Go to Admin Dashboard</a>
   <?php else: ?>
-    <div class="alert alert-warning">⚠️ Some steps failed. Check the errors above and ensure your DATABASE_URL environment variable is set correctly on Render.</div>
+    <div class="alert alert-warning">
+      ⚠️ One or more steps failed. Review the errors above.<br>
+      Make sure your <code>DATABASE_URL</code> environment variable is correctly set in Render.
+    </div>
+    <a href="setup.php" class="btn btn-secondary">Re-run Setup</a>
   <?php endif; ?>
 </body>
 </html>
