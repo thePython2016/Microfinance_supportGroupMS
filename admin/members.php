@@ -329,57 +329,63 @@ if(!isset($_SESSION['username']))
             <?php
 require "connectDB.php";
 
-// Alias every column explicitly so key names are guaranteed regardless of DB casing
-$selectMembers = finance_db_query($connection,
-    'SELECT 
-        "mobileNumber"  AS mobilenumber,
-        nin,
-        fname,
-        mname,
-        lname,
-        day,
-        month,
-        year,
-        gender,
-        address,
-        COALESCE(status, \'\')    AS status,
-        COALESCE(joined_at::text, \'\') AS joined_at,
-        COALESCE(email, \'\')     AS email
-     FROM members'
-);
+// Simple select — handle all formatting in PHP, not SQL
+$selectMembers = finance_db_query($connection, 'SELECT * FROM members');
+
+// Query failed — show error and stop
+if ($selectMembers === false) {
+    global $finance_db_last_error;
+    echo '<tr><td colspan="11" class="text-danger">Query error: ' . htmlspecialchars($finance_db_last_error ?? 'Unknown error') . '</td></tr>';
+    return;
+}
 
 foreach ($selectMembers as $members) {
 
-    // year is a timestamp — extract just the 4-digit year
-    $yearDisplay   = !empty($members['year'])      ? date('Y', strtotime($members['year']))      : '';
-    $joinedDisplay = !empty($members['joined_at']) ? date('Y-m-d', strtotime($members['joined_at'])) : '';
+    // Handle both camelCase and lowercase key names from the DB driver
+    $mobilenumber = $members['mobileNumber'] ?? $members['mobilenumber'] ?? '';
+    $nin          = $members['nin']          ?? '';
+    $fname        = $members['fname']        ?? '';
+    $mname        = $members['mname']        ?? '';
+    $lname        = $members['lname']        ?? '';
+    $day          = $members['day']          ?? '';
+    $month        = $members['month']        ?? '';
+    $yearRaw      = $members['year']         ?? '';
+    $gender       = $members['gender']       ?? '';
+    $address      = $members['address']      ?? '';
+    $status       = $members['status']       ?? '';
+    $joined_at    = $members['joined_at']    ?? '';
+    $email        = $members['email']        ?? '';
+
+    // year is stored as timestamp — extract just the 4-digit year
+    $yearDisplay   = !empty($yearRaw)   ? date('Y', strtotime($yearRaw))   : '';
+    $joinedDisplay = !empty($joined_at) ? date('Y-m-d', strtotime($joined_at)) : '';
 
     echo "<tr class='dataRow'
-               data-phone='"   . htmlspecialchars($members['mobilenumber'] ?? '') . "'
-               data-nin='"     . htmlspecialchars($members['nin']          ?? '') . "'
-               data-fname='"   . htmlspecialchars($members['fname']        ?? '') . "'
-               data-mname='"   . htmlspecialchars($members['mname']        ?? '') . "'
-               data-lname='"   . htmlspecialchars($members['lname']        ?? '') . "'
-               data-day='"     . htmlspecialchars($members['day']          ?? '') . "'
-               data-month='"   . htmlspecialchars($members['month']        ?? '') . "'
-               data-year='"    . htmlspecialchars($yearDisplay)                   . "'
-               data-gender='"  . htmlspecialchars($members['gender']       ?? '') . "'
-               data-address='" . htmlspecialchars($members['address']      ?? '') . "'
-               data-status='"  . htmlspecialchars($members['status']       ?? '') . "'
-               data-joined='"  . htmlspecialchars($joinedDisplay)                 . "'
-               data-email='"   . htmlspecialchars($members['email']        ?? '') . "'>";
+               data-phone='"   . htmlspecialchars($mobilenumber) . "'
+               data-nin='"     . htmlspecialchars($nin)          . "'
+               data-fname='"   . htmlspecialchars($fname)        . "'
+               data-mname='"   . htmlspecialchars($mname)        . "'
+               data-lname='"   . htmlspecialchars($lname)        . "'
+               data-day='"     . htmlspecialchars($day)          . "'
+               data-month='"   . htmlspecialchars($month)        . "'
+               data-year='"    . htmlspecialchars($yearDisplay)  . "'
+               data-gender='"  . htmlspecialchars($gender)       . "'
+               data-address='" . htmlspecialchars($address)      . "'
+               data-status='"  . htmlspecialchars($status)       . "'
+               data-joined='"  . htmlspecialchars($joinedDisplay). "'
+               data-email='"   . htmlspecialchars($email)        . "'>";
     ?>
-        <td><?php echo htmlspecialchars($members['mobilenumber'] ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($members['nin']          ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($members['fname']        ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($members['mname']        ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($members['lname']        ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($members['day'] ?? '') . ' / ' . htmlspecialchars($members['month'] ?? '') . ' / ' . htmlspecialchars($yearDisplay); ?></td>
-        <td><?php echo htmlspecialchars($members['gender']  ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($members['address'] ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($members['status']  ?? ''); ?></td>
-        <td><?php echo htmlspecialchars($joinedDisplay); ?></td>
-        <td><?php echo htmlspecialchars($members['email']   ?? ''); ?></td>
+        <td><?php echo htmlspecialchars($mobilenumber); ?></td>
+        <td><?php echo htmlspecialchars($nin);          ?></td>
+        <td><?php echo htmlspecialchars($fname);        ?></td>
+        <td><?php echo htmlspecialchars($mname);        ?></td>
+        <td><?php echo htmlspecialchars($lname);        ?></td>
+        <td><?php echo htmlspecialchars($day) . ' / ' . htmlspecialchars($month) . ' / ' . htmlspecialchars($yearDisplay); ?></td>
+        <td><?php echo htmlspecialchars($gender);       ?></td>
+        <td><?php echo htmlspecialchars($address);      ?></td>
+        <td><?php echo htmlspecialchars($status);       ?></td>
+        <td><?php echo htmlspecialchars($joinedDisplay);?></td>
+        <td><?php echo htmlspecialchars($email);        ?></td>
     </tr>
     <?php
 }
