@@ -99,7 +99,17 @@ function finance_db_connect(): FinanceDbConnection
         return new FinanceDbConnection($pdo);
     } catch (PDOException $e) {
         $finance_db_last_error = $e->getMessage();
-        die('Failed to connect to PostgreSQL: ' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8'));
+        $message = $e->getMessage();
+
+        if (stripos($message, 'could not find driver') !== false) {
+            $ini = php_ini_loaded_file() ?: '(unknown php.ini)';
+            $drivers = extension_loaded('pdo') ? implode(', ', PDO::getAvailableDrivers()) : 'PDO not loaded';
+            $message .= '. Enable extension=pdo_pgsql in ' . $ini
+                . ', copy C:\\xampp\\php\\libpq.dll to C:\\xampp\\apache\\bin\\, then restart Apache.'
+                . ' Available PDO drivers: ' . $drivers;
+        }
+
+        die('Failed to connect to PostgreSQL: ' . htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
     }
 }
 
