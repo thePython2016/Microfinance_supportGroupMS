@@ -65,9 +65,4 @@ CREATE TABLE IF NOT EXISTS sent_sms (
     message TEXT
 );
 
--- Default login users (change passwords after first login)
-INSERT INTO profile (username, password, user_category) VALUES
-    ('Administrator', 'admin', 1),
-    ('Member', 'member', 2),
-    ('Financial', 'financial', 3)
-ON CONFLICT (username) DO NOTHING;
+-- Default users: run `php database/seed_profile.php` to insert bcrypt-hashed passwords.

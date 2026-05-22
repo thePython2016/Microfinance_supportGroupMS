@@ -3,19 +3,36 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 require "admin/connectDB.php";
+require_once dirname(__FILE__) . "/includes/auth.php";
 
 if (isset($_POST['submit'])) {
     $username = $_POST['username'] ?? '';
-    $pass = $_POST['password'] ?? '';
+    $plainPassword = $_POST['password'] ?? '';
+
+    if ($username === '' || $plainPassword === '') {
+        $_SESSION['login_error'] = 'Invalid username or password.';
+        header("Location:index.php");
+        exit;
+    }
 
     $username = finance_db_escape($connection, $username);
-    $pass = finance_db_escape($connection, $pass);
 
-    $selectuser = "select username,password,user_category from profile where username='$username' AND password='$pass'";
+    $selectuser = "SELECT username, password, user_category FROM profile WHERE username='$username' LIMIT 1";
     $user = finance_db_query($connection, $selectuser);
     $usercat = finance_db_fetch_array($user);
 
-    if (is_array($usercat) && isset($usercat['user_category'])) {
+    if (
+        is_array($usercat)
+        && isset($usercat['password'], $usercat['user_category'])
+        && finance_password_verify($plainPassword, (string) $usercat['password'])
+    ) {
+        finance_password_upgrade_if_needed(
+            $connection,
+            $username,
+            $plainPassword,
+            (string) $usercat['password']
+        );
+
         $returncat = (int) $usercat['user_category'];
         $_SESSION['username'] = $username;
 
