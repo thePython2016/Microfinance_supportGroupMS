@@ -319,7 +319,7 @@ if(!isset($_SESSION['username']))
                     <th>Birth date</th>
                     <th>Gender</th>
                     <th>Physical address</th>
-                    <th>Status</th>
+              
                     <th>Date Joined</th>
                     <th>Email</th>
                 </tr>
@@ -349,7 +349,7 @@ foreach ($selectMembers as $members) {
     $yearRaw      = $members['year']         ?? '';
     $gender       = $members['gender']       ?? '';
     $address      = $members['address']      ?? '';
-    $status       = $members['status']       ?? '';
+
     $joined_at    = $members['joined_at']    ?? '';
     $email        = $members['email']        ?? '';
 
@@ -378,7 +378,7 @@ foreach ($selectMembers as $members) {
                data-year='"    . htmlspecialchars($yearDisplay)  . "'
                data-gender='"  . htmlspecialchars($gender)       . "'
                data-address='" . htmlspecialchars($address)      . "'
-               data-status='"  . htmlspecialchars($status)       . "'
+      
                data-joined='"  . htmlspecialchars($joinedDisplay). "'
                data-email='"   . htmlspecialchars($email)        . "'>";
     ?>
@@ -390,7 +390,7 @@ foreach ($selectMembers as $members) {
         <td><?php echo htmlspecialchars($day) . ' / ' . htmlspecialchars($month) . ' / ' . htmlspecialchars($yearDisplay); ?></td>
         <td><?php echo htmlspecialchars($gender);       ?></td>
         <td><?php echo htmlspecialchars($address);      ?></td>
-  
+    
         <td><?php echo htmlspecialchars($joinedDisplay); ?></td>
         <td class="email-cell" title="<?php echo htmlspecialchars($email); ?>">
             <?php echo htmlspecialchars($email); ?>
