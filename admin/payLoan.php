@@ -8,16 +8,18 @@ if (isset($_POST['payLoan'])) {
     $amount = (float)$_POST['amount'];
     $amountEsc = finance_db_escape($connection, (string)$amount);
 
+    // member column in loanpayments stores the phone number directly
     $result = finance_db_query($connection,
-        "INSERT INTO loanPayments (paymentID,date,member,amount)
-         VALUES ('$id','$date',(SELECT mobileNumber FROM members WHERE mobileNumber='$member'),'$amountEsc')");
+        "INSERT INTO loanPayments (paymentID, date, member, amount)
+         VALUES ('$id', '$date', '$member', '$amountEsc')");
 
     if ($result) {
         finance_db_query($connection,
             "UPDATE loans SET amount = amount - $amountEsc WHERE member = '$member'");
         $_SESSION['flash_success'] = 'Loan payment recorded successfully!';
     } else {
-        $_SESSION['flash_error'] = 'Error: Could not record payment. Please try again.';
+        global $finance_db_last_error;
+        $_SESSION['flash_error'] = 'Error: Could not record payment. ' . ($finance_db_last_error ?? 'Please try again.');
     }
     echo "<script>window.location.href='loan-payment.php';</script>";
 }

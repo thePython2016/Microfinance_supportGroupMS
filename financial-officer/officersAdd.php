@@ -20,7 +20,8 @@ if (isset($_POST['addOfficers'])) {
     if ($result) {
         $_SESSION['flash_success'] = 'Financial officer added successfully!';
     } else {
-        $_SESSION['flash_error'] = 'Error: Could not add officer. The mobile number or NIN may already exist.';
+        global $finance_db_last_error;
+        $_SESSION['flash_error'] = 'Error: Could not add officer. The mobile number or NIN may already exist.' . ($finance_db_last_error ?? '');
     }
     echo "<script>window.location.href='financial-officers.php';</script>";
 }

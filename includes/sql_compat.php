@@ -1,89 +1,126 @@
 <?php
 
 /**
- * Translate legacy MySQL-style SQL to the current Supabase/PostgreSQL schema.
+ * Translate legacy PHP SQL to the current PostgreSQL schema.
+ *
+ * Base tables use lowercase column names and integer PKs (BIGSERIAL).
+ * Compatibility views (app_members, app_shares, app_loans) are used for SELECTs.
  */
 function finance_compat_sql(string $sql): string
 {
+    // Skip all DDL unchanged
     if (preg_match('/^\s*(CREATE|ALTER|DROP|GRANT|REVOKE)\s/i', $sql)) {
         return $sql;
     }
 
-    $fromReplacements = [
-        '/\bfrom\s+members\b/i' => 'FROM app_members',
-        '/\bfrom\s+shares\b/i' => 'FROM app_shares',
-        '/\bfrom\s+loans\b/i' => 'FROM app_loans',
-        '/\bfrom\s+loanPayments\b/i' => 'FROM loanpayments',
-        '/\bfrom\s+loanpayments\b/i' => 'FROM loanpayments',
-        '/\bjoin\s+shares\b/i' => 'JOIN app_shares',
-        '/\bjoin\s+loans\b/i' => 'JOIN app_loans',
-        '/\bjoin\s+members\b/i' => 'JOIN app_members',
-        '/\bupdate\s+shares\b/i' => 'UPDATE shares',
-        '/\bupdate\s+loans\b/i' => 'UPDATE loans',
-        '/\bupdate\s+members\b/i' => 'UPDATE members',
-        '/\bupdate\s+officers\b/i' => 'UPDATE officers',
-        '/\binsert\s+into\s+shares\b/i' => 'INSERT INTO shares',
-        '/\binsert\s+into\s+loans\b/i' => 'INSERT INTO loans',
-        '/\binsert\s+into\s+members\b/i' => 'INSERT INTO members',
-        '/\binsert\s+into\s+loanPayments\b/i' => 'INSERT INTO loanpayments',
-        '/\binsert\s+into\s+loanpayments\b/i' => 'INSERT INTO loanpayments',
-        '/\bdelete\s+from\s+shares\b/i' => 'DELETE FROM shares',
-        '/\bdelete\s+from\s+loans\b/i' => 'DELETE FROM loans',
-        '/\bdelete\s+from\s+members\b/i' => 'DELETE FROM members',
-    ];
+    // ── Normalise loanPayments (any case) → loanpayments ──────────────────
+    $sql = preg_replace('/\bloanPayments\b/i', 'loanpayments', $sql);
 
-    foreach ($fromReplacements as $pattern => $replacement) {
-        $sql = preg_replace($pattern, $replacement, $sql);
-    }
+    // ── Route SELECT / JOIN through compatibility views ────────────────────
+    $sql = preg_replace('/\bFROM\s+members\b/i',      'FROM app_members',  $sql);
+    $sql = preg_replace('/\bFROM\s+shares\b/i',       'FROM app_shares',   $sql);
+    $sql = preg_replace('/\bFROM\s+loans\b/i',        'FROM app_loans',    $sql);
+    $sql = preg_replace('/\bJOIN\s+members\b/i',      'JOIN app_members',  $sql);
+    $sql = preg_replace('/\bJOIN\s+shares\b/i',       'JOIN app_shares',   $sql);
+    $sql = preg_replace('/\bJOIN\s+loans\b/i',        'JOIN app_loans',    $sql);
 
-    // Base members table uses mobilenumber; app_members view exposes "mobileNumber".
+    // ── mobileNumber → mobilenumber (base-table contexts only) ─────────────
     if (!preg_match('/\bapp_members\b/i', $sql)) {
         $sql = preg_replace('/\bmobileNumber\b/', 'mobilenumber', $sql);
     }
 
-    // Legacy share/loan inserts reference member phone; map to member_id.
-    $sql = preg_replace(
-        '/\(select\s+mobilenumber\s+from\s+members\s+where\s+mobilenumber=\'([^\']+)\'\)/i',
-        "(SELECT id FROM members WHERE mobilenumber='$1')",
-        $sql
-    );
-
-    // Legacy column names on base tables.
-    $sql = preg_replace('/\bshareID\b/', 'id', $sql);
-    $sql = preg_replace('/\bloanID\b/', 'id', $sql);
+    // ── Legacy PK column aliases used across DML ───────────────────────────
+    $sql = preg_replace('/\bshareID\b/',   'id',        $sql);
+    $sql = preg_replace('/\bloanID\b/',    'id',        $sql);
     $sql = preg_replace('/\bpaymentID\b/', 'paymentid', $sql);
 
-    if (preg_match('/\binsert\s+into\s+shares\b/i', $sql)) {
-        $sql = preg_replace('/\(\s*id\s*,\s*"date"\s*,/i', '(share_date,', $sql);
-        $sql = preg_replace('/\(\s*id\s*,\s*date\s*,/i', '(share_date,', $sql);
+    // ══ INSERT INTO shares ══════════════════════════════════════════════════
+    // Input cols:  (date, member, amount)          — id is BIGSERIAL, omit it
+    // Output cols: (share_date, member_id, amount)
+    if (preg_match('/\bINSERT\s+INTO\s+shares\b/i', $sql)) {
+        // Strip accidental id/ shareID column if still present (keeps VALUES in sync)
+        $sql = preg_replace('/\(\s*id\s*,\s*/i', '(', $sql);
+        // date / "date" → share_date (column-list position)
+        $sql = preg_replace('/\(\s*"?date"?\s*,/i',       '(share_date,', $sql);
+        $sql = preg_replace('/\b"date"\b/',                'share_date',   $sql);
+        $sql = preg_replace('/\bdate\b(?=\s*[,)])/i',     'share_date',   $sql);
+        // member → member_id
         $sql = preg_replace('/,\s*member\s*,/i', ', member_id,', $sql);
-        $sql = preg_replace('/\b"date"\b/', 'share_date', $sql);
-        $sql = preg_replace('/\bdate\b(?=\s*,|\s*\))/i', 'share_date', $sql);
-    }
-
-    if (preg_match('/\binsert\s+into\s+loans\b/i', $sql)) {
-        $sql = preg_replace('/\(\s*id\s*,\s*"date"\s*,/i', '(loan_date,', $sql);
-        $sql = preg_replace('/\(\s*id\s*,\s*date\s*,/i', '(loan_date,', $sql);
-        $sql = preg_replace('/,\s*member\s*,/i', ', member_id,', $sql);
-        $sql = preg_replace('/\binterest\b/', 'interest_rate', $sql);
-    }
-
-    if (preg_match('/\binsert\s+into\s+loanpayments\b/i', $sql)) {
-        $sql = preg_replace('/\(\s*paymentid\s*,/i', '(paymentid,', $sql);
-        $sql = preg_replace('/,\s*member\s*,/i', ', member_phone,', $sql);
-    }
-
-    if (preg_match('/\bwhere\s+member\s*=/i', $sql) && preg_match('/\b(update|delete)\s+(shares|loans)\b/i', $sql)) {
+        // Subselect: mobilenumber lookup → id lookup
         $sql = preg_replace(
-            '/\bwhere\s+member\s*=\s*\'([^\']+)\'/i',
-            "WHERE member_id=(SELECT id FROM members WHERE mobilenumber='$1')",
+            '/\(\s*SELECT\s+mobilenumber\s+FROM\s+members\s+WHERE\s+mobilenumber\s*=\s*\'([^\']*)\'\s*\)/i',
+            "(SELECT id FROM members WHERE mobilenumber='$1')",
             $sql
         );
     }
 
-    if (preg_match('/\bapp_shares\b/i', $sql)) {
-        $sql = preg_replace('/\bwhere\s+member\s*=\s*\'([^\']+)\'/i', "WHERE member='$1'", $sql);
+    // ══ INSERT INTO loans ═══════════════════════════════════════════════════
+    // Input cols:  (date, member, amount, interest)          — id is BIGSERIAL
+    // Output cols: (loan_date, member_id, amount, interest_rate)
+    if (preg_match('/\bINSERT\s+INTO\s+loans\b/i', $sql)) {
+        // Strip accidental id/loanID column if present
+        $sql = preg_replace('/\(\s*id\s*,\s*/i', '(', $sql);
+        // date / "date" → loan_date
+        $sql = preg_replace('/\(\s*"?date"?\s*,/i',       '(loan_date,', $sql);
+        $sql = preg_replace('/\b"date"\b/',                'loan_date',   $sql);
+        $sql = preg_replace('/\bdate\b(?=\s*[,)])/i',     'loan_date',   $sql);
+        // member → member_id
+        $sql = preg_replace('/,\s*member\s*,/i', ', member_id,', $sql);
+        // interest → interest_rate
+        $sql = preg_replace('/\binterest\b/i', 'interest_rate', $sql);
+        // Subselect: mobilenumber lookup → id lookup
+        $sql = preg_replace(
+            '/\(\s*SELECT\s+mobilenumber\s+FROM\s+members\s+WHERE\s+mobilenumber\s*=\s*\'([^\']*)\'\s*\)/i',
+            "(SELECT id FROM members WHERE mobilenumber='$1')",
+            $sql
+        );
     }
+
+    // ══ INSERT INTO loanpayments ═════════════════════════════════════════════
+    // Input cols:  (paymentid, date, member, amount)
+    // Output cols: (paymentid, payment_date, member_phone, amount)
+    // NOTE: member column stores the phone number directly (no FK lookup needed)
+    if (preg_match('/\bINSERT\s+INTO\s+loanpayments\b/i', $sql)) {
+        // date → payment_date (between paymentid and member)
+        $sql = preg_replace('/,\s*"?date"?\s*,/i', ', payment_date,', $sql);
+        // member → member_phone
+        $sql = preg_replace('/,\s*member\s*,/i', ', member_phone,', $sql);
+    }
+
+    // ══ UPDATE shares — column name fixes ═══════════════════════════════════
+    if (preg_match('/\bUPDATE\s+shares\b/i', $sql)) {
+        $sql = preg_replace('/\bdate\b/i', 'share_date', $sql);
+    }
+
+    // ══ UPDATE loans — column name fixes ════════════════════════════════════
+    if (preg_match('/\bUPDATE\s+loans\b/i', $sql)) {
+        $sql = preg_replace('/\bdate\b/i',      'loan_date',    $sql);
+        $sql = preg_replace('/\binterest\b/i',  'interest_rate', $sql);
+    }
+
+    // ══ UPDATE / DELETE WHERE member = '...' on base tables ═════════════════
+    // Translate phone-based WHERE to member_id subselect
+    if (preg_match('/\bwhere\s+member\s*=/i', $sql)
+        && preg_match('/\b(UPDATE|DELETE)\b.+\b(shares|loans)\b/i', $sql)
+    ) {
+        $sql = preg_replace(
+            '/\bWHERE\s+member\s*=\s*\'([^\']*)\'/i',
+            "WHERE member_id = (SELECT id FROM members WHERE mobilenumber='$1')",
+            $sql
+        );
+    }
+
+    // WHERE member = '...' on views (member column already = mobilenumber string)
+    if (preg_match('/\b(app_shares|app_loans)\b/i', $sql)) {
+        $sql = preg_replace(
+            '/\bWHERE\s+member\s*=\s*\'([^\']*)\'/i',
+            "WHERE member='$1'",
+            $sql
+        );
+    }
+
+    // ══ DELETE FROM members WHERE mobileNumber/mobilenumber ═════════════════
+    // No extra transformation needed — mobilenumber is already normalised above.
 
     return $sql;
 }
@@ -92,16 +129,18 @@ function finance_compat_sql(string $sql): string
 function finance_normalize_row(array $row): array
 {
     $map = [
-        'mobilenumber' => 'mobileNumber',
-        'shareid' => 'shareID',
-        'loanid' => 'loanID',
-        'paymentid' => 'paymentID',
+        'mobilenumber'  => 'mobileNumber',
+        'shareid'       => 'shareID',
+        'loanid'        => 'loanID',
+        'paymentid'     => 'paymentID',
         'interest_rate' => 'interest',
-        'share_date' => 'date',
-        'loan_date' => 'date',
-        'member_phone' => 'member',
-        'count' => 'Count',
-        'total' => 'Total',
+        'share_date'    => 'date',
+        'loan_date'     => 'date',
+        'payment_date'  => 'date',
+        'member_phone'  => 'member',
+        'sent_date'     => 'date',
+        'count'         => 'Count',
+        'total'         => 'Total',
     ];
 
     $normalized = [];
