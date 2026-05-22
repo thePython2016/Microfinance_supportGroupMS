@@ -69,19 +69,8 @@ $connection = finance_db_connect();
 apply_sql_file('postgres_schema.sql', __DIR__ . '/postgres_schema.sql', $connection, $results, $hasError);
 
 // ── Step 2: Fix column types that may be wrong in existing deployments ─────
-//    The production DB may have day/month/year as INTEGER or TIMESTAMP instead
-//    of VARCHAR. ALTER COLUMN TYPE with USING converts the data safely.
-$varchar_cols = [
-    ['members',  'year',  'VARCHAR(4)',  "COALESCE(year::text, '')"],
-    ['members',  'month', 'VARCHAR(20)', "COALESCE(month::text, '')"],
-    ['members',  'day',   'VARCHAR(2)',  "COALESCE(day::text, '')"],
-    ['officers', 'year',  'VARCHAR(4)',  "COALESCE(year::text, '')"],
-    ['officers', 'month', 'VARCHAR(20)', "COALESCE(month::text, '')"],
-    ['officers', 'day',   'VARCHAR(2)',  "COALESCE(day::text, '')"],
-];
-foreach ($varchar_cols as [$table, $col, $type, $using]) {
-    fix_column_type($table, $col, $type, $using, $connection, $results, $hasError);
-}
+// day/month are int4 and year is timestamp in the live DB — the app_members
+// view handles reading them back correctly. No ALTER needed.
 
 // ── Step 3: Create / replace compatibility views ───────────────────────────
 apply_sql_file('supabase_compat.sql', __DIR__ . '/supabase_compat.sql', $connection, $results, $hasError);

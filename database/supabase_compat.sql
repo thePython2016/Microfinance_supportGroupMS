@@ -14,9 +14,9 @@ SELECT
     fname,
     mname,
     lname,
-    day::text    AS day,
-    month::text  AS month,
-    year::text   AS year,
+    day::text                              AS day,
+    month::text                            AS month,
+    EXTRACT(YEAR FROM year)::int::text     AS year,
     gender,
     address
 FROM members;

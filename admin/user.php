@@ -11,10 +11,11 @@
   style="background:#FB6542;" id="notification-badge" title="Sent Messages">
     <?php
 require 'connectDB.php';
-$countMessage=finance_db_query($connection,"select count(id) as messageCount from sent_sms");
+$countMessage=finance_db_query($connection,"select count(id) as messagecount from sent_sms");
+$totalSMS = 0;
 foreach($countMessage as $message)
 {
-  $totalSMS=$message['messageCount'] ?? 0;
+  $totalSMS = $message['messagecount'] ?? 0;
   echo $totalSMS;
 }
     ?>

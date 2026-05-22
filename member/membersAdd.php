@@ -16,7 +16,8 @@ if (isset($_POST['addMembers'])) {
 
     $result = finance_db_query($connection,
         "INSERT INTO members (mobileNumber,nin,email,fname,mname,lname,day,month,year,gender,address)
-         VALUES ('$phone','$nin','$email','$fname','$mname','$lname','$day','$month','$year','$gender','$address')");
+         VALUES ('$phone','$nin','$email','$fname','$mname','$lname',
+                 $day::int,$month::int,make_timestamp($year::int,1,1,0,0,0),'$gender','$address')");
 
     if ($result) {
         $_SESSION['flash_success'] = 'Member added successfully!';
