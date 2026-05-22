@@ -6,37 +6,37 @@ include "connection.php";
 require_once dirname(__DIR__) . "/includes/auth.php";
 
 if (isset($_POST['submit'])) {
-    $username = $_POST['username'] ?? '';
-    $plainPassword = $_POST['password'] ?? '';
+    $username = trim((string) ($_POST['username'] ?? ''));
+    $plainPassword = (string) ($_POST['password'] ?? '');
 
     if ($username === '' || $plainPassword === '') {
         header("Location:index.php");
         exit;
     }
 
-    $username = finance_db_escape($conn, $username);
+    $usernameEsc = finance_db_escape($conn, $username);
 
-    $selectuser = "SELECT username, password, user_category FROM profile WHERE username='$username' LIMIT 1";
+    $selectuser = "SELECT username, password, level FROM account WHERE username='$usernameEsc' LIMIT 1";
     $user = finance_db_query($conn, $selectuser);
-    $usercat = finance_db_fetch_array($user);
+    $row = finance_db_fetch_array($user);
 
     if (
-        is_array($usercat)
-        && isset($usercat['password'], $usercat['user_category'])
-        && finance_password_verify($plainPassword, (string) $usercat['password'])
+        is_array($row)
+        && isset($row['password'], $row['level'])
+        && finance_password_verify($plainPassword, (string) $row['password'])
     ) {
-        finance_password_upgrade_if_needed(
-            $conn,
-            $username,
-            $plainPassword,
-            (string) $usercat['password']
-        );
+        finance_password_upgrade_if_needed($conn, $username, $plainPassword, (string) $row['password'], 'account');
 
-        $returncat = (int) $usercat['user_category'];
+        $level = (int) $row['level'];
         $_SESSION['username'] = $username;
+        $_SESSION['level'] = $level;
 
-        if ($returncat === 1) {
+        if ($level === 1) {
             header("Location:../admin/admin.php");
+            exit;
+        }
+        if ($level === 2) {
+            header("Location:../member/macro-member.php");
             exit;
         }
     }

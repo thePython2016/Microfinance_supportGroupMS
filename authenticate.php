@@ -15,37 +15,35 @@ if (isset($_POST['submit'])) {
         exit;
     }
 
-    $username = finance_db_escape($connection, $username);
+    $usernameEsc = finance_db_escape($connection, $username);
 
-    $selectuser = "SELECT username, password, user_category FROM profile WHERE username='$username' LIMIT 1";
+    $selectuser = "SELECT username, password, level FROM account WHERE username='$usernameEsc' LIMIT 1";
     $user = finance_db_query($connection, $selectuser);
-    $usercat = finance_db_fetch_array($user);
+    $row = finance_db_fetch_array($user);
 
     if (
-        is_array($usercat)
-        && isset($usercat['password'], $usercat['user_category'])
-        && finance_password_verify($plainPassword, (string) $usercat['password'])
+        is_array($row)
+        && isset($row['password'], $row['level'])
+        && finance_password_verify($plainPassword, (string) $row['password'])
     ) {
         finance_password_upgrade_if_needed(
             $connection,
             $username,
             $plainPassword,
-            (string) $usercat['password']
+            (string) $row['password'],
+            'account'
         );
 
-        $returncat = (int) $usercat['user_category'];
+        $level = (int) $row['level'];
         $_SESSION['username'] = $username;
+        $_SESSION['level'] = $level;
 
-        if ($returncat === 1) {
+        if ($level === 1) {
             header("Location:admin/admin.php");
             exit;
         }
-        if ($returncat === 2) {
+        if ($level === 2) {
             header("Location:member/macro-member.php");
-            exit;
-        }
-        if ($returncat === 3) {
-            header("Location:financial-officer/financial-officer.php");
             exit;
         }
     }

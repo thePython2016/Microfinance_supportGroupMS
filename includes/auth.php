@@ -11,7 +11,9 @@ function finance_password_hash(string $plainPassword): string
 
 function finance_password_is_hashed(string $stored): bool
 {
-    return password_get_info($stored)['algo'] !== 0;
+    $algo = password_get_info($stored)['algo'] ?? null;
+
+    return is_int($algo) && $algo !== 0;
 }
 
 function finance_password_verify(string $plainPassword, string $stored): bool
@@ -40,9 +42,18 @@ function finance_password_should_rehash(string $stored): bool
 /**
  * After a successful login, store a bcrypt hash if the row still has plain text.
  */
-function finance_password_upgrade_if_needed($connection, string $username, string $plainPassword, string $stored): void
-{
+function finance_password_upgrade_if_needed(
+    $connection,
+    string $username,
+    string $plainPassword,
+    string $stored,
+    string $table = 'account'
+): void {
     if (!finance_password_should_rehash($stored)) {
+        return;
+    }
+
+    if (!in_array($table, ['account', 'profile'], true)) {
         return;
     }
 
@@ -52,6 +63,6 @@ function finance_password_upgrade_if_needed($connection, string $username, strin
 
     finance_db_query(
         $connection,
-        "UPDATE profile SET password='$hash' WHERE username='$username'"
+        "UPDATE $table SET password='$hash' WHERE username='$username'"
     );
 }
