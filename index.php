@@ -1,3 +1,13 @@
+<?php
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$loginError = '';
+if (!empty($_SESSION['login_error'])) {
+    $loginError = $_SESSION['login_error'];
+    unset($_SESSION['login_error']);
+}
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -110,12 +120,7 @@ background-color:#EB8921;
                 width="150px" alt="profile">
             </div>
 
-            <?php
-            session_start();
-            if (!empty($_SESSION['login_error'])):
-                $loginError = $_SESSION['login_error'];
-                unset($_SESSION['login_error']);
-            ?>
+            <?php if ($loginError !== ''): ?>
             <p class="text-danger text-center small mb-0 mt-3"><?php echo htmlspecialchars($loginError, ENT_QUOTES, 'UTF-8'); ?></p>
             <?php endif; ?>
 
