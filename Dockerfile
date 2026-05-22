@@ -11,6 +11,10 @@ RUN a2enmod rewrite
 
 COPY . /var/www/html/
 
+# Strip UTF-8 BOM from PHP files (invisible bytes before <?php break sessions/headers).
+RUN find /var/www/html -name '*.php' -type f -print0 \
+    | xargs -0 -I{} php -r '$p=$argv[1];$c=@file_get_contents($p);if($c!==false&&strncmp($c,"\xEF\xBB\xBF",3)===0){file_put_contents($p,substr($c,3));}'
+
 RUN chown -R www-data:www-data /var/www/html
 
 EXPOSE 80
