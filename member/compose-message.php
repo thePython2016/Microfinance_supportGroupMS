@@ -184,7 +184,7 @@ $selectEmail=finance_db_query($connection,"select * from members");
                 <select id="newItemSelect" class="form-control" name="email">
                 <option selected value="">----Recipient----</option>
                   <?php
-                  foreach($selectEmail as $emails)
+                  foreach($selectEmail ?: [] as $emails)
                   {
                   ?>
                     

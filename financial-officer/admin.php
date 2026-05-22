@@ -123,7 +123,7 @@ margin-left:1050px !important;
     <label for="region">Region:</label>
     <select id="region" name="region">
         <option value="" disabled selected>Select a region</option>
-        <?php foreach ($regions as $region): ?>
+        <?php foreach($regions ?: [] as $region): ?>
             <option value="<?= htmlspecialchars($region) ?>" <?= ($selectedRegion === $region) ? 'selected' : '' ?>>
                 <?= htmlspecialchars($region) ?>
             </option>
@@ -217,7 +217,7 @@ margin-left:1050px !important;
             require 'connection.php';
 $selectOfficers="select * from agroofficers";
 $runSelectstmt=finance_db_query($conn,$selectOfficers);
-foreach($runSelectstmt as $officers)
+foreach($runSelectstmt ?: [] as $officers)
 {
 
                

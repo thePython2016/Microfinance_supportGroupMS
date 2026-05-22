@@ -337,7 +337,7 @@ if ($selectMembers === false) {
     return;
 }
 
-foreach ($selectMembers as $members) {
+foreach($selectMembers ?: [] as $members) {
 
     $mobilenumber = $members['mobileNumber'] ?? $members['mobilenumber'] ?? '';
     $nin          = $members['nin']          ?? '';

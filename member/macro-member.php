@@ -187,7 +187,7 @@ a:hover{
             <?php 
             require "connectDB.php";
 
-foreach($selectMembers as $members)
+foreach($selectMembers ?: [] as $members)
 {
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
                "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname'] 
@@ -264,7 +264,7 @@ foreach($selectMembers as $members)
        <?php 
        require "connectDB.php";
 
-foreach($selectMembers as $members)
+foreach($selectMembers ?: [] as $members)
 {
 echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
           "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname'] 

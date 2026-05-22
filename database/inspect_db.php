@@ -10,6 +10,6 @@ $result = finance_db_query($connection, "
     ORDER BY table_name, ordinal_position
 ");
 
-foreach ($result as $row) {
+foreach($result ?: [] as $row) {
     echo $row['table_name'] . '.' . $row['column_name'] . ' (' . $row['data_type'] . ')' . PHP_EOL;
 }

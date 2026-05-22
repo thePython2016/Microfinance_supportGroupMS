@@ -128,7 +128,7 @@ $selectMembers=finance_db_query($connection,"select members.mobileNumber,members
 members.fname,members.mname,members.lname,members.gender,members.day,
 members.month,members.year,members.gender,members.address,sum(shares.amount) as totalShares,shares.member
  from members INNER JOIN shares ON members.mobileNumber=shares.member GROUP BY shares.member");
-foreach($selectMembers as $members)
+foreach($selectMembers ?: [] as $members)
 {
 $totalShares=$members['totalShares'];
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
@@ -159,7 +159,7 @@ $totalShares=$members['totalShares'];
               <tr>
                 <?php
 $findTotal=finance_db_query($connection,"select sum(amount) as Total from shares");
-foreach($findTotal as $shares)
+foreach($findTotal ?: [] as $shares)
 {
     $Total=$shares['Total'];
 
@@ -214,7 +214,7 @@ $selectMembers=finance_db_query($connection,"select members.mobileNumber,members
 members.fname,members.mname,members.lname,members.gender,members.day,
 members.month,members.year,members.gender,members.address,sum(loans.amount) as totalLoans,loans.member
  from members INNER JOIN loans ON members.mobileNumber=loans.member GROUP BY loans.member");
-foreach($selectMembers as $members)
+foreach($selectMembers ?: [] as $members)
 {
 $totalLoans=$members['totalLoans'];
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
@@ -243,7 +243,7 @@ $totalLoans=$members['totalLoans'];
        <tr>
                 <?php
 $findTotal=finance_db_query($connection,"select sum(amount) as Total from loans");
-foreach($findTotal as $loans)
+foreach($findTotal ?: [] as $loans)
 {
     $loanTotal=$loans['Total'];
 

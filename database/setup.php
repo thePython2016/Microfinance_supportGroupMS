@@ -23,7 +23,7 @@ function apply_sql_file(string $label, string $path, $connection, array &$result
     }
     $statements = preg_split('/;\s*\n/', $sql);
     $ok = 0; $fail = 0;
-    foreach ($statements as $stmt) {
+    foreach($statements ?: [] as $stmt) {
         $stmt = trim($stmt);
         if ($stmt === '' || preg_match('/^--/', $stmt)) continue;
         $r = finance_db_query($connection, $stmt);
@@ -73,7 +73,7 @@ apply_sql_file('postgres_schema.sql', __DIR__ . '/postgres_schema.sql', $connect
 // day/month may be INTEGER — convert with ::text. Ignores "already VARCHAR" errors.
 function try_alter(string $label, array $sqls, $connection, array &$results, bool &$hasError): void
 {
-    foreach ($sqls as $sql) {
+    foreach($sqls ?: [] as $sql) {
         try {
             $connection->pdo->exec($sql);
             $results[] = ['label' => $label, 'status' => 'ok', 'msg' => 'Column type fixed.'];
@@ -125,7 +125,7 @@ apply_sql_file('supabase_compat.sql', __DIR__ . '/supabase_compat.sql', $connect
   </p>
   <hr>
 
-  <?php foreach ($results as $r): ?>
+  <?php foreach($results ?: [] as $r): ?>
     <div class="alert alert-<?php echo $r['status'] === 'ok' ? 'success' : 'danger'; ?> py-2 mb-2">
       <strong><?php echo htmlspecialchars($r['label']); ?>:</strong>
       <?php echo htmlspecialchars($r['msg']); ?>

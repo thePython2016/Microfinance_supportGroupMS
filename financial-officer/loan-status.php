@@ -181,11 +181,14 @@
            </style>
             <?php 
             require "connectDB.php";
-$selectMembers=finance_db_query($connection,"select members.mobileNumber,members.nin,
-members.fname,members.mname,members.lname,members.gender,members.day,
-members.month,members.year,members.gender,members.address,sum(loans.amount) as totalLoans,loans.member
- from members INNER JOIN loans ON members.mobileNumber=loans.member GROUP BY loans.member");
-foreach($selectMembers as $members)
+$selectMembers=finance_db_query($connection,
+    "SELECT m.mobileNumber, m.nin, m.fname, m.mname, m.lname, m.gender,
+            m.day, m.month, m.year, m.address, SUM(s.amount) AS totalLoans
+     FROM members m
+     INNER JOIN loans s ON m.mobileNumber = s.member
+     GROUP BY m.mobileNumber, m.nin, m.fname, m.mname, m.lname, m.gender,
+              m.day, m.month, m.year, m.address");
+foreach($selectMembers ?: [] as $members)
 {
 $totalLoans=$members['totalLoans'];
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 

@@ -19,7 +19,7 @@ if (!($result instanceof FinanceDbResult)) {
 $updated = 0;
 $skipped = 0;
 
-foreach ($result as $row) {
+foreach($result ?: [] as $row) {
     $username = (string) ($row['username'] ?? '');
     $stored = (string) ($row['password'] ?? '');
 

@@ -13,7 +13,7 @@
 require 'connectDB.php';
 $countMessage=finance_db_query($connection,"select count(id) as messagecount from sent_sms");
 $totalSMS = 0;
-foreach($countMessage as $message)
+foreach($countMessage ?: [] as $message)
 {
   $totalSMS = $message['messagecount'] ?? 0;
   echo $totalSMS;

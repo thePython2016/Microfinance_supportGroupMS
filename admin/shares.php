@@ -195,7 +195,7 @@
 // SELECT MEMBERS FROM DB
 require "connectDB.php";
 $selectMember=finance_db_query($connection,"select * from members");
-foreach($selectMember as $member)
+foreach($selectMember ?: [] as $member)
 {
                 ?>
 
@@ -241,7 +241,7 @@ foreach($selectMember as $member)
                   <?php
                   require "connectDB.php";
                   $selectShares=finance_db_query($connection,"select * from shares");
-                  foreach($selectShares as $shares)
+                  foreach($selectShares ?: [] as $shares)
                   {
                     ?>
                   <tr>

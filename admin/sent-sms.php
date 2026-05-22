@@ -206,7 +206,7 @@ $(document).ready(function() {
     <?php
     require "connectDB.php";
     $selectMessage=finance_db_query($connection,"select * from sent_sms");
-    foreach($selectMessage as $messages)
+    foreach($selectMessage ?: [] as $messages)
     {
       $phone=$messages['receiver_name'];
       $phone2=str_replace(['[',']','"'],"",$phone)

@@ -21,7 +21,7 @@ function run_sql_file(string $path, $connection, int &$ok, int &$errors): void
 
     // Split on semicolons that end a statement (skip comment-only chunks)
     $statements = preg_split('/;\s*\n/', $sql);
-    foreach ($statements as $stmt) {
+    foreach($statements ?: [] as $stmt) {
         $stmt = trim($stmt);
         if ($stmt === '' || preg_match('/^--/', $stmt)) {
             continue;

@@ -12,7 +12,7 @@ $iterator = new RecursiveIteratorIterator(
 
 $stripped = 0;
 
-foreach ($iterator as $file) {
+foreach($iterator ?: [] as $file) {
     if (!$file->isFile() || $file->getExtension() !== 'php') {
         continue;
     }

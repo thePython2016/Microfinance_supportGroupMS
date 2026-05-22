@@ -179,7 +179,7 @@ if(!isset($_SESSION['username']))
               <?php
                  require "connectDB.php";
                  $selectShares=finance_db_query($connection,"select * from loans");
-                 foreach($selectShares as $shares)
+                 foreach($selectShares ?: [] as $shares)
                  {
                    ?>
               

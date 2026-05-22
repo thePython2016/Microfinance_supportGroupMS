@@ -18,7 +18,7 @@ $selectLoans = finance_db_query(
 );
 
 if ($selectLoans instanceof FinanceDbResult) {
-    foreach ($selectLoans as $loans) {
+    foreach($selectLoans ?: [] as $loans) {
         $months[] = $loans['months'] ?? $loans['Months'] ?? '';
         $amount[] = $loans['Total'] ?? $loans['total'] ?? 0;
     }
@@ -32,7 +32,7 @@ $selectShares = finance_db_query(
 );
 
 if ($selectShares instanceof FinanceDbResult) {
-    foreach ($selectShares as $shares) {
+    foreach($selectShares ?: [] as $shares) {
         $shareMonths[] = $shares['months'] ?? $shares['Months'] ?? '';
         $shareAmount[] = $shares['Total'] ?? $shares['total'] ?? 0;
     }

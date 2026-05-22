@@ -184,7 +184,7 @@
             require "connectDB.php";
             $selectMember=finance_db_query($connection,"select distinct mobileNumber,nin,fname,lname
             from members where mobileNumber='$phone' GROUP BY mobileNumber");
-            foreach($selectMember as $member)
+            foreach($selectMember ?: [] as $member)
             {
 $mobile=$member['mobileNumber'];
 $nin=$member['nin'];
@@ -206,7 +206,7 @@ $fname=$member['fname'];
 
    <?php        
 $selectShares=finance_db_query($connection,"select shareID,date,amount from shares where member='$phone'");
-foreach($selectShares as $shares)
+foreach($selectShares ?: [] as $shares)
 {
   
  ?>
@@ -229,7 +229,7 @@ foreach($selectShares as $shares)
 <!-- Find total shares -->
   <?php
   $shareTotal=finance_db_query($connection,"select sum(amount) as totalShare from shares where member='$phone'");
-  foreach($shareTotal as $sum)
+  foreach($shareTotal ?: [] as $sum)
   {
     $sumShares=$sum['totalShare'];
   }

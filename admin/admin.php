@@ -429,7 +429,7 @@ require 'dash.php';
             <?php 
             require "connectDB.php";
 $selectMembers=finance_db_query($connection,"select * from members");
-foreach($selectMembers as $members)
+foreach($selectMembers ?: [] as $members)
 {
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
                "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname'] 

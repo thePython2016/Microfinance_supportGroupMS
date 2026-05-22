@@ -14,7 +14,7 @@ function finance_load_env(string $envPath): void
         return;
     }
 
-    foreach ($lines as $line) {
+    foreach($lines ?: [] as $line) {
         $line = trim($line);
         if ($line === '' || str_starts_with($line, '#')) {
             continue;
@@ -83,7 +83,7 @@ function finance_env(string $key, ?string $default = null): ?string
 
     $keys = $aliases[$key] ?? [$key];
 
-    foreach ($keys as $name) {
+    foreach($keys ?: [] as $name) {
         $value = getenv($name);
         if ($value !== false && $value !== '') {
             return $value;

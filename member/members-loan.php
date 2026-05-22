@@ -23,16 +23,16 @@
    <link href="https://cdn.datatables.net/v/dt/dt-2.1.6/datatables.min.css" rel="stylesheet">
    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
    <link href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css" rel="stylesheet">
-  
+
    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 
-  
+
 
    <!-- Datatables End -->
 
    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
-   
+
 
    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <!-- Favicon -->
@@ -56,7 +56,7 @@
     <link rel="stylesheet" href="assets/css/demo.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
 
- 
+
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
@@ -74,7 +74,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- charts end -->
-    
+
   </head>
 
   <body>
@@ -90,7 +90,7 @@
         <div class="layout-page"  >
           <!-- Navbar -->
 
-          <nav  
+          <nav
             class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
             id="layout-navbar">
             <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
@@ -111,14 +111,14 @@
                     aria-label="Search..." /> -->
                 </div>
               </div>
-              
+
               <!-- /Search -->
 
               <ul class="navbar-nav flex-row align-items-center ms-auto">
               <?php require "user.php" ?>
               </ul>
             </div>
-            
+
           </nav>
           <hr style="background:red !important;border:1px solid #00246B, !important">
 
@@ -130,46 +130,46 @@
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row gy-6">
-             
+
               <div class="col-lg-12 col-md-12 col-12 mb-4">
               <a class="btn addBtn" href="members.php">Add Member</a>
-                    
+
 </div>
 <hr>
 
 
-        
 
 
-                     
+
+
                 <!-- Members List -->
 
                 <!-- Data Tables -->
                 <div class="col-12">
                   <div class="card " style="margin-left:20px">
                     <div class="card-header" style="color:rgb(61, 60, 60) !important;font-size:16px;font-weight:bold">Loan Status</div>
-             
+
                     <div class="container">
                     <table id="membersTable"  style="background:none !important" class="table  table-striped table-bordered" >
             <thead>
                 <tr>
                     <th>Mobile number</th>
                     <th>NIN</th>
-               
+
                     <th>First name</th>
                     <th>Middle name</th>
                     <th>Last name</th>
                     <th>Gender</th>
                     <th>Birth date</th>
-                  
-                
+
+
                     <th>Physical address</th>
                     <th>Loan Amount</th>
 
                 </tr>
             </thead>
             <tbody>
-            
+
               <!-- DEDUCT LOAN ON PAYMNET -->
 
               <!-- Select Total loans -->
@@ -184,41 +184,44 @@
             display: none;
         }
            </style>
-            <?php 
-           
-$selectMembers=finance_db_query($connection,"select members.mobileNumber,members.nin,
-members.fname,members.mname,members.lname,members.gender,members.day,
-members.month,members.year,members.gender,members.address,sum(loans.amount) as totalLoans,loans.member
- from members INNER JOIN loans ON members.mobileNumber=loans.member GROUP BY loans.member");
-foreach($selectMembers as $members)
+            <?php
+
+$selectMembers = finance_db_query($connection,
+    "SELECT m.mobileNumber, m.nin, m.fname, m.mname, m.lname, m.gender,
+            m.day, m.month, m.year, m.address, SUM(s.amount) AS totalLoans
+     FROM members m
+     INNER JOIN loans s ON m.mobileNumber = s.member
+     GROUP BY m.mobileNumber, m.nin, m.fname, m.mname, m.lname, m.gender,
+              m.day, m.month, m.year, m.address");
+foreach($selectMembers ?: [] as $members)
 {
-$totalLoans=$members['totalLoans'];
-  echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
-               "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname'] 
+$totalLoans = $members['totalLoans'];
+  echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] .
+               "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname']
                . "' data-gender='" .$members['lname'] . "' data-day='" . $members['day'] . "'. data-month='" . $members['month'] . "'
                data-year='" . $members['year'] . "'data-gender='" . $members['gender']  . "'data-address='" . $members['address'] ."'>";
                ?>
                     <td><a class="url" class="url" href="loan.php?phone=<?php echo $members['mobileNumber']?>"><?php echo $members['mobileNumber']?></a></td>
                     <td><?php echo $members['nin']?></td>
-                
+
                     <td><?php echo $members['fname']?></td>
                     <td><?php echo $members['mname']?></td>
                     <td><?php echo $members['lname']?></td>
                     <td><?php echo $members['gender']?></td>
                     <td><?php echo $members['day']. '/'.$members['month'].'/'.$members['year']?></td>
-                
-             
+
+
                     <td><?php echo $members['address']?></td>
                     <td><?php echo $totalLoans ?></td>
-                    
+
                 </tr>
-             
+
              <?php
 }
 ?>
-              
-             
-              
+
+
+
             </tbody>
         </table>
         </div>
@@ -247,7 +250,7 @@ $totalLoans=$members['totalLoans'];
                     </script>
                     All Rights Reserved<span class="text-danger">
                   </div>
-                  
+
                 </div>
               </div>
             </footer>
@@ -323,10 +326,10 @@ $totalLoans=$members['totalLoans'];
         // "loadingRecords": "Loading...",
         "processing":     "",
         "search":         "Search:",
-        
+
         "zeroRecords":    "No matching records found",
-        
-    
+
+
            "bProcessing": true,
         "sAutoWidth": false,
         "bDestroy":true,
@@ -341,12 +344,12 @@ $totalLoans=$members['totalLoans'];
             // "last":       "Last",
             "next":       "<button style='border:1px solid grey !important;color:grey;column-gap:0px'>Next</button>",
             "previous":   "<button style='border:1px solid grey !important;color:grey;column-gap:0px'>Previous</button>",
-            
+
         }
       }
-      
+
     } );
-    
+
     // new DataTable('#myTable', {
     //     language: {
     //         paginate: {
@@ -354,10 +357,10 @@ $totalLoans=$members['totalLoans'];
     //         }
     //     }
     // });
-    
+
     // table one
     $('#membersTable').dataTable( {
-      
+
       info:false,
       // paging:false,
       pagingType:"simple",
@@ -375,7 +378,7 @@ $totalLoans=$members['totalLoans'];
         "processing":     "",
         "search":         "Search:",
         "zeroRecords":    "No matching records found",
-    
+
         //    "bProcessing": true,
         // "sAutoWidth": false,
         // "bDestroy":true,
@@ -390,14 +393,14 @@ $totalLoans=$members['totalLoans'];
             // "last":       "Last",
             "next":       "<button  class='paging-button' style='border:1px solid grey !important;color:grey;margin:0'>Next</button>",
             "previous":   "<button class='paging-button' style='border:1px solid grey !important;color:grey'>Previous</button>",
-            
+
         }
       }
-      
-    
-      
+
+
+
     } );
-    
+
     </script>
 
     <!-- Get Years -->
@@ -423,7 +426,7 @@ $totalLoans=$members['totalLoans'];
  <script>
     // Array of month names
     const months = [
-        "January", "February", "March", "April", "May", "June", 
+        "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
 

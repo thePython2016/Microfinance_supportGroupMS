@@ -3,7 +3,7 @@
 require "connectDB.php";
 function simplePhoneFromat($phones){
     $phone_formated = [];
-    foreach($phones as $ph){
+    foreach($phones ?: [] as $ph){
         $phone_formated[]= "255".substr($ph,1);
     }
     //implode to convert to array separated by comma, always for above to work make sure the phone numbers in your db start with 0CCCCCCCCCC

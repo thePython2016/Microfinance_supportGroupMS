@@ -144,7 +144,7 @@ function finance_normalize_row(array $row): array
     ];
 
     $normalized = [];
-    foreach ($row as $key => $value) {
+    foreach($row ?: [] as $key => $value) {
         $lower = strtolower((string) $key);
         $normalized[$map[$lower] ?? $key] = $value;
     }

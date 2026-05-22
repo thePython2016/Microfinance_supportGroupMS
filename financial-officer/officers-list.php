@@ -200,7 +200,7 @@ if(!isset($_SESSION['username']))
             <?php 
             require "connectDB.php";
 $selectOfficers=finance_db_query($connection,"select * from officers");
-foreach($selectOfficers as $members)
+foreach($selectOfficers ?: [] as $members)
 {
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
                "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname'] 

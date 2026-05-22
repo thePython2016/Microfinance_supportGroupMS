@@ -196,7 +196,7 @@
             $phone=$_GET['number'];
             require "connectDB.php";
 $selectMembers=finance_db_query($connection,"select * from members where mobileNumber='$phone'");
-foreach($selectMembers as $members)
+foreach($selectMembers ?: [] as $members)
 {
   echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
                "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname'] 
