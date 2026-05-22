@@ -24,6 +24,7 @@ if (isset($_POST['addMembers'])) {
         global $finance_db_last_error;
         $_SESSION['flash_error'] = 'Error: Could not add member. The mobile number or NIN may already exist.' . ($finance_db_last_error ?? '');
     }
-    echo "<script>window.location.href='members.php';</script>";
+    header('Location: members.php');
+    exit;
 }
 ?>
