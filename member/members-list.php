@@ -1,6 +1,8 @@
-<!doctype html>
 <?php
 session_start();
+?>
+<!doctype html>
+<?php
 if(!isset($_SESSION['username']))
 {
   echo "
@@ -34,16 +36,16 @@ if(!isset($_SESSION['username']))
    <link href="https://cdn.datatables.net/v/dt/dt-2.1.6/datatables.min.css" rel="stylesheet">
    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
    <link href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css" rel="stylesheet">
-  
+
    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 
-  
+
 
    <!-- Datatables End -->
 
    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
-   
+
 
    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <!-- Favicon -->
@@ -67,7 +69,7 @@ if(!isset($_SESSION['username']))
     <link rel="stylesheet" href="assets/css/demo.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
 
- 
+
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
@@ -89,7 +91,7 @@ if(!isset($_SESSION['username']))
         .hidden {
             display: none;
         }
-     
+
     </style>
   </head>
 
@@ -106,7 +108,7 @@ if(!isset($_SESSION['username']))
         <div class="layout-page"  >
           <!-- Navbar -->
 
-          <nav  
+          <nav
             class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
             id="layout-navbar">
             <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
@@ -127,7 +129,7 @@ if(!isset($_SESSION['username']))
                     aria-label="Search..." /> -->
                 </div>
               </div>
-              
+
               <!-- /Search -->
 
               <ul class="navbar-nav flex-row align-items-center ms-auto">
@@ -137,7 +139,7 @@ if(!isset($_SESSION['username']))
                 <!--/ User -->
               </ul>
             </div>
-            
+
           </nav>
           <hr style="background:red !important;border:1px solid #00246B, !important">
 
@@ -149,26 +151,26 @@ if(!isset($_SESSION['username']))
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row gy-6">
-             
+
               <div class="col-lg-12 col-md-12 col-12 mb-4" >
               <a class="btn addBtn" href="members.php">Add Members</a>
-                    
+
 </div>
 <hr>
 
 
-        
 
-               
-              
-                     
+
+
+
+
                 <!-- Members List -->
 
                 <!-- Data Tables -->
                 <div class="col-12">
                   <div class="card " style="margin-left:20px">
                     <div class="card-header" style="color:rgb(61, 60, 60) !important;font-size:16px;font-weight:bold">Members Form</div>
-             
+
                     <div class="container">
                     <table id="membersTable"  style="background:none !important" class="table  table-striped table-bordered" >
             <thead>
@@ -182,7 +184,7 @@ if(!isset($_SESSION['username']))
                     <th>Birth day</th>
                     <th>Birth month</th>
                     <th>Birth year</th>
-                
+
                     <th>Physical address</th>
 
                 </tr>
@@ -194,13 +196,13 @@ if(!isset($_SESSION['username']))
             display: none;
         }
            </style>
-            <?php 
+            <?php
             require "connectDB.php";
 $selectMembers=finance_db_query($connection,"select * from members");
 foreach($selectMembers as $members)
 {
-  echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
-               "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname'] 
+  echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] .
+               "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname']
                . "' data-gender='" .$members['lname'] . "' data-day='" . $members['day'] . "'. data-month='" . $members['month'] . "'
                data-year='" . $members['year'] . "'data-gender='" . $members['gender']  . "'data-address='" . $members['address'] ."'>";
                ?>
@@ -213,20 +215,20 @@ foreach($selectMembers as $members)
                     <td><?php echo $members['day']?></td>
                     <td><?php echo $members['month']?></td>
                     <td><?php echo $members['year']?></td>
-             
+
                     <td><?php echo $members['address']?></td>
-                    
+
                 </tr>
-             
+
              <?php
 }
 ?>
-              
-             
-              
+
+
+
             </tbody>
         </table>
-        
+
         <!-- DISABLE PAGINATION BUTTONS -->
         <style>
          .dt-paging{
@@ -235,10 +237,10 @@ foreach($selectMembers as $members)
          </style>
         <!-- UPDATE FORM -->
         <div class="row">
-        
+
           <div class="col-7">
           <!-- Show update button when row is selected -->
-        
+
 <form id="editForm" class="hidden" method="POST" action="updateAll.php">
 <h3 style="margin-top:30px">Update Record</h3>
 <hr style="color:blue !important">
@@ -247,9 +249,9 @@ foreach($selectMembers as $members)
           <div class="col-8">
             <div class="block1">
           <div class="mb-3">
-  
-          
-  
+
+
+
     <input type="hidden" class="form-control" name="phone" id="phone">
   </div>
           <div class="mb-3">
@@ -259,8 +261,8 @@ foreach($selectMembers as $members)
 </div>
             <div class="block1">
           <div class="mb-3">
-       
-          
+
+
     <label for="exampleInputPassword1" class="form-label">First name</label>
     <input type="text" class="form-control" name="fname" id="fname">
   </div>
@@ -294,7 +296,7 @@ foreach($selectMembers as $members)
     <label for="exampleInputPassword1" class="form-label">Birth year</label>
     <input type="text" class="form-control" name="year" id="year" disabled>
   </div>
-         
+
   <div class="mb-3">
     <label for="exampleInputPassword1" class="form-label">Address</label>
     <input type="text" class="form-control" name="address" id="address">
@@ -307,25 +309,25 @@ foreach($selectMembers as $members)
 
 </form>
 </div>
-   
-    
 
-        
+
+
+
 <?php
-           
+
            ?>
           <div class="col-5">
           <div   style="margin-top:20px !important;margin-bottom:20px !important">
-      
-  
- 
+
+
+
           <button type="button" id="showFormBtn" class="btn hidden submitBtn" >Update Selected Record</button>
       <button id="delete-button" type="submit"  class="btn  submitBtn">Delete selected</button>
-     
+
 </div>
 </div>
 
-          
+
 </div>
         </div>
 
@@ -349,7 +351,7 @@ foreach($selectMembers as $members)
                     </script>
                     All Rights Reserved<span class="text-danger">
                   </div>
-                  
+
                 </div>
               </div>
             </footer>
@@ -425,10 +427,10 @@ foreach($selectMembers as $members)
         // "loadingRecords": "Loading...",
         "processing":     "",
         "search":         "Search:",
-        
+
         "zeroRecords":    "No matching records found",
-        
-    
+
+
            "bProcessing": true,
         "sAutoWidth": false,
         "bDestroy":true,
@@ -443,12 +445,12 @@ foreach($selectMembers as $members)
             // "last":       "Last",
             "next":       "<button style='border:1px solid grey !important;color:grey;column-gap:0px'>Next</button>",
             "previous":   "<button style='border:1px solid grey !important;color:grey;column-gap:0px'>Previous</button>",
-            
+
         }
       }
-      
+
     } );
-    
+
     // new DataTable('#myTable', {
     //     language: {
     //         paginate: {
@@ -456,10 +458,10 @@ foreach($selectMembers as $members)
     //         }
     //     }
     // });
-    
+
     // table one
     $('#membersTable').dataTable( {
-      
+
       info:false,
       // paging:false,
       pagingType:"simple",
@@ -477,7 +479,7 @@ foreach($selectMembers as $members)
         "processing":     "",
         "search":         "Search:",
         "zeroRecords":    "No matching records found",
-    
+
         //    "bProcessing": true,
         // "sAutoWidth": false,
         // "bDestroy":true,
@@ -492,14 +494,14 @@ foreach($selectMembers as $members)
             // "last":       "Last",
             "next":       "<button  class='paging-button' style='border:1px solid grey !important;color:grey;margin:0'>Next</button>",
             "previous":   "<button class='paging-button' style='border:1px solid grey !important;color:grey'>Previous</button>",
-            
+
         }
       }
-      
-    
-      
+
+
+
     } );
-    
+
     </script>
 
     <!-- Get Years -->
@@ -525,7 +527,7 @@ foreach($selectMembers as $members)
  <script>
     // Array of month names
     const months = [
-        "January", "February", "March", "April", "May", "June", 
+        "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
 
@@ -627,7 +629,7 @@ foreach($selectMembers as $members)
                    day.value = rowData[6].innerText;
                    month.value = rowData[7].innerText;
                    year.value = rowData[8].innerText;
-             
+
                    address.value = rowData[9].innerText;
 
                     // Store the selected row for future updates
@@ -643,7 +645,7 @@ foreach($selectMembers as $members)
                 if (selectedRow) {
                     form.classList.remove('hidden');
                 }
-                
+
             });
 
             // // Handle form submission for updating the row
@@ -660,7 +662,7 @@ foreach($selectMembers as $members)
             //         selectedRow.children[3].innerText = year.value;
             //         selectedRow.children[3].innerText = gender.value;
             //         selectedRow.children[3].innerText =address.value;
-                
+
 
             //         // Optionally hide the form after update
             //         form.classList.add('hidden');
