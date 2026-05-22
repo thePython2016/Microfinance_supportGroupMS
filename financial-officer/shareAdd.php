@@ -1,49 +1,21 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require 'connectDB.php';
-if(isset($_POST["addShares"]))
-{
-  
+if (isset($_POST['addShares'])) {
+    $id     = uniqid('SH', true);
+    $date   = finance_db_escape($connection, $_POST['date']);
+    $member = finance_db_escape($connection, $_POST['member']);
+    $amount = finance_db_escape($connection, (string)$_POST['amount']);
 
-$id=finance_db_escape($connection,$_POST['id']);
-$date=finance_db_escape($connection,$_POST['date']);
-$member=finance_db_escape($connection,$_POST['member']);
-$amount=finance_db_escape($connection,$_POST['amount']);
+    $result = finance_db_query($connection,
+        "INSERT INTO shares (shareID,date,member,amount)
+         VALUES ('$id','$date',(SELECT mobileNumber FROM members WHERE mobileNumber='$member'),'$amount')");
 
-
-
-
-
-// INSERT TO TABLE
-$insertShares=finance_db_query($connection,"insert into shares
-(shareID,date,member,amount)
- values('$id','$date',(select mobileNumber from members where mobileNumber='$member'),'$amount')");
-
-//  update shareTable table after INSERTION
-$amount=0;
-$updateLoan=finance_db_query($connection,"update shares
-
-SET amount=amount-$amount where member='$member'");
-
-
-
-// $count=finance_db_num_rows($farmersQuery);
-
-if($insertShares)
-{
-  $_SESSION['addedMember']="<p style='color:red;font-size:14px;margin-left:200px;font-weight:bold'>One record added/p>";
-  echo "<script>
-  window.location.href='shares.php'
-  </script>";
-  
-
-  
-}
-else{
-
-  $_SESSION['addingmemberError']="<p style='color:red;font-size:14px;margin-left:200px;font-weight:bold'>Error </p>";
-}
-
-
-
+    if ($result) {
+        $_SESSION['flash_success'] = 'Share record added successfully!';
+    } else {
+        $_SESSION['flash_error'] = 'Error: Could not add share record. Please try again.';
+    }
+    echo "<script>window.location.href='shares.php';</script>";
 }
 ?>

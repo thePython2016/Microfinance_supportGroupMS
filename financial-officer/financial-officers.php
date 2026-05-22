@@ -37,16 +37,16 @@ if(!isset($_SESSION['username']))
    <link href="https://cdn.datatables.net/v/dt/dt-2.1.6/datatables.min.css" rel="stylesheet">
    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
    <link href="https://cdn.datatables.net/2.1.6/css/dataTables.bootstrap5.css" rel="stylesheet">
-  
+
    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
 
-  
+
 
    <!-- Datatables End -->
 
    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.bootstrap5.js"></script>
-   
+
 
    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <!-- Favicon -->
@@ -70,7 +70,7 @@ if(!isset($_SESSION['username']))
     <link rel="stylesheet" href="assets/css/demo.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
 
- 
+
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
@@ -88,7 +88,7 @@ if(!isset($_SESSION['username']))
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <!-- charts end -->
-    
+
   </head>
 
   <body>
@@ -104,7 +104,7 @@ if(!isset($_SESSION['username']))
         <div class="layout-page"  >
           <!-- Navbar -->
 
-          <nav  
+          <nav
             class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
             id="layout-navbar">
             <div class="layout-menu-toggle navbar-nav align-items-xl-center me-4 me-xl-0 d-xl-none">
@@ -125,7 +125,7 @@ if(!isset($_SESSION['username']))
                     aria-label="Search..." /> -->
                 </div>
               </div>
-              
+
               <!-- /Search -->
 
               <ul class="navbar-nav flex-row align-items-center ms-auto">
@@ -135,7 +135,7 @@ if(!isset($_SESSION['username']))
                 <!--/ User -->
               </ul>
             </div>
-            
+
           </nav>
           <hr style="background:red !important;border:1px solid #00246B, !important">
 
@@ -147,27 +147,27 @@ if(!isset($_SESSION['username']))
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row gy-6">
-             
+
               <div class="col-lg-12 col-md-12 col-12 mb-4">
-                   
+
                     <a class="btn addBtn" href="financial-officers.php">Add Financial Officer</a>
-                    
+
 </div>
 <hr>
 
 
-        
 
-               
-              
-                     
+
+
+
+
                 <!-- Members List -->
 
                 <!-- Data Tables -->
                 <div class="col-12">
                   <div class="card " style="margin-left:20px">
                     <div class="card-header" style="color:rgb(61, 60, 60) !important;font-size:16px;font-weight:bold">Financial Officers Form</div>
-             
+
                     <div class="container mt-4">
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
@@ -176,21 +176,35 @@ if(!isset($_SESSION['username']))
         <li class="nav-item" role="presentation">
             <a class="nav-link" id="tab3-tab" data-bs-toggle="tab" href="#editUpdate" role="tab" aria-controls="tab3" aria-selected="false">Officers List</a>
         </li>
-       
-   
+
+
     </ul>
     <div class="tab-content tabForms" id="myTabContent">
         <div class="tab-pane fade show active" id="membersForm" role="tabpanel" aria-labelledby="tab1-tab">
 
-       
+
        <!-- Farmers Form -->
-       <form name="" method="POST" action="officersAdd.php"> 
+       <?php if (isset($_SESSION['flash_success'])): ?>
+<div class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+  <i class="fas fa-check-circle me-2"></i>
+  <?php echo htmlspecialchars($_SESSION['flash_success']); unset($_SESSION['flash_success']); ?>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>
+<?php if (isset($_SESSION['flash_error'])): ?>
+<div class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+  <i class="fas fa-exclamation-triangle me-2"></i>
+  <?php echo htmlspecialchars($_SESSION['flash_error']); unset($_SESSION['flash_error']); ?>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<?php endif; ?>
+       <form name="" method="POST" action="officersAdd.php">
         <div class="first-block">
         <div class="mb-3 mobile">
     <label for="exampleInputEmail1" class="form-label" >Mobile number</label>
     <input type="text" id="mobile-number"  name="phone" class="form-control" maxlength="12" placeholder="076-123-7891" required>
-    
-    
+
+
   </div>
   <div class="mb-3 nin">
 
@@ -201,18 +215,18 @@ if(!isset($_SESSION['username']))
    <div class="mb-3 occupation">
     <label for="exampleInputEmail1" class="form-label" >Occupation</label>
     <input type="text" class="form-control" id="ninField" aria-describedby="emailHelp">
-    
+
   </div>
-  
+
 </div>
 <!-- style input  fields -->
 <style>
          input[type="text"] {
- 
+
             background-color: white !important; /* Light blue background */
         }
         select {
-          
+
             background-color: white; /* Light blue background for select field */
         }
     </style>
@@ -246,7 +260,7 @@ if(!isset($_SESSION['username']))
     </select>
   </div>
 
-      
+
   <div class="mb-3 year">
   <select class="form-select" id="year" name="year">
         <option >Choose a year</option>
@@ -269,7 +283,7 @@ if(!isset($_SESSION['username']))
     <input type="text" class="form-control" id="address" name="address">
   </div>
 </div>
- 
+
   <button type="submit" name="addOfficers" class="btn submitBtn">Submit</button>
 </form>
         </div>
@@ -293,7 +307,7 @@ if(!isset($_SESSION['username']))
                     <th>Birth day</th>
                     <th>Birth month</th>
                     <th>Birth year</th>
-                
+
                     <th>Physical address</th>
 
                 </tr>
@@ -305,13 +319,13 @@ if(!isset($_SESSION['username']))
             display: none;
         }
            </style>
-            <?php 
+            <?php
             require "connectDB.php";
 $selectMembers=finance_db_query($connection,"select * from officers");
 foreach($selectMembers as $members)
 {
-  echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] . 
-               "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname'] 
+  echo "<tr class='dataRow' data-phone='" . $members['mobileNumber'] . "' data-nin='" . $members['nin'] .
+               "' data-fname='" . $members['fname'] . "' data-mname='" . $members['mname']
                . "' data-gender='" .$members['lname'] . "' data-day='" . $members['day'] . "'. data-month='" . $members['month'] . "'
                data-year='" . $members['year'] . "'data-gender='" . $members['gender']  . "'data-address='" . $members['address'] ."'>";
                ?>
@@ -324,17 +338,17 @@ foreach($selectMembers as $members)
                     <td><?php echo $members['day']?></td>
                     <td><?php echo $members['month']?></td>
                     <td><?php echo $members['year']?></td>
-             
+
                     <td><?php echo $members['address']?></td>
-                    
+
                 </tr>
-             
+
              <?php
 }
 ?>
-              
-             
-              
+
+
+
             </tbody>
         </table>
         </div>
@@ -344,24 +358,24 @@ foreach($selectMembers as $members)
             <input type="file" class="form-control" id="uploadField">
             <button type="submit" name="submit" class="btn btn-primary uploadBtn">Upload</button>
         </div>
-        
 
 
-        
+
+
         <div class="tab-pane fade" id="uploadSample" role="tabpanel" aria-labelledby="tab3-tab">
         <a href="uploadedSampleFiles/payments.csv"  class="payment-sample" download="payments.csv">Payments Sample file</a> <br>
      <a href="uploadedSampleFiles/staff.csv" class="staff-sample" download="staff.csv">Staff Sample file</a> <br>
      <a href="uploadedSampleFiles/student data.csv" class="student-sample"   download="student data.csv">Student Sample file</a>
-            
+
         </div>
     </div>
 
 
-                     
-                       
-                     
+
+
+
                     </div>
-                      
+
                 <!--/ Data Tables -->
               </div>
               </div>
@@ -381,7 +395,7 @@ foreach($selectMembers as $members)
                     </script>
                     All Rights Reserved<span class="text-danger">
                   </div>
-                  
+
                 </div>
               </div>
             </footer>
@@ -436,8 +450,8 @@ foreach($selectMembers as $members)
 
     <!-- Dataset SECRIPTS -->
     <script>
-    
-    
+
+
     // new DataTable('#myTable', {
     //     language: {
     //         paginate: {
@@ -445,10 +459,10 @@ foreach($selectMembers as $members)
     //         }
     //     }
     // });
-    
+
     // table one
     $('#officersTable').dataTable( {
-      
+
       info:false,
       // paging:false,
       pagingType:"simple",
@@ -466,7 +480,7 @@ foreach($selectMembers as $members)
         "processing":     "",
         "search":         "Search:",
         "zeroRecords":    "No matching records found",
-    
+
         //    "bProcessing": true,
         // "sAutoWidth": false,
         // "bDestroy":true,
@@ -481,14 +495,14 @@ foreach($selectMembers as $members)
             // "last":       "Last",
             "next":       "<button  class='paging-button' style='border:1px solid grey !important;color:grey;margin:0'>Next</button>",
             "previous":   "<button class='paging-button' style='border:1px solid grey !important;color:grey'>Previous</button>",
-            
+
         }
       }
-      
-    
-      
+
+
+
     } );
-    
+
     </script>
 
     <!-- Get Years -->
@@ -514,7 +528,7 @@ foreach($selectMembers as $members)
  <script>
     // Array of month names
     const months = [
-        "January", "February", "March", "April", "May", "June", 
+        "January", "February", "March", "April", "May", "June",
         "July", "August", "September", "October", "November", "December"
     ];
 

@@ -1,59 +1,24 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require 'connectDB.php';
-if(isset($_POST["addLoan"]))
-{
-  
+if (isset($_POST['addLoan'])) {
+    $id     = uniqid('LN', true);
+    $date   = finance_db_escape($connection, $_POST['date']);
+    $member = finance_db_escape($connection, $_POST['member']);
+    $amount = (float)$_POST['amount'];
+    $interest = ($amount < 100000) ? $amount * 0.2 : $amount * 0.15;
+    $amountEsc   = finance_db_escape($connection, (string)$amount);
+    $interestEsc = finance_db_escape($connection, (string)$interest);
 
-$id=finance_db_escape($connection,$_POST['id']);
-$date=finance_db_escape($connection,$_POST['date']);
-$member=finance_db_escape($connection,$_POST['member']);
-$amount=finance_db_escape($connection,$_POST['amount']);
+    $result = finance_db_query($connection,
+        "INSERT INTO loans (loanID,date,member,amount,interest)
+         VALUES ('$id','$date',(SELECT mobileNumber FROM members WHERE mobileNumber='$member'),'$amountEsc','$interestEsc')");
 
-
-
-
-if($amount<100000)
-{
-  $interest=$amount*0.2;
-}
-else
-{
-  $interest=$amount*0.15;
-}
-// INSERT TO TABLE
-$insertLoan=finance_db_query($connection,"insert into loans
-(loanID,date,member,amount,interest)
- values('$id','$date',(select mobileNumber from members where mobileNumber='$member'),'$amount','$interest')");
-
-
- $amount=0;
- //  update LOANS table after INSERTION
-$updateLoan=finance_db_query($connection,"update loans
-
-SET amount=amount+$amount where member='$member'");
-
-
-
-
-
-// $count=finance_db_num_rows($farmersQuery);
-
-if($insertLoan)
-{
-  $_SESSION['addedLoan']="<p style='color:red;font-size:14px;margin-left:200px;font-weight:bold'>One record added/p>";
-  echo "<script>
-  window.location.href='loans.php'
-  </script>";
-  
-
-  
-}
-else{
-
-  $_SESSION['addingloanError']="<p style='color:red;font-size:14px;margin-left:200px;font-weight:bold'>Error </p>";
-}
-
-
-
+    if ($result) {
+        $_SESSION['flash_success'] = 'Loan record added successfully!';
+    } else {
+        $_SESSION['flash_error'] = 'Error: Could not add loan. Please try again.';
+    }
+    echo "<script>window.location.href='loans.php';</script>";
 }
 ?>

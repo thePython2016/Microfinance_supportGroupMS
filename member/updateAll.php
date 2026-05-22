@@ -1,4 +1,5 @@
 <?php
+if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require 'connectDB.php';
 if(isset($_POST['updateMembers']))
 {
@@ -6,19 +7,19 @@ if(isset($_POST['updateMembers']))
     $fname=$_POST['fname'];
     $lname=$_POST['lname'];
     $mname=$_POST['mname'];
- 
-    
+
+
     $updateMembers =finance_db_query($connection,"update members
-    set 
+    set
 
    fname='$fname',
     mname='$mname',
    lname='$lname'
-  
-  
+
+
 where mobileNumber='$phone'
     ");
-    
+
     if($updateMembers)
     {
 
@@ -47,19 +48,19 @@ if(isset($_POST['updateShares']))
     $date=$_POST['date'];
     $amount=$_POST['amount'];
 
- 
-    
+
+
     $updateShares =finance_db_query($connection,"update shares
-    set 
+    set
 
    date='$date',
     amount='$amount'
 
-  
-  
+
+
 where shareID='$id'
     ");
-    
+
     if($updateShares)
     {
 
@@ -91,17 +92,17 @@ if(isset($_POST['updateOfficers']))
     $address=$_POST['address'];
 
     $updateOfficers =finance_db_query($connection,"update officers
-    set 
+    set
 
    fname='$firstname',
     mname='$middlename',
    lname='$lastname',
    address='$address'
-  
-  
+
+
 where mobileNumber='$mobile'
     ");
-    
+
     if($updateOfficers)
     {
 
