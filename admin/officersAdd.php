@@ -15,15 +15,16 @@ if (isset($_POST['addOfficers'])) {
     $address    = finance_db_escape($connection, $_POST['address']    ?? '');
     $occupation = finance_db_escape($connection, $_POST['occupation'] ?? '');
 
-    $result = finance_db_query($connection,
-        "INSERT INTO officers (mobileNumber, nin, fname, mname, lname, day, month, year, gender, address, occupation)
-         VALUES ('$phone','$nin','$fname','$mname','$lname','$day','$month','$year','$gender','$address','$occupation')"
-    );
+    $sql = "INSERT INTO officers (mobileNumber, nin, fname, mname, lname, day, month, year, gender, address, occupation)
+            VALUES ('$phone','$nin','$fname','$mname','$lname','$day','$month','$year','$gender','$address','$occupation')";
+
+    $result = finance_db_query($connection, $sql);
 
     if ($result) {
         $_SESSION['flash_success'] = "Financial officer $fname $lname added successfully!";
     } else {
-        $_SESSION['flash_error'] = 'Error: Could not add officer. The mobile number or NIN may already exist.';
+        // Show the real error + the query for debugging
+        $_SESSION['flash_error'] = 'DB Error: ' . mysqli_error($connection) . ' | Query: ' . $sql;
     }
 }
 
