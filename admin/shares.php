@@ -112,20 +112,21 @@ if (!isset($_SESSION['username'])) {
                                    value="<?php echo date('Y-m-d'); ?>" required>
                           </div>
 
-                          <!-- Member dropdown -->
+                          <!-- Member dropdown (Value is now Member ID) -->
                           <div class="mb-3 mobile">
                             <label class="form-label">Member</label>
-                            <select class="form-control" name="member" required>
+                            <select class="form-control" name="member_id" required>
                               <option value="" disabled selected>--Select Member--</option>
                               <?php
                               require "connectDB.php";
                               $selectMembers = finance_db_query($connection, "SELECT * FROM members ORDER BY fname");
                               foreach ($selectMembers ?: [] as $m):
+                                  $memberId = htmlspecialchars((string)($m['id'] ?? $m['ID'] ?? ''));
                                   $mob = htmlspecialchars(trim((string)($m['mobileNumber'] ?? $m['mobilenumber'] ?? '')));
                                   $name = htmlspecialchars(trim(($m['fname'] ?? '') . ' ' . ($m['lname'] ?? '')));
-                                  if (!empty($mob)):
+                                  if (!empty($memberId)):
                               ?>
-                                <option value="<?php echo $mob; ?>"><?php echo $mob . ' — ' . $name; ?></option>
+                                <option value="<?php echo $memberId; ?>"><?php echo $mob . ' — ' . $name; ?></option>
                               <?php 
                                   endif;
                               endforeach; 
