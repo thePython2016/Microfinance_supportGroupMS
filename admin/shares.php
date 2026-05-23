@@ -121,7 +121,7 @@ if (!isset($_SESSION['username'])) {
                               require "connectDB.php";
                               $selectMembers = finance_db_query($connection, "SELECT * FROM members ORDER BY fname");
                               foreach ($selectMembers ?: [] as $m):
-                                  $mob = htmlspecialchars($m['mobileNumber'] ?? $m['mobilenumber'] ?? '');
+                                  $mob = htmlspecialchars(trim((string)($m['mobileNumber'] ?? $m['mobilenumber'] ?? '')));
                                   $name = htmlspecialchars(trim(($m['fname'] ?? '') . ' ' . ($m['lname'] ?? '')));
                                   if (!empty($mob)):
                               ?>
@@ -163,7 +163,6 @@ if (!isset($_SESSION['username'])) {
                           </thead>
                           <tbody>
                             <?php
-                            // Join shares with members using matching layout columns
                             $selectShares = finance_db_query($connection,
                                 "SELECT s.id, s.share_date, s.amount,
                                         m.fname, m.lname, m.id AS member_id,
