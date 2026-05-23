@@ -1,15 +1,14 @@
 <?php
-
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 if(!isset($_SESSION['username']))
 {
-  echo "
-  <script>
-  window.location.href='../index.php';
-  </script>
-  ";
+   echo "
+   <script>
+   window.location.href='../index.php';
+   </script>
+   ";
+   exit;
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
