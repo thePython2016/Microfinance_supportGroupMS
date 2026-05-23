@@ -119,9 +119,9 @@ if (!isset($_SESSION['username'])) {
                               <option value="" disabled selected>--Select Member--</option>
                               <?php
                               require "connectDB.php";
-                              $selectMembers = finance_db_query($connection, "SELECT id, \"mobileNumber\", fname, lname FROM members ORDER BY fname ASC");
+                              $selectMembers = finance_db_query($connection, "SELECT id, \"mobileNumber\" AS mobile, fname, lname FROM members ORDER BY fname ASC");
                               foreach ($selectMembers ?: [] as $m):
-                                  $mob = $m['mobileNumber'] ?? $m['mobilenumber'] ?? '';
+                                  $mob = $m['mobile'] ?? '';
                               ?>
                                 <option value="<?php echo htmlspecialchars($mob); ?>">
                                   <?php echo htmlspecialchars($mob . ' — ' . ($m['fname'] ?? '') . ' ' . ($m['lname'] ?? '')); ?>

@@ -19,12 +19,18 @@ if (isset($_POST['addShares'])) {
         "SELECT id FROM members WHERE \"mobileNumber\" = '$mobile' LIMIT 1");
 
     if (empty($memberResult)) {
-        $_SESSION['flash_error'] = 'Error: Member not found.';
+        // Also try lowercase in case driver returns it that way
+        $memberResult = finance_db_query($connection,
+            "SELECT id FROM members WHERE mobilenumber = '$mobile' LIMIT 1");
+    }
+
+    if (empty($memberResult)) {
+        $_SESSION['flash_error'] = 'Error: Member not found. Mobile: ' . htmlspecialchars($mobile);
         header('Location: shares.php');
         exit;
     }
 
-    $member_id = (int)$memberResult[0]['id'];
+    $member_id = (int)($memberResult[0]['id'] ?? 0);
 
     // Insert only member_id, amount, share_date — id is ALWAYS identity (auto)
     $result = finance_db_query($connection,
