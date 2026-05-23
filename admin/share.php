@@ -4,6 +4,23 @@ if (!isset($_SESSION['username'])) {
     echo "<script>window.location.href='../index.php';</script>";
     exit;
 }
+
+// Get phone and look up member BEFORE any HTML output
+$phone = $_GET['phone'] ?? '';
+require "connectDB.php";
+
+$member_id   = 0;
+$member_name = '';
+$selectMember = finance_db_query($connection,
+    "SELECT id, \"mobileNumber\", nin, fname, lname
+     FROM members
+     WHERE \"mobileNumber\" = '$phone'
+     LIMIT 1");
+
+foreach ($selectMember ?: [] as $member) {
+    $member_id   = (int)($member['id'] ?? 0);
+    $member_name = ($member['fname'] ?? '') . ' ' . ($member['lname'] ?? '');
+}
 ?>
 <!doctype html>
 <html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr"
@@ -77,19 +94,23 @@ if (!isset($_SESSION['username'])) {
             </div>
             <hr>
 
-            <!-- Flash messages -->
+            <!-- Flash messages — shown AFTER redirect back to this page with ?phone= -->
             <?php if (isset($_SESSION['flash_success'])): ?>
-              <div class="alert alert-success alert-dismissible fade show mx-3" role="alert">
-                <i class="fas fa-check-circle me-2"></i>
-                <?php echo htmlspecialchars($_SESSION['flash_success']); unset($_SESSION['flash_success']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              <div class="col-12">
+                <div class="alert alert-success alert-dismissible fade show mx-3" role="alert">
+                  <i class="fas fa-check-circle me-2"></i>
+                  <?php echo htmlspecialchars($_SESSION['flash_success']); unset($_SESSION['flash_success']); ?>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
               </div>
             <?php endif; ?>
             <?php if (isset($_SESSION['flash_error'])): ?>
-              <div class="alert alert-danger alert-dismissible fade show mx-3" role="alert">
-                <i class="fas fa-exclamation-triangle me-2"></i>
-                <?php echo htmlspecialchars($_SESSION['flash_error']); unset($_SESSION['flash_error']); ?>
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+              <div class="col-12">
+                <div class="alert alert-danger alert-dismissible fade show mx-3" role="alert">
+                  <i class="fas fa-exclamation-triangle me-2"></i>
+                  <?php echo htmlspecialchars($_SESSION['flash_error']); unset($_SESSION['flash_error']); ?>
+                  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
               </div>
             <?php endif; ?>
 
@@ -108,20 +129,8 @@ if (!isset($_SESSION['username'])) {
                     </thead>
                     <tbody>
                       <?php
-                      $phone = $_GET['phone'] ?? '';
-                      require "connectDB.php";
-
-                      // Get member info + their integer id
-                      $selectMember = finance_db_query($connection,
-                          "SELECT id, \"mobileNumber\", nin, fname, lname
-                           FROM members
-                           WHERE \"mobileNumber\" = '$phone'
-                           LIMIT 1");
-
-                      $member_id = 0;
-                      foreach ($selectMember ?: [] as $member):
-                          $member_id = (int)($member['id'] ?? 0);
-                      ?>
+                      // Member info row
+                      foreach ($selectMember ?: [] as $member): ?>
                         <tr>
                           <td colspan="3">
                             <strong><?php echo htmlspecialchars($member['mobileNumber'] ?? $member['mobilenumber'] ?? ''); ?></strong>
@@ -132,7 +141,7 @@ if (!isset($_SESSION['username'])) {
                         </tr>
                       <?php endforeach;
 
-                      // Shares rows — join on member_id, use correct column names
+                      // Shares rows
                       $selectShares = finance_db_query($connection,
                           "SELECT id, share_date, amount
                            FROM shares
@@ -153,7 +162,7 @@ if (!isset($_SESSION['username'])) {
                           "SELECT SUM(amount) AS totalShare FROM shares WHERE member_id = $member_id");
                       $sumShares = 0;
                       foreach ($shareTotal ?: [] as $sum) {
-                          $sumShares = $sum['totalShare'] ?? 0;
+                          $sumShares = $sum['totalsahre'] ?? $sum['totalShare'] ?? $sum['totalshare'] ?? 0;
                       }
                       ?>
                       <tr>
@@ -194,20 +203,29 @@ if (!isset($_SESSION['username'])) {
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form method="POST" action="sharesAdd.php">
+
+        <!-- Hidden: pass member_id (int) and phone (for redirect back) -->
+        <input type="hidden" name="member_id" value="<?php echo $member_id; ?>">
+        <input type="hidden" name="phone"     value="<?php echo htmlspecialchars($phone); ?>">
+
         <div class="modal-body">
 
+          <!-- Read-only member name — not submitted -->
           <div class="mb-3">
-            <label for="memberField" class="form-label">Member (Mobile Number)</label>
-            <input type="text" class="form-control" id="memberField" name="member"
-                   value="<?php echo htmlspecialchars($phone ?? ''); ?>" required>
+            <label class="form-label">Member</label>
+            <input type="text" class="form-control"
+                   value="<?php echo htmlspecialchars($member_name); ?>"
+                   readonly disabled>
           </div>
 
+          <!-- Date -->
           <div class="mb-3">
             <label for="dateField" class="form-label">Date</label>
             <input type="date" class="form-control" id="dateField" name="date"
                    value="<?php echo date('Y-m-d'); ?>" required>
           </div>
 
+          <!-- Amount -->
           <div class="mb-3">
             <label for="amountField" class="form-label">Amount</label>
             <input type="number" class="form-control" id="amountField" name="amount"
