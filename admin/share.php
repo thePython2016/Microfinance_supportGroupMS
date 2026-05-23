@@ -220,7 +220,7 @@ foreach ($selectMember ?: [] as $member) {
 
           <!-- Date -->
           <div class="mb-3">
-            <label for="dateField" class="form-label">Date</label>
+            <label for="dateField" class="form-label">Duuate</label>
             <input type="date" class="form-control" id="dateField" name="date"
                    value="<?php echo date('Y-m-d'); ?>" required>
           </div>
