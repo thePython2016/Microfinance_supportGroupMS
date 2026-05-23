@@ -4,17 +4,29 @@ require 'connectDB.php';
 
 if (isset($_POST['addShares'])) {
 
-    $member_id  = (int)($_POST['member_id'] ?? 0);
-    $share_date = finance_db_escape($connection, $_POST['date']   ?? '');
+    $mobile     = finance_db_escape($connection, $_POST['member']  ?? '');
+    $share_date = finance_db_escape($connection, $_POST['date']    ?? '');
     $amount     = finance_db_escape($connection, (string)($_POST['amount'] ?? ''));
 
-    if (empty($member_id) || empty($share_date) || empty($amount)) {
+    if (empty($mobile) || empty($share_date) || empty($amount)) {
         $_SESSION['flash_error'] = 'Error: All fields are required.';
-        header('Location: shares.php?phone=' . urlencode($_POST['phone'] ?? ''));
+        header('Location: shares.php');
         exit;
     }
 
-    // id is auto-increment — only insert member_id, amount, share_date
+    // Look up member's integer id from mobileNumber
+    $memberResult = finance_db_query($connection,
+        "SELECT id FROM members WHERE \"mobileNumber\" = '$mobile' LIMIT 1");
+
+    if (empty($memberResult)) {
+        $_SESSION['flash_error'] = 'Error: Member not found.';
+        header('Location: shares.php');
+        exit;
+    }
+
+    $member_id = (int)$memberResult[0]['id'];
+
+    // Insert only member_id, amount, share_date — id is ALWAYS identity (auto)
     $result = finance_db_query($connection,
         "INSERT INTO shares (member_id, amount, share_date)
          VALUES ($member_id, $amount, '$share_date')");
@@ -26,7 +38,7 @@ if (isset($_POST['addShares'])) {
         $_SESSION['flash_error'] = 'Error: Could not add share. ' . ($finance_db_last_error ?? 'Please try again.');
     }
 
-    header('Location: shares.php?phone=' . urlencode($_POST['phone'] ?? ''));
+    header('Location: shares.php');
     exit;
 }
 
