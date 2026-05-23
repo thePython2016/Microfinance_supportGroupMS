@@ -1,9 +1,9 @@
-   <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme" >
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
           <div class="app-brand demo">
             <a href="admin.php" class="app-brand-link">
               <span class="app-brand-logo demo me-1">
                 <span style="color: var(--bs-primary)">
-                  <!-- <svg width="30" height="24" viewBox="0 0 250 196" fill="none" xmlns="http://www.w3.org/2000/svg"> -->
+                  <svg width="30" height="24" viewBox="0 0 250 196" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                       fill-rule="evenodd"
                       clip-rule="evenodd"
@@ -72,24 +72,24 @@
             </a>
           </div>
 
-          <div class="menu-inner-shadow" ></div>
+          <div class="menu-inner-shadow"></div>
 
           <ul class="menu-inner py-1">
-            <!-- Dashboards -->
+
+            <!-- Dashboard -->
             <li class="menu-item">
               <a href="admin.php" class="menu-link dashboard-text">
-              <i class="fa-solid fa-gauge-simple fa-icon"></i>
+                <i class="fa-solid fa-gauge-simple fa-icon"></i>
                 <div>Dashboard</div>
               </a>
             </li>
 
-            <!-- Layouts -->
+            <!-- Members -->
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="fa-solid fa-users fa-icon"></i>
+                <i class="fa-solid fa-users fa-icon"></i>
                 <div data-i18n="Layouts">Members</div>
               </a>
-
               <ul class="menu-sub">
                 <li class="menu-item">
                   <a href="members.php" class="menu-link">
@@ -111,54 +111,33 @@
                     <div data-i18n="Fluid">Members by Loan</div>
                   </a>
                 </li>
-                <!-- <li class="menu-item">
-                  <a href="loan-status.php" class="menu-link">
-                    <div data-i18n="Fluid">Loan Status</div>
-                  </a>
-                </li> -->
-               
               </ul>
             </li>
 
-            <!-- Front Pages -->
+            <!-- Shares -->
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="fa-solid fa-money-bill fa-icon"></i>
+                <i class="fa-solid fa-money-bill fa-icon"></i>
                 <div data-i18n="Front Pages">Shares</div>
-        
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a
-                    href="shares.php"
-                    class="menu-link"
-                    >
+                  <a href="shares.php" class="menu-link">
                     <div data-i18n="Landing">Add Share</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a
-                    href="shares-list.php"
-                    class="menu-link"
-                    >
+                  <a href="shares-list.php" class="menu-link">
                     <div data-i18n="Pricing">Shares List</div>
                   </a>
                 </li>
-             
-               
-            
               </ul>
             </li>
 
-            <!-- Apps -->
-         
-        
-        
-      
-            <!-- Pages -->
+            <!-- Financial Officers -->
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="fa-solid fa-user-tie fa-icon"></i>
+                <i class="fa-solid fa-user-tie fa-icon"></i>
                 <div data-i18n="Account Settings">Financial Officers</div>
               </a>
               <ul class="menu-sub">
@@ -172,100 +151,84 @@
                     <div data-i18n="Notifications">Financial Officers List</div>
                   </a>
                 </li>
-               
               </ul>
             </li>
+
+            <!-- Loan -->
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="fa-solid fa-money-bill-1-wave fa-icon"></i>
+                <i class="fa-solid fa-money-bill-1-wave fa-icon"></i>
                 <div data-i18n="Authentications">Loan</div>
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="loans.php" class="menu-link" >
+                  <a href="loans.php" class="menu-link">
                     <div data-i18n="Basic">Member's Loan</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="check-loan.php" class="menu-link" >
+                  <a href="check-loan.php" class="menu-link">
                     <div data-i18n="Basic">Check Member's Loan</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="loan-payment.php" class="menu-link" >
+                  <a href="loan-payment.php" class="menu-link">
                     <div data-i18n="Basic">Loan Payment</div>
                   </a>
                 </li>
-               
-                </li>
               </ul>
             </li>
-          
-        
+
+            <!-- Compose Email -->
             <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-              <i class="fa-solid fa-envelope fa-icon"></i>
+                <i class="fa-solid fa-envelope fa-icon"></i>
                 <div data-i18n="Authentications">Compose Email</div>
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="compose-message.php" class="menu-link" >
+                  <a href="compose-message.php" class="menu-link">
                     <div data-i18n="Basic">Compose Email</div>
                   </a>
                 </li>
-              
-  </ul>
-               
-                </li>
-                <li class="menu-item">
+              </ul>
+            </li>
+
+            <!-- Compose SMS -->
+            <li class="menu-item">
               <a href="javascript:void(0);" class="menu-link menu-toggle">
-           
-              <i class="fa-solid fa-message fa-icon"></i>
+                <i class="fa-solid fa-message fa-icon"></i>
                 <div data-i18n="Authentications">Compose SMS</div>
               </a>
               <ul class="menu-sub">
                 <li class="menu-item">
-                  <a href="new-sms.php" class="menu-link" >
+                  <a href="new-sms.php" class="menu-link">
                     <div data-i18n="Basic">New Message</div>
                   </a>
                 </li>
                 <li class="menu-item">
-                  <a href="sent-sms.php" class="menu-link" >
+                  <a href="sent-sms.php" class="menu-link">
                     <div data-i18n="Basic">Sent Message</div>
                   </a>
                 </li>
-  </ul>
-               
-                </li>
+              </ul>
+            </li>
 
-           
-
-            <!-- Icons -->
+            <!-- Reports -->
             <li class="menu-item">
               <a href="reports.php" class="menu-link">
-              <i class="fa-regular fa-flag fa-icon"></i>
+                <i class="fa-regular fa-flag fa-icon"></i>
                 <div data-i18n="Icons">Reports</div>
               </a>
             </li>
+
+            <!-- Charts -->
             <li class="menu-item">
               <a href="charts.php" class="menu-link">
-              <i class="fa-solid fa-chart-line fa-icon"></i>
+                <i class="fa-solid fa-chart-line fa-icon"></i>
                 <div data-i18n="Icons">Charts</div>
               </a>
             </li>
-            
 
-
-
-
-
-
-
-         
-
-          
-          
-     
           </ul>
-  </li>
         </aside>
