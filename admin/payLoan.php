@@ -24,3 +24,4 @@ if (isset($_POST['payLoan'])) {
     echo "<script>window.location.href='loan-payment.php';</script>";
 }
 ?>
+
