@@ -11,11 +11,13 @@ $debug_count = 0;
 $loanrecord = [];
 $totalsMap = [];
 
+
+
+
 try {
-    // Main loans query
-    $query = "SELECT m.mobilenumber, m.fname, m.lname, 
-                     l.id, l.loan_date, l.due_date, l.amount, l.interest_rate, l.total_payable, l.status, l.notes
-              FROM members m 
+    // Main loans query (use loans.mobilenumber to match the actual loans table schema)
+    $query = "SELECT m.mobilenumber, m.fname, m.lname, l.*
+              FROM members m
               INNER JOIN loans l ON m.mobilenumber = l.mobilenumber
               ORDER BY m.mobilenumber, l.loan_date DESC";
     
@@ -25,20 +27,59 @@ try {
         $debug_count = count($loanrecord);
     }
 
-    // Per-member totals
-    $totalQuery = "SELECT l.mobilenumber, m.fname, m.lname,
-                          COUNT(*) as loan_count,
-                          SUM(l.amount) as total_amount,
-                          SUM(l.total_payable) as total_payable
-                   FROM loans l
-                   INNER JOIN members m ON m.mobilenumber = l.mobilenumber
-                   GROUP BY l.mobilenumber, m.fname, m.lname";
-    $totalResult = $connection->pdo->query($totalQuery);
-    if ($totalResult) {
-        foreach($totalResult->fetchAll(PDO::FETCH_ASSOC) as $t) {
-            $totalsMap[$t['mobilenumber']] = $t;
+    // Normalize loan records and compute totals when total_payable is missing.
+    foreach ($loanrecord as &$loan) {
+        $loan['amount'] = (float)($loan['amount'] ?? 0);
+        $loan['interest_rate'] = (float)($loan['interest_rate'] ?? 0);
+
+        if (!array_key_exists('total_payable', $loan) || $loan['total_payable'] === null || $loan['total_payable'] === '') {
+            $loan['total_payable'] = $loan['amount'] * (1 + ($loan['interest_rate'] / 100));
+        } else {
+            $loan['total_payable'] = (float)$loan['total_payable'];
+        }
+
+        $loan['due_date'] = $loan['due_date'] ?? '-';
+        $loan['notes'] = $loan['notes'] ?? '';
+
+        $memberKey = $loan['mobilenumber'] ?? '';
+        if ($memberKey === '') {
+            continue;
+        }
+
+        if (!isset($totalsMap[$memberKey])) {
+            $totalsMap[$memberKey] = [
+                'loan_count' => 0,
+                'total_amount' => 0.0,
+                'total_payable' => 0.0,
+                'fname' => $loan['fname'] ?? '',
+                'lname' => $loan['lname'] ?? '',
+            ];
+        }
+
+        $totalsMap[$memberKey]['loan_count'] += 1;
+        $totalsMap[$memberKey]['total_amount'] += $loan['amount'];
+        $totalsMap[$memberKey]['total_payable'] += $loan['total_payable'];
+    }
+    unset($loan);
+
+    // Load share deposit trend data directly, so charts are populated correctly.
+    $shareTrendData = [];
+    $shareQuery = "SELECT TO_CHAR(share_date, 'YYYY-MM') AS month_key, SUM(amount) AS total_amount
+                   FROM \"shares\"
+                   GROUP BY TO_CHAR(share_date, 'YYYY-MM')
+                   ORDER BY MIN(share_date) ASC";
+    $shareResult = $connection->pdo->query($shareQuery);
+    if ($shareResult) {
+        foreach ($shareResult->fetchAll(PDO::FETCH_ASSOC) as $row) {
+            $shareTrendData[] = [
+                'month' => $row['month_key'] ?? $row['MONTH_KEY'] ?? null,
+                'total' => (float)($row['total_amount'] ?? $row['TOTAL_AMOUNT'] ?? 0),
+            ];
         }
     }
+
+    // Store for later chart rendering
+    $shareTrendData = $shareTrendData ?: [];
 
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
@@ -350,46 +391,50 @@ try {
             }
         }
 
-        // 2. Timeline Aggregator Engine for both Monthly Trends
+        // 2. Timeline Aggregator Engine for loans and share deposits
         $monthlyLoans = [];
-        $monthlyDeposits = []; // Placeholder calculation array if you separate later
-        
-        foreach (array_reverse($loanrecord) as $loan) { 
+        foreach (array_reverse($loanrecord) as $loan) {
             if (!empty($loan['loan_date'])) {
                 $monthKey = date('Y-m', strtotime($loan['loan_date']));
-                
-                // Aggregate total amount loaned monthly
                 if (!isset($monthlyLoans[$monthKey])) { $monthlyLoans[$monthKey] = 0.0; }
                 $monthlyLoans[$monthKey] += (float)($loan['amount'] ?? 0);
-                
-                // For demonstration/calculation purposes based on your table payload,
-                // total_payable minus base amount gives total expected returns/interests pool.
-                if (!isset($monthlyDeposits[$monthKey])) { $monthlyDeposits[$monthKey] = 0.0; }
-                $monthlyDeposits[$monthKey] += (float)($loan['total_payable'] ?? 0);
             }
         }
-        
+
+        // Share deposit timeline
+        $monthlyShares = [];
+        foreach ($shareTrendData as $shareRow) {
+            if (!empty($shareRow['month'])) {
+                $monthlyShares[$shareRow['month']] = (float)$shareRow['total'];
+            }
+        }
+
         // Chronological Key Sort
         ksort($monthlyLoans);
-        ksort($monthlyDeposits);
+        ksort($monthlyShares);
 
-        $trendLabels = [];
+        $loanTrendLabels = [];
         $loanValues = [];
-        $depositValues = [];
-
         foreach ($monthlyLoans as $dateKey => $amount) {
-            $trendLabels[] = date('M Y', strtotime($dateKey . '-01'));
+            $loanTrendLabels[] = date('M Y', strtotime($dateKey . '-01'));
             $loanValues[] = $amount;
-            $depositValues[] = $monthlyDeposits[$dateKey] ?? 0;
+        }
+
+        $shareTrendLabels = [];
+        $shareValues = [];
+        foreach ($monthlyShares as $dateKey => $amount) {
+            $shareTrendLabels[] = date('M Y', strtotime($dateKey . '-01'));
+            $shareValues[] = $amount;
         }
       ?>
 
       // Deliver variables directly safely to JavaScript environment
       const statusData = <?php echo json_encode(array_values($statusCounts)); ?>;
       const statusLabels = <?php echo json_encode(array_map('ucfirst', array_keys($statusCounts))); ?>;
-      const trendLabels = <?php echo json_encode($trendLabels); ?>;
+      const loanTrendLabels = <?php echo json_encode($loanTrendLabels); ?>;
       const loanValues = <?php echo json_encode($loanValues); ?>;
-      const depositValues = <?php echo json_encode($depositValues); ?>;
+      const shareTrendLabels = <?php echo json_encode($shareTrendLabels); ?>;
+      const shareValues = <?php echo json_encode($shareValues); ?>;
 
       // 1. Render Tall Status Donut Chart
       if (document.querySelector("#loanStatusChart") && statusData.reduce((a, b) => a + b, 0) > 0) {
@@ -407,28 +452,28 @@ try {
       }
 
       // 2. Render Monthly Share Deposits Line Chart (Top Right)
-      if (document.querySelector("#shareDepositChart") && trendLabels.length > 0) {
+      if (document.querySelector("#shareDepositChart") && shareTrendLabels.length > 0) {
         new ApexCharts(document.querySelector("#shareDepositChart"), {
           chart: { height: 210, type: 'line', toolbar: { show: false } },
           stroke: { curve: 'smooth', width: 3 },
-          series: [{ name: 'Share Contributions & Deposits', data: depositValues }],
+          series: [{ name: 'Share Contributions & Deposits', data: shareValues }],
           colors: ['#03a9f4'], // Light Blue Theme
           markers: { size: 4 },
-          xaxis: { categories: trendLabels },
+          xaxis: { categories: shareTrendLabels },
           yaxis: { labels: { formatter: function (val) { return parseInt(val).toLocaleString() + ' TZS'; } } },
           tooltip: { y: { formatter: function (val) { return parseFloat(val).toLocaleString() + ' TZS'; } } }
         }).render();
       }
 
       // 3. Render Monthly Loan Issuance Line Chart (Bottom Right)
-      if (document.querySelector("#loanTrendChart") && trendLabels.length > 0) {
+      if (document.querySelector("#loanTrendChart") && loanTrendLabels.length > 0) {
         new ApexCharts(document.querySelector("#loanTrendChart"), {
           chart: { height: 210, type: 'line', toolbar: { show: false } },
           stroke: { curve: 'smooth', width: 3 },
           series: [{ name: 'Total Disbursed', data: loanValues }],
           colors: ['#6610f2'], // Purple Theme
           markers: { size: 4 },
-          xaxis: { categories: trendLabels },
+          xaxis: { categories: loanTrendLabels },
           yaxis: { labels: { formatter: function (val) { return parseInt(val).toLocaleString() + ' TZS'; } } },
           tooltip: { y: { formatter: function (val) { return parseFloat(val).toLocaleString() + ' TZS'; } } }
         }).render();

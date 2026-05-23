@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - Data Population Guide</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; }
+        h1 { color: #375E97; }
+        .section { background: #f5f5f5; padding: 20px; margin: 20px 0; border-left: 4px solid #375E97; }
+        code { background: #e0e0e0; padding: 2px 6px; border-radius: 3px; font-family: monospace; }
+        .success { color: #28a745; }
+        .info { color: #0066cc; }
+        .warning { color: #ff9800; }
+        button { background: #375E97; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #2a4675; }
+        .method { margin: 20px 0; padding: 15px; background: white; border: 1px solid #ddd; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>Admin Dashboard - Data Population Guide</h1>
+    
+    <div class="section">
+        <h2>📊 Dashboard Status</h2>
+        <p>The admin dashboard is now configured to display:</p>
+        <ul>
+            <li>✓ Monthly share deposits (line chart)</li>
+            <li>✓ Monthly loan issuance (line chart)</li>
+            <li>✓ Loan status breakdown (donut chart)</li>
+            <li>✓ Members list with data</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🗄️ Files Modified</h2>
+        <ul>
+            <li><code>admin/admin.php</code> - Added database queries to extract chart data</li>
+            <li><code>admin/fetchMemberChartsData.php</code> - Added AJAX endpoint for member-specific charts</li>
+            <li><code>includes/chart_stats.php</code> - Updated with PostgreSQL-compatible queries</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>📝 Files Created</h2>
+        <ul>
+            <li><code>admin/seed-dashboard-data.php</code> - Comprehensive test data seeder</li>
+        </ul>
+    </div>
+
+    <h2>🚀 Method 1: Browser (Easiest)</h2>
+    <div class="method">
+        <p><strong>Step 1:</strong> Make sure XAMPP is running (Apache + PostgreSQL)</p>
+        <p><strong>Step 2:</strong> Visit the seeder script:</p>
+        <code style="display: block; margin: 10px 0; padding: 10px; background: #f0f0f0;">
+            http://localhost/finance/admin/seed-dashboard-data.php
+        </code>
+        <p><strong>Step 3:</strong> The script will display progress and confirm when complete</p>
+        <p><strong>Step 4:</strong> Visit the dashboard:</p>
+        <code style="display: block; margin: 10px 0; padding: 10px; background: #f0f0f0;">
+            http://localhost/finance/admin/admin.php
+        </code>
+        <p>✓ Charts should now display data!</p>
+    </div>
+
+    <h2>🖥️ Method 2: Command Line (PowerShell)</h2>
+    <div class="method">
+        <p><strong>Step 1:</strong> Open PowerShell and navigate to the project:</p>
+        <code style="display: block; margin: 10px 0; padding: 10px; background: #f0f0f0;">
+            cd c:\xampp\htdocs\finance\admin
+        </code>
+        <p><strong>Step 2:</strong> Run the seeder with PHP CLI:</p>
+        <code style="display: block; margin: 10px 0; padding: 10px; background: #f0f0f0;">
+            "C:\xampp\php\php.exe" seed-dashboard-data.php
+        </code>
+        <p><strong>Step 3:</strong> You should see confirmation output showing inserted data</p>
+    </div>
+
+    <h2>📊 What Data Gets Added?</h2>
+    <div class="section">
+        <h3>Members (5 test members)</h3>
+        <ul>
+            <li>John Doe (256701234567)</li>
+            <li>Jane Smith (256702345678)</li>
+            <li>Bob Johnson (256703456789)</li>
+            <li>Alice Williams (256704567890)</li>
+            <li>Charlie Brown (256705678901)</li>
+        </ul>
+
+        <h3>Shares Data</h3>
+        <p>15 share entries across Jan - May 2026, ranging from 100,000 - 165,000 TZS per entry</p>
+
+        <h3>Loans Data</h3>
+        <p>10 loan entries across Jan - May 2026 with:</p>
+        <ul>
+            <li><span class="success">Active</span>: 4 loans</li>
+            <li><span class="warning">Pending</span>: 2 loans</li>
+            <li><span class="success">Paid</span>: 2 loans</li>
+            <li style="color: #dc3545;">Overdue: 1 loan</li>
+        </ul>
+        <p>Loan amounts: 450,000 - 1,000,000 TZS</p>
+    </div>
+
+    <div class="section">
+        <h2>✅ Verification Checklist</h2>
+        <ul>
+            <li>☐ Database has test data (check via seed script output)</li>
+            <li>☐ Dashboard loads without errors</li>
+            <li>☐ Monthly Share Deposits line chart shows 5 months of data</li>
+            <li>☐ Monthly Loan Issuance line chart shows 5 months of data</li>
+            <li>☐ Loan Status Doughnut shows: Active (4), Pending (2), Paid (2), Overdue (1)</li>
+            <li>☐ Members table displays 5 test members</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>🔄 Resetting Data</h2>
+        <p>To start fresh, uncomment the "CLEAR EXISTING TEST DATA" section in <code>seed-dashboard-data.php</code> before running it again.</p>
+    </div>
+
+    <div class="section">
+        <h2>🆘 Troubleshooting</h2>
+        <p><strong>Charts show "No Data Available"?</strong></p>
+        <ul>
+            <li>✓ Make sure you ran the seed script successfully</li>
+            <li>✓ Check browser console (F12) for JavaScript errors</li>
+            <li>✓ Verify database connection in <code>includes/connectDB.php</code></li>
+        </ul>
+        
+        <p><strong>Error about missing columns?</strong></p>
+        <ul>
+            <li>✓ Ensure database schema is installed: <code>php database/install_schema.php</code></li>
+            <li>✓ Verify PostgreSQL is running and connected</li>
+        </ul>
+    </div>
+
+</body>
+</html>

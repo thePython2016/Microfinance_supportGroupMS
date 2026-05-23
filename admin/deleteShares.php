@@ -1,6 +1,7 @@
 <?php
 
 require "connectDB.php";
+
 $id=$_GET['id'];
   
 $delete = finance_db_query($connection, "DELETE FROM shares WHERE id='$id'");

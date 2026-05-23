@@ -279,7 +279,7 @@ if(!isset($_SESSION['username']))
 
 
         <button type="button" id="showFormBtn" class="btn hidden submitBtn" >Update Selected Row</button>
-    <button id="delete-button" type="submit"  class="btn  submitBtn">Delete selected</button>
+   <a id="delete-button" href="#" class="btn submitBtn">Delete Selected</a>
    
 </div>
 </div>
@@ -481,27 +481,32 @@ if(!isset($_SESSION['username']))
     <!-- DELETE AND UPDATE SCRIPTS -->
      <!-- Delete scripts -->
      <script>
-        $(document).ready(function() {
-            let selectedId = null; // Variable to hold the selected record ID
+ $(document).ready(function () {
+    let selectedId = null;
 
-            // Row click event scoped to table body only
-            $('#sharesTable tbody').on('click', 'tr', function() {
-                $('#sharesTable tbody tr').removeClass('selected');
-                $(this).addClass('selected');
-                selectedId = $(this).data('id') || null;
-            });
+    // Row click — generate URL immediately
+    $('#sharesTable tbody').on('click', 'tr', function () {
+        $('#sharesTable tbody tr').removeClass('selected');
+        $(this).addClass('selected');
+        selectedId = $(this).data('id');
 
-            // Delete button click event
-            $('#delete-button').click(function() {
-                if (!selectedId) {
-                    alert('Please select a record to delete.');
-                    return;
-                }
-                if (confirm('Are you sure you want to delete this record?')) {
-                    window.location.href = 'deleteShares.php?id=' + encodeURIComponent(selectedId);
-                }
-            });
-        });
+        // ✅ URL is generated here — deleteShares.php?id=5
+        $('#delete-button').attr('href', 'deleteShares.php?id=' + selectedId);
+    });
+
+    // Confirm before following the URL
+    $('#delete-button').on('click', function (e) {
+        if (!selectedId) {
+            e.preventDefault();
+            alert('Please select a row to delete.');
+            return;
+        }
+        if (!confirm('Delete record ID: ' + selectedId + '?')) {
+            e.preventDefault(); // cancelled — stop
+        }
+        // confirmed — browser follows href naturally
+    });
+});
     </script>
 
 
