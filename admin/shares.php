@@ -112,20 +112,24 @@ if (!isset($_SESSION['username'])) {
                                    value="<?php echo date('Y-m-d'); ?>" required>
                           </div>
 
-                          <!-- Member dropdown — value is mobileNumber, shareAdd.php looks up id -->
+                          <!-- Member dropdown -->
                           <div class="mb-3 mobile">
                             <label class="form-label">Member</label>
                             <select class="form-control" name="member" required>
                               <option value="" disabled selected>--Select Member--</option>
                               <?php
                               require "connectDB.php";
-                              $selectMembers = finance_db_query($connection, "SELECT mobileNumber, fname, lname FROM members ORDER BY fname");
+                              $selectMembers = finance_db_query($connection, "SELECT * FROM members ORDER BY fname");
                               foreach ($selectMembers ?: [] as $m):
-                                  $mob = htmlspecialchars($m['mobileNumber'] ?? '');
+                                  $mob = htmlspecialchars($m['mobileNumber'] ?? $m['mobilenumber'] ?? '');
                                   $name = htmlspecialchars(trim(($m['fname'] ?? '') . ' ' . ($m['lname'] ?? '')));
+                                  if (!empty($mob)):
                               ?>
                                 <option value="<?php echo $mob; ?>"><?php echo $mob . ' — ' . $name; ?></option>
-                              <?php endforeach; ?>
+                              <?php 
+                                  endif;
+                              endforeach; 
+                              ?>
                             </select>
                           </div>
 
@@ -159,24 +163,26 @@ if (!isset($_SESSION['username'])) {
                           </thead>
                           <tbody>
                             <?php
-                            // Join shares with members to get name + mobile
+                            // Join shares with members using matching layout columns
                             $selectShares = finance_db_query($connection,
                                 "SELECT s.id, s.share_date, s.amount,
-                                        m.\"mobileNumber\", m.fname, m.lname, m.id AS member_id
+                                        m.fname, m.lname, m.id AS member_id,
+                                        m.mobilenumber, m.\"mobileNumber\"
                                  FROM shares s
                                  JOIN members m ON m.id = s.member_id
                                  ORDER BY s.share_date DESC");
 
                             $sn = 1;
                             foreach ($selectShares ?: [] as $share):
-                                $mob = $share['mobileNumber'] ?? $share['mobilenumber'] ?? '';
+                                $mob = htmlspecialchars($share['mobileNumber'] ?? $share['mobilenumber'] ?? '');
+                                $fullName = htmlspecialchars(trim(($share['fname'] ?? '') . ' ' . ($share['lname'] ?? '')));
                             ?>
                               <tr>
                                 <td><?php echo $sn++; ?></td>
                                 <td><?php echo htmlspecialchars($share['share_date'] ?? ''); ?></td>
                                 <td>
                                   <a class="url" href="shares.php?member_id=<?php echo (int)$share['member_id']; ?>">
-                                    <?php echo htmlspecialchars($mob . ' — ' . ($share['fname'] ?? '') . ' ' . ($share['lname'] ?? '')); ?>
+                                    <?php echo $mob . ' — ' . $fullName; ?>
                                   </a>
                                 </td>
                                 <td><?php echo htmlspecialchars($share['amount'] ?? ''); ?></td>

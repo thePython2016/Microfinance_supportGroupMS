@@ -14,12 +14,24 @@ if (isset($_POST['addShares'])) {
         exit;
     }
 
-    // sql_compat.php transforms this to:
-    //   INSERT INTO shares (share_date, member_id, amount)
-    //   VALUES ('$share_date', (SELECT id FROM app_members WHERE mobilenumber='$mobile'), '$amountEsc')
+    // 1. Verify that the member actually exists and fetch their proper ID
+    $checkMember = finance_db_query($connection, "SELECT id FROM members WHERE mobileNumber='$mobile' LIMIT 1");
+    
+    // Convert resource/array to a clean array item depending on your custom database wrapper wrapper structure
+    $memberRow = !empty($checkMember) ? array_shift($checkMember) : null;
+
+    if (!$memberRow || !isset($memberRow['id'])) {
+        $_SESSION['flash_error'] = 'Error: Selected member could not be validated in the system.';
+        header('Location: shares.php');
+        exit;
+    }
+
+    $memberId = (int)$memberRow['id'];
+
+    // 2. Insert into the correct matching column fields: share_date, member_id, amount
     $result = finance_db_query($connection,
-        "INSERT INTO shares (date, member, amount)
-         VALUES ('$share_date', (SELECT mobileNumber FROM members WHERE mobileNumber='$mobile'), '$amountEsc')");
+        "INSERT INTO shares (share_date, member_id, amount)
+         VALUES ('$share_date', '$memberId', '$amountEsc')");
 
     if ($result) {
         $_SESSION['flash_success'] = 'Share record added successfully!';
