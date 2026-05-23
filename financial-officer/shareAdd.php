@@ -1,14 +1,22 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require 'connectDB.php';
+
 if (isset($_POST['addShares'])) {
-    $date   = finance_db_escape($connection, $_POST['date']);
-    $member = finance_db_escape($connection, $_POST['member']);
-    $amount = finance_db_escape($connection, (string)$_POST['amount']);
+    $mobile     = finance_db_escape($connection, trim($_POST['member'] ?? ''));
+    $share_date = finance_db_escape($connection, trim($_POST['date']   ?? ''));
+    $amount     = (float)($_POST['amount'] ?? 0);
+    $amountEsc  = finance_db_escape($connection, (string)$amount);
+
+    if (empty($mobile) || empty($share_date) || $amount <= 0) {
+        $_SESSION['flash_error'] = 'All fields are required and amount must be greater than zero.';
+        header('Location: shares.php');
+        exit;
+    }
 
     $result = finance_db_query($connection,
         "INSERT INTO shares (date, member, amount)
-         VALUES ('$date', (SELECT mobileNumber FROM members WHERE mobileNumber='$member'), '$amount')");
+         VALUES ('$share_date', (SELECT mobileNumber FROM members WHERE mobileNumber='$mobile'), '$amountEsc')");
 
     if ($result) {
         $_SESSION['flash_success'] = 'Share record added successfully!';
@@ -16,6 +24,9 @@ if (isset($_POST['addShares'])) {
         global $finance_db_last_error;
         $_SESSION['flash_error'] = 'Error: Could not add share. ' . ($finance_db_last_error ?? 'Please try again.');
     }
-    echo "<script>window.location.href='shares.php';</script>";
+    header('Location: shares.php');
+    exit;
 }
-?>
+
+header('Location: shares.php');
+exit;

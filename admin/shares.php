@@ -119,13 +119,12 @@ if (!isset($_SESSION['username'])) {
                               <option value="" disabled selected>--Select Member--</option>
                               <?php
                               require "connectDB.php";
-                              $selectMembers = finance_db_query($connection, "SELECT id, \"mobileNumber\" AS mobile, fname, lname FROM members ORDER BY fname ASC");
+                              $selectMembers = finance_db_query($connection, "SELECT mobileNumber, fname, lname FROM members ORDER BY fname");
                               foreach ($selectMembers ?: [] as $m):
-                                  $mob = $m['mobile'] ?? '';
+                                  $mob = htmlspecialchars($m['mobileNumber'] ?? '');
+                                  $name = htmlspecialchars(trim(($m['fname'] ?? '') . ' ' . ($m['lname'] ?? '')));
                               ?>
-                                <option value="<?php echo htmlspecialchars($mob); ?>">
-                                  <?php echo htmlspecialchars($mob . ' — ' . ($m['fname'] ?? '') . ' ' . ($m['lname'] ?? '')); ?>
-                                </option>
+                                <option value="<?php echo $mob; ?>"><?php echo $mob . ' — ' . $name; ?></option>
                               <?php endforeach; ?>
                             </select>
                           </div>

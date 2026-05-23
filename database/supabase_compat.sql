@@ -9,6 +9,7 @@ ALTER TABLE members ADD COLUMN IF NOT EXISTS date_joined TIMESTAMP DEFAULT NOW()
 -- app_members: exposes mobilenumber as "mobileNumber" for legacy PHP code
 CREATE OR REPLACE VIEW app_members AS
 SELECT
+    id,
     mobilenumber,
     nin,
     COALESCE(email, '') AS email,

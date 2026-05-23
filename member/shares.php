@@ -193,18 +193,14 @@
               <select id="gender" class="form-control" name="member" required name="gender">
               <option value="" disabled selected>--Select Member--</option>
                 <?php
-// SELECT MEMBERS FROM DB
 require "connectDB.php";
-$selectMember=finance_db_query($connection,"select * from members");
-foreach($selectMember ?: [] as $member)
-{
-                ?>
-
-
-                <option value="<?php echo $member['mobileNumber']?>"><?php echo $member['mobileNumber'].' '.$member['fname'].' '.$member['lname']?></option>
-               <?php
-}
+$selectMember = finance_db_query($connection, "SELECT mobileNumber, fname, lname FROM members ORDER BY fname");
+foreach ($selectMember ?: [] as $member):
+    $mob  = htmlspecialchars($member['mobileNumber'] ?? '');
+    $name = htmlspecialchars(trim(($member['fname'] ?? '') . ' ' . ($member['lname'] ?? '')));
 ?>
+  <option value="<?php echo $mob; ?>"><?php echo $mob . ' — ' . $name; ?></option>
+<?php endforeach; ?>
             </select>
 
   </div>
