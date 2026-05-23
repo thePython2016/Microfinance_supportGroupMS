@@ -3,6 +3,8 @@ if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require 'connectDB.php';
 
 if (isset($_POST['addOfficers'])) {
+    global $finance_db_last_error;
+
     $phone      = finance_db_escape($connection, $_POST['phone']      ?? '');
     $nin        = finance_db_escape($connection, $_POST['nin']        ?? '');
     $fname      = finance_db_escape($connection, $_POST['fname']      ?? '');
@@ -23,8 +25,7 @@ if (isset($_POST['addOfficers'])) {
     if ($result) {
         $_SESSION['flash_success'] = "Financial officer $fname $lname added successfully!";
     } else {
-        // Show the real error + the query for debugging
-        $_SESSION['flash_error'] = 'DB Error: ' . mysqli_error($connection) . ' | Query: ' . $sql;
+        $_SESSION['flash_error'] = 'Error: ' . ($finance_db_last_error ?? 'Unknown error');
     }
 }
 
