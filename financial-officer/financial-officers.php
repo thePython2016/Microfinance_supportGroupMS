@@ -3,12 +3,13 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
 if (!isset($_SESSION['username'])) {
     header('Location: ../index.php');
     exit;
 }
-?><!doctype html>
+?>
+
+<!doctype html>
 <html lang="en" class="light-style layout-menu-fixed layout-compact" dir="ltr"
   data-theme="theme-default" data-assets-path="../assets/"
   data-template="vertical-menu-template-free" data-style="light">
