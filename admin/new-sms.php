@@ -145,7 +145,7 @@ if(!isset($_SESSION['username']))
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row gy-6">
-             
+              
               <div class="col-lg-12 col-md-12 col-12 mb-4">
               <a class="btn addBtn" href="members.php">Add Member</a>
                     
@@ -158,6 +158,12 @@ if(!isset($_SESSION['username']))
 
           
                 <div class="col-10 " style="margin:0 auto !important">
+                  <!-- Notification Label (API KEYS EXPIRES) -->
+                  <div class="alert alert-warning alert-dismissible fade show" role="alert" style="margin-left:20px">
+                    <i class="ri-alert-line me-2"></i><strong>Notice:</strong> API KEYS HAVE EXPIRED. Please review your active keys.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+
                   <div class="card   " style="margin-left:20px">
                     <div class="card-header" style="color:rgb(61, 60, 60) !important;font-size:16px;font-weight:bold">Compose Message</div>
                     <hr>
@@ -211,7 +217,7 @@ $selectEmail=finance_db_query($connection,"select * from members");
   <textarea class="form-control" id="message" rows="10" name="message" placeholder="Write your Message"></textarea>
 </div>
   
-<button style="margin-left:450px !important" type="submit" name="send-sms" class="btn submitBtn mt-2" >Send</button>
+<button style="margin-left:450px !important; display: block;" type="submit" name="send-sms" class="btn submitBtn mt-2" >Send</button>
 </form>
 
 

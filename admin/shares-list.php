@@ -484,21 +484,21 @@ if(!isset($_SESSION['username']))
         $(document).ready(function() {
             let selectedId = null; // Variable to hold the selected record ID
 
-            // Row click event
-            $("tr").click(function() {
-                $("tr").removeClass("selected"); // Deselect previously selected row
-                $(this).addClass("selected"); // Highlight the selected row
-                selectedId = $(this).data("id"); // Get the ID of the clicked row
+            // Row click event scoped to table body only
+            $('#sharesTable tbody').on('click', 'tr', function() {
+                $('#sharesTable tbody tr').removeClass('selected');
+                $(this).addClass('selected');
+                selectedId = $(this).data('id') || null;
             });
 
             // Delete button click event
-            $("#delete-button").click(function() {
-                if (selectedId === null) {
-                    alert("Please select a record to delete.");
+            $('#delete-button').click(function() {
+                if (!selectedId) {
+                    alert('Please select a record to delete.');
                     return;
                 }
-                if (confirm("Are you sure you want to delete this record?")) {
-                    window.location.href = 'deleteShares.php?id=' + selectedId; // Redirect to delete.php
+                if (confirm('Are you sure you want to delete this record?')) {
+                    window.location.href = 'deleteShares.php?id=' + encodeURIComponent(selectedId);
                 }
             });
         });

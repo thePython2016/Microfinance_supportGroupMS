@@ -50,25 +50,14 @@ if(isset($_POST['updateShares']))
 
 
 
-    $updateShares =finance_db_query($connection,"update shares
-    set
+    $updateShares = finance_db_query($connection, "UPDATE shares
+    SET
+      share_date='$date',
+      amount='$amount'
+    WHERE id='$id'");
 
-   date='$date',
-    amount='$amount'
-
-
-
-where shareID='$id'
-    ");
-
-    if($updateShares)
-    {
-
-        echo  "
-        <script>
-        window.location.href='shares-list.php';
-        </script>
-        ";
+    if ($updateShares) {
+        echo "<script>window.location.href='shares-list.php';</script>";
     }
 
     else{

@@ -187,7 +187,7 @@ $(document).ready(function() {
 
             <div class="container-xxl flex-grow-1 container-p-y">
               <div class="row gy-6">
-             
+              
               <div class="col-lg-12 col-md-12 col-12 mb-4">
               <a class="btn addBtn" href="members.php">Add Member</a>
                     
@@ -200,9 +200,15 @@ $(document).ready(function() {
                      
    
 
-          <div style="background:white !important;height:500px ">
-         <div style="width:600px !important;padding:20px !important;margin:0 auto !important">  
+          <div style="background:white !important; min-height:500px; padding-top: 20px;">
+         <div style="width:600px !important; margin:0 auto !important">  
                
+            <!-- Notification Label (API KEYS EXPIRES) -->
+            <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+              <i class="ri-alert-line me-2"></i><strong>Notice:</strong> API KEYS HAVE EXPIRED. Please check your dashboard settings.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
     <?php
     require "connectDB.php";
     $selectMessage=finance_db_query($connection,"select * from sent_sms");
