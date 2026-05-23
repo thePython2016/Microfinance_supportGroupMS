@@ -194,9 +194,16 @@
               <option value="" disabled selected>--Select Member--</option>
                 <?php
 require "connectDB.php";
-$selectMember = finance_db_query($connection, "SELECT mobileNumber, fname, lname FROM members ORDER BY fname");
-foreach ($selectMember ?: [] as $member):
-    $mob  = htmlspecialchars($member['mobileNumber'] ?? '');
+try {
+    $memberStmt = $connection->pdo->query(
+        "SELECT mobilenumber, fname, lname FROM members ORDER BY fname"
+    );
+    $membersList = $memberStmt ? $memberStmt->fetchAll(PDO::FETCH_ASSOC) : [];
+} catch (PDOException $e) {
+    $membersList = [];
+}
+foreach ($membersList as $member):
+    $mob  = htmlspecialchars($member['mobilenumber'] ?? '');
     $name = htmlspecialchars(trim(($member['fname'] ?? '') . ' ' . ($member['lname'] ?? '')));
 ?>
   <option value="<?php echo $mob; ?>"><?php echo $mob . ' — ' . $name; ?></option>

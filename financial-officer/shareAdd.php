@@ -2,30 +2,47 @@
 if (session_status() === PHP_SESSION_NONE) { session_start(); }
 require 'connectDB.php';
 
-if (isset($_POST['addShares'])) {
-    $mobile     = finance_db_escape($connection, trim($_POST['member'] ?? ''));
-    $share_date = finance_db_escape($connection, trim($_POST['date']   ?? ''));
-    $amount     = (float)($_POST['amount'] ?? 0);
-    $amountEsc  = finance_db_escape($connection, (string)$amount);
+if (!isset($_POST['addShares'])) {
+    header('Location: shares.php');
+    exit;
+}
 
-    if (empty($mobile) || empty($share_date) || $amount <= 0) {
-        $_SESSION['flash_error'] = 'All fields are required and amount must be greater than zero.';
+$mobile     = trim($_POST['member'] ?? '');
+$share_date = trim($_POST['date']   ?? '');
+$amount     = (float)($_POST['amount'] ?? 0);
+
+if (empty($mobile) || empty($share_date) || $amount <= 0) {
+    $_SESSION['flash_error'] = 'All fields are required and amount must be greater than zero.';
+    header('Location: shares.php');
+    exit;
+}
+
+try {
+    // Look up member id directly (bypass compat layer)
+    $stmt = $connection->pdo->prepare(
+        "SELECT id FROM members WHERE mobilenumber = ? LIMIT 1"
+    );
+    $stmt->execute([$mobile]);
+    $memberRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$memberRow) {
+        $_SESSION['flash_error'] = 'Member not found for mobile number: ' . htmlspecialchars($mobile);
         header('Location: shares.php');
         exit;
     }
 
-    $result = finance_db_query($connection,
-        "INSERT INTO shares (date, member, amount)
-         VALUES ('$share_date', (SELECT mobileNumber FROM members WHERE mobileNumber='$mobile'), '$amountEsc')");
+    $member_id = (int)$memberRow['id'];
 
-    if ($result) {
-        $_SESSION['flash_success'] = 'Share record added successfully!';
-    } else {
-        global $finance_db_last_error;
-        $_SESSION['flash_error'] = 'Error: Could not add share. ' . ($finance_db_last_error ?? 'Please try again.');
-    }
-    header('Location: shares.php');
-    exit;
+    // Insert share directly (bypass compat layer)
+    $stmt = $connection->pdo->prepare(
+        "INSERT INTO shares (share_date, member_id, amount) VALUES (?, ?, ?)"
+    );
+    $stmt->execute([$share_date, $member_id, $amount]);
+
+    $_SESSION['flash_success'] = 'Share record added successfully!';
+
+} catch (PDOException $e) {
+    $_SESSION['flash_error'] = 'Error: Could not add share. ' . $e->getMessage();
 }
 
 header('Location: shares.php');

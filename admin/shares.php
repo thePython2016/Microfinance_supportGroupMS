@@ -112,32 +112,27 @@ if (!isset($_SESSION['username'])) {
                                    value="<?php echo date('Y-m-d'); ?>" required>
                           </div>
 
-                          <!-- Member dropdown -->
+                          <!-- Member dropdown (direct PDO — bypasses compat layer) -->
                           <div class="mb-3 mobile">
                             <label class="form-label">Member</label>
-                            <select class="form-control" name="member_id" required>
-                              <option value="" disabled selected>--Select Member--</option>
+                            <select class="form-control" name="member" required>
+                              <option value="" disabled selected>-- Select Member --</option>
                               <?php
                               require "connectDB.php";
-                              
-                              // Explicitly naming columns so we know their direct positions
-                              $selectMembers = finance_db_query($connection, "SELECT id, fname, lname, mobilenumber FROM members ORDER BY fname");
-                              
-                              foreach ($selectMembers ?: [] as $m):
-                                  // Read by key name if available, fallback to index positions if keys are transformed to uppercase/lowercase by the driver
-                                  $memberId = htmlspecialchars((string)($m['id'] ?? $m['ID'] ?? array_values($m)[0] ?? ''));
-                                  $firstName = htmlspecialchars((string)($m['fname'] ?? $m['FNAME'] ?? array_values($m)[1] ?? ''));
-                                  $lastName  = htmlspecialchars((string)($m['lname'] ?? $m['LNAME'] ?? array_values($m)[2] ?? ''));
-                                  $mob       = htmlspecialchars(trim((string)($m['mobileNumber'] ?? $m['mobilenumber'] ?? $m['MOBILENUMBER'] ?? array_values($m)[3] ?? '')));
-                                  
-                                  $name = trim($firstName . ' ' . $lastName);
-                                  if (!empty($memberId)):
+                              try {
+                                  $memberStmt = $connection->pdo->query(
+                                      "SELECT mobilenumber, fname, lname FROM members ORDER BY fname"
+                                  );
+                                  $membersList = $memberStmt ? $memberStmt->fetchAll(PDO::FETCH_ASSOC) : [];
+                              } catch (PDOException $e) {
+                                  $membersList = [];
+                              }
+                              foreach ($membersList as $m):
+                                  $mob  = htmlspecialchars($m['mobilenumber'] ?? '');
+                                  $name = htmlspecialchars(trim(($m['fname'] ?? '') . ' ' . ($m['lname'] ?? '')));
                               ?>
-                                <option value="<?php echo $memberId; ?>"><?php echo $mob . ' — ' . $name; ?></option>
-                              <?php 
-                                  endif;
-                              endforeach; 
-                              ?>
+                                <option value="<?php echo $mob; ?>"><?php echo $mob . ' — ' . $name; ?></option>
+                              <?php endforeach; ?>
                             </select>
                           </div>
 
@@ -171,28 +166,28 @@ if (!isset($_SESSION['username'])) {
                           </thead>
                           <tbody>
                             <?php
-                            $selectShares = finance_db_query($connection,
-                                "SELECT s.id, s.share_date, s.amount,
-                                        m.fname, m.lname, m.id AS member_id,
-                                        m.mobilenumber, m.\"mobileNumber\"
-                                 FROM shares s
-                                 JOIN members m ON m.id = s.member_id
-                                 ORDER BY s.share_date DESC");
-
+                            // Direct PDO join — bypasses compat layer
+                            try {
+                                $sharesStmt = $connection->pdo->query(
+                                    "SELECT s.share_date, s.amount, m.mobilenumber, m.fname, m.lname
+                                     FROM shares s
+                                     JOIN members m ON m.id = s.member_id
+                                     ORDER BY s.share_date DESC"
+                                );
+                                $sharesList = $sharesStmt ? $sharesStmt->fetchAll(PDO::FETCH_ASSOC) : [];
+                            } catch (PDOException $e) {
+                                $sharesList = [];
+                            }
                             $sn = 1;
-                            foreach ($selectShares ?: [] as $share):
-                                $mob = htmlspecialchars($share['mobileNumber'] ?? $share['mobilenumber'] ?? $share['MOBILENUMBER'] ?? '');
-                                $fullName = htmlspecialchars(trim(($share['fname'] ?? $share['FNAME'] ?? '') . ' ' . ($share['lname'] ?? $share['LNAME'] ?? '')));
+                            foreach ($sharesList as $share):
+                                $mob = htmlspecialchars($share['mobilenumber'] ?? '');
+                                $fullName = htmlspecialchars(trim(($share['fname'] ?? '') . ' ' . ($share['lname'] ?? '')));
                             ?>
                               <tr>
                                 <td><?php echo $sn++; ?></td>
-                                <td><?php echo htmlspecialchars($share['share_date'] ?? $share['SHARE_DATE'] ?? ''); ?></td>
-                                <td>
-                                  <a class="url" href="shares.php?member_id=<?php echo (int)($share['member_id'] ?? $share['MEMBER_ID'] ?? 0); ?>">
-                                    <?php echo $mob . ' — ' . $fullName; ?>
-                                  </a>
-                                </td>
-                                <td><?php echo htmlspecialchars($share['amount'] ?? $share['AMOUNT'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($share['share_date'] ?? ''); ?></td>
+                                <td><?php echo $mob . ' — ' . $fullName; ?></td>
+                                <td><?php echo htmlspecialchars($share['amount'] ?? ''); ?></td>
                               </tr>
                             <?php endforeach; ?>
                           </tbody>
