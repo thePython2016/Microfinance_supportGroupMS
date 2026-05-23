@@ -68,7 +68,6 @@ if (!isset($_SESSION['username'])) {
           <div class="row gy-6">
 
             <div class="col-lg-12 col-md-12 col-12 mb-4">
-              <!-- Add Share button triggers modal -->
               <button type="button" class="btn addBtn" data-bs-toggle="modal" data-bs-target="#addShareModal">
                 Add Share
               </button>
@@ -112,46 +111,53 @@ if (!isset($_SESSION['username'])) {
                       $phone = $_GET['phone'] ?? '';
                       require "connectDB.php";
 
-                      // Member info row
+                      // Get member info + their integer id
                       $selectMember = finance_db_query($connection,
-                          "SELECT DISTINCT \"mobileNumber\", nin, fname, lname
+                          "SELECT id, \"mobileNumber\", nin, fname, lname
                            FROM members
-                           WHERE \"mobileNumber\" = '$phone'");
+                           WHERE \"mobileNumber\" = '$phone'
+                           LIMIT 1");
 
-                      foreach ($selectMember ?: [] as $member): ?>
+                      $member_id = 0;
+                      foreach ($selectMember ?: [] as $member):
+                          $member_id = (int)($member['id'] ?? 0);
+                      ?>
                         <tr>
                           <td colspan="3">
                             <strong><?php echo htmlspecialchars($member['mobileNumber'] ?? $member['mobilenumber'] ?? ''); ?></strong>
-                            &nbsp;|&nbsp; <?php echo htmlspecialchars($member['nin'] ?? ''); ?>
+                            &nbsp;|&nbsp; <?php echo htmlspecialchars($member['nin']   ?? ''); ?>
                             &nbsp;|&nbsp; <?php echo htmlspecialchars($member['fname'] ?? ''); ?>
                             &nbsp;<?php echo htmlspecialchars($member['lname'] ?? ''); ?>
                           </td>
                         </tr>
                       <?php endforeach;
 
-                      // Shares rows
+                      // Shares rows — join on member_id, use correct column names
                       $selectShares = finance_db_query($connection,
-                          "SELECT \"shareID\", date, amount FROM shares WHERE member = '$phone'");
+                          "SELECT id, share_date, amount
+                           FROM shares
+                           WHERE member_id = $member_id
+                           ORDER BY share_date ASC");
 
+                      $sn = 1;
                       foreach ($selectShares ?: [] as $shares): ?>
                         <tr>
-                          <td><?php echo htmlspecialchars($shares['shareID'] ?? ''); ?></td>
-                          <td><?php echo htmlspecialchars($shares['date']    ?? ''); ?></td>
-                          <td><?php echo htmlspecialchars($shares['amount']  ?? ''); ?></td>
+                          <td><?php echo $sn++; ?></td>
+                          <td><?php echo htmlspecialchars($shares['share_date'] ?? ''); ?></td>
+                          <td><?php echo htmlspecialchars($shares['amount']     ?? ''); ?></td>
                         </tr>
                       <?php endforeach;
 
-                      // Total row
+                      // Total
                       $shareTotal = finance_db_query($connection,
-                          "SELECT SUM(amount) AS totalShare FROM shares WHERE member = '$phone'");
+                          "SELECT SUM(amount) AS totalShare FROM shares WHERE member_id = $member_id");
                       $sumShares = 0;
                       foreach ($shareTotal ?: [] as $sum) {
                           $sumShares = $sum['totalShare'] ?? 0;
                       }
                       ?>
                       <tr>
-                        <td style="font-weight:bold;font-size:15px">TOTAL</td>
-                        <td></td>
+                        <td style="font-weight:bold;font-size:15px" colspan="2">TOTAL</td>
                         <td style="font-weight:bold;font-size:15px"><?php echo htmlspecialchars((string)$sumShares); ?></td>
                       </tr>
                     </tbody>
@@ -187,25 +193,21 @@ if (!isset($_SESSION['username'])) {
         <h5 class="modal-title" id="addShareModalLabel">Add Share</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <!-- Form POSTs directly to sharesAdd.php -->
       <form method="POST" action="sharesAdd.php">
         <div class="modal-body">
 
-          <!-- Member mobile number — pre-filled from URL param -->
           <div class="mb-3">
             <label for="memberField" class="form-label">Member (Mobile Number)</label>
             <input type="text" class="form-control" id="memberField" name="member"
                    value="<?php echo htmlspecialchars($phone ?? ''); ?>" required>
           </div>
 
-          <!-- Date -->
           <div class="mb-3">
             <label for="dateField" class="form-label">Date</label>
             <input type="date" class="form-control" id="dateField" name="date"
                    value="<?php echo date('Y-m-d'); ?>" required>
           </div>
 
-          <!-- Amount -->
           <div class="mb-3">
             <label for="amountField" class="form-label">Amount</label>
             <input type="number" class="form-control" id="amountField" name="amount"
@@ -223,7 +225,6 @@ if (!isset($_SESSION['username'])) {
 </div>
 <!-- ===== END MODAL ===== -->
 
-<!-- Core JS -->
 <script src="assets/vendor/libs/jquery/jquery.js"></script>
 <script src="assets/vendor/libs/popper/popper.js"></script>
 <script src="assets/vendor/libs/node-waves/node-waves.js"></script>
