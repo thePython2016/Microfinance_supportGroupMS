@@ -227,7 +227,7 @@ if (!isset($_SESSION['username'])) {
                               require "connectDB.php";
                               $selectOfficers = finance_db_query($connection, "SELECT * FROM officers");
                               foreach ($selectOfficers ?: [] as $officer):
-                                  $mob        = htmlspecialchars($officer['mobileNumber'] ?? '');
+                                  $mob        = htmlspecialchars($officer['mobilenumber'] ?? '');
                                   $nin        = htmlspecialchars($officer['nin']          ?? '');
                                   $fname      = htmlspecialchars($officer['fname']        ?? '');
                                   $mname      = htmlspecialchars($officer['mname']        ?? '');
@@ -311,7 +311,7 @@ if (!isset($_SESSION['username'])) {
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
   <script src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.print.min.js"></script>
 
-  <!-- Bootstrap Bundle (tabs + alerts) -->
+  <!-- Bootstrap Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
   <!-- DataTable init -->

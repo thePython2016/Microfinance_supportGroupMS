@@ -17,7 +17,7 @@ if (isset($_POST['addOfficers'])) {
     $address    = finance_db_escape($connection, $_POST['address']    ?? '');
     $occupation = finance_db_escape($connection, $_POST['occupation'] ?? '');
 
-    $sql = "INSERT INTO officers (mobileNumber, nin, fname, mname, lname, day, month, year, gender, address, occupation)
+    $sql = "INSERT INTO officers (mobilenumber, nin, fname, mname, lname, day, month, year, gender, address, occupation)
             VALUES ('$phone','$nin','$fname','$mname','$lname','$day','$month','$year','$gender','$address','$occupation')";
 
     $result = finance_db_query($connection, $sql);
