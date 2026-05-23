@@ -112,18 +112,25 @@ if (!isset($_SESSION['username'])) {
                                    value="<?php echo date('Y-m-d'); ?>" required>
                           </div>
 
-                          <!-- Member dropdown (Value is now Member ID) -->
+                          <!-- Member dropdown -->
                           <div class="mb-3 mobile">
                             <label class="form-label">Member</label>
                             <select class="form-control" name="member_id" required>
                               <option value="" disabled selected>--Select Member--</option>
                               <?php
                               require "connectDB.php";
-                              $selectMembers = finance_db_query($connection, "SELECT * FROM members ORDER BY fname");
+                              
+                              // Explicitly naming columns so we know their direct positions
+                              $selectMembers = finance_db_query($connection, "SELECT id, fname, lname, mobilenumber FROM members ORDER BY fname");
+                              
                               foreach ($selectMembers ?: [] as $m):
-                                  $memberId = htmlspecialchars((string)($m['id'] ?? $m['ID'] ?? ''));
-                                  $mob = htmlspecialchars(trim((string)($m['mobileNumber'] ?? $m['mobilenumber'] ?? '')));
-                                  $name = htmlspecialchars(trim(($m['fname'] ?? '') . ' ' . ($m['lname'] ?? '')));
+                                  // Read by key name if available, fallback to index positions if keys are transformed to uppercase/lowercase by the driver
+                                  $memberId = htmlspecialchars((string)($m['id'] ?? $m['ID'] ?? array_values($m)[0] ?? ''));
+                                  $firstName = htmlspecialchars((string)($m['fname'] ?? $m['FNAME'] ?? array_values($m)[1] ?? ''));
+                                  $lastName  = htmlspecialchars((string)($m['lname'] ?? $m['LNAME'] ?? array_values($m)[2] ?? ''));
+                                  $mob       = htmlspecialchars(trim((string)($m['mobileNumber'] ?? $m['mobilenumber'] ?? $m['MOBILENUMBER'] ?? array_values($m)[3] ?? '')));
+                                  
+                                  $name = trim($firstName . ' ' . $lastName);
                                   if (!empty($memberId)):
                               ?>
                                 <option value="<?php echo $memberId; ?>"><?php echo $mob . ' — ' . $name; ?></option>
@@ -174,18 +181,18 @@ if (!isset($_SESSION['username'])) {
 
                             $sn = 1;
                             foreach ($selectShares ?: [] as $share):
-                                $mob = htmlspecialchars($share['mobileNumber'] ?? $share['mobilenumber'] ?? '');
-                                $fullName = htmlspecialchars(trim(($share['fname'] ?? '') . ' ' . ($share['lname'] ?? '')));
+                                $mob = htmlspecialchars($share['mobileNumber'] ?? $share['mobilenumber'] ?? $share['MOBILENUMBER'] ?? '');
+                                $fullName = htmlspecialchars(trim(($share['fname'] ?? $share['FNAME'] ?? '') . ' ' . ($share['lname'] ?? $share['LNAME'] ?? '')));
                             ?>
                               <tr>
                                 <td><?php echo $sn++; ?></td>
-                                <td><?php echo htmlspecialchars($share['share_date'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($share['share_date'] ?? $share['SHARE_DATE'] ?? ''); ?></td>
                                 <td>
-                                  <a class="url" href="shares.php?member_id=<?php echo (int)$share['member_id']; ?>">
+                                  <a class="url" href="shares.php?member_id=<?php echo (int)($share['member_id'] ?? $share['MEMBER_ID'] ?? 0); ?>">
                                     <?php echo $mob . ' — ' . $fullName; ?>
                                   </a>
                                 </td>
-                                <td><?php echo htmlspecialchars($share['amount'] ?? ''); ?></td>
+                                <td><?php echo htmlspecialchars($share['amount'] ?? $share['AMOUNT'] ?? ''); ?></td>
                               </tr>
                             <?php endforeach; ?>
                           </tbody>
