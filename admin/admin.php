@@ -610,7 +610,7 @@ $amount = !empty($amount) ? $amount : [0];
           <rect width="24" height="24" fill="none"/>
         </svg>
       </button>
-      <span id="ai-assistant-label">AI Assistant</span>
+      <span id="ai-assistant-label">AI 	Agent</span>
     </div>
 
     <script>
