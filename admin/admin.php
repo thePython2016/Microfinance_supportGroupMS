@@ -440,5 +440,195 @@ $amount = !empty($amount) ? $amount : [0];
         });
       });
     </script>
+
+    <!-- ========== AI ASSISTANT FLOATING BUTTON ========== -->
+    <style>
+      #ai-assistant-fab {
+        position: fixed;
+        bottom: 28px;
+        right: 28px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      #ai-assistant-btn {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #00246B 0%, #03a9f4 100%);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 18px rgba(0, 36, 107, 0.45);
+        cursor: pointer;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        position: relative;
+        outline: none;
+      }
+
+      #ai-assistant-btn:hover {
+        transform: translateY(-3px) scale(1.07);
+        box-shadow: 0 8px 28px rgba(0, 36, 107, 0.6);
+      }
+
+      #ai-assistant-btn:active {
+        transform: scale(0.96);
+      }
+
+      #ai-assistant-btn svg {
+        width: 26px;
+        height: 26px;
+        fill: #ffffff;
+      }
+
+      #ai-assistant-btn::before {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid rgba(0, 36, 107, 0.35);
+        animation: ai-pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes ai-pulse {
+        0%, 100% { transform: scale(1);    opacity: 0.65; }
+        50%       { transform: scale(1.18); opacity: 0;    }
+      }
+
+      #ai-assistant-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #00246B;
+        letter-spacing: 0.3px;
+        background: #fff;
+        padding: 3px 10px;
+        border-radius: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        white-space: nowrap;
+        user-select: none;
+      }
+
+      #ai-chat-modal {
+        display: none;
+        position: fixed;
+        bottom: 110px;
+        right: 28px;
+        z-index: 9998;
+        width: 340px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+        overflow: hidden;
+        flex-direction: column;
+        animation: ai-slide-in 0.25s ease;
+      }
+
+      @keyframes ai-slide-in {
+        from { opacity: 0; transform: translateY(16px) scale(0.97); }
+        to   { opacity: 1; transform: translateY(0)   scale(1);    }
+      }
+
+      #ai-chat-modal.open { display: flex; }
+
+      .ai-chat-header {
+        background: linear-gradient(135deg, #00246B 0%, #03a9f4 100%);
+        padding: 14px 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: #fff;
+      }
+
+      .ai-chat-header-title {
+        font-size: 14px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .ai-chat-header-close {
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 22px;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+        outline: none;
+      }
+
+      .ai-chat-header-close:hover { color: #fff; }
+
+      .ai-chat-body {
+        padding: 16px;
+        font-size: 13px;
+        color: #444;
+        background: #f0f4ff;
+        min-height: 80px;
+      }
+
+      .ai-chat-body p { margin: 0 0 8px; }
+
+      .ai-chat-footer {
+        padding: 12px 16px;
+        border-top: 1px solid #e0e8f5;
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+        background: #fff;
+      }
+    </style>
+
+    <div id="ai-assistant-fab">
+      <div id="ai-chat-modal">
+        <div class="ai-chat-header">
+          <div class="ai-chat-header-title">
+            <!-- Network/graph nodes icon — finance/connectivity theme -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18" height="18">
+              <path d="M17 12a5 5 0 1 0-4.478-2.774l-3.118 2.057A5 5 0 1 0 7 16.899l3.418-2.257A5.007 5.007 0 0 0 12 17a5 5 0 0 0 5-5zm-5 3a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM5 19a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+            </svg>
+            AI Assistant
+          </div>
+          <button class="ai-chat-header-close" onclick="toggleAiChat()" aria-label="Close">&times;</button>
+        </div>
+        <div class="ai-chat-body">
+          <p>👋 Hello! I'm your <strong>MFSGMS AI Assistant</strong>.</p>
+          <p>I can help you analyse member data, track loan trends, monitor share deposits, and surface financial insights.</p>
+        </div>
+        <div class="ai-chat-footer">🔒 Powered by MFSGMS Intelligence</div>
+      </div>
+
+      <button id="ai-assistant-btn" onclick="toggleAiChat()" title="AI Assistant" aria-label="Open AI Assistant">
+        <!-- Waveform / data-pulse icon — distinct from previous two -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M2 12h2l2-7 2 14 2-10 2 6 2-3h6"/>
+          <path d="M2 12h2l2-7 2 14 2-10 2 6 2-3h6" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect width="24" height="24" fill="none"/>
+        </svg>
+      </button>
+      <span id="ai-assistant-label">AI Assistant</span>
+    </div>
+
+    <script>
+      function toggleAiChat() {
+        var modal = document.getElementById('ai-chat-modal');
+        modal.classList.toggle('open');
+      }
+
+      document.addEventListener('click', function(e) {
+        var fab   = document.getElementById('ai-assistant-fab');
+        var modal = document.getElementById('ai-chat-modal');
+        if (modal.classList.contains('open') && !fab.contains(e.target)) {
+          modal.classList.remove('open');
+        }
+      });
+    </script>
+    <!-- ========== / AI ASSISTANT FLOATING BUTTON ========== -->
+
   </body>
 </html>
