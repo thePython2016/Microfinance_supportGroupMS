@@ -178,6 +178,12 @@
                 </li>
               </ul>
             </li>
+			 <li class="menu-item">
+              <a href="ai-agent.php" class="menu-link">
+                <i class="fa-regular fa-flag fa-icon"></i>
+                <div data-i18n="Icons">AI Agent</div>
+              </a>
+            </li>
 
             <!-- Compose Email -->
             <li class="menu-item">

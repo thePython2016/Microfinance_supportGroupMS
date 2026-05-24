@@ -592,7 +592,7 @@ $amount = !empty($amount) ? $amount : [0];
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="18" height="18">
               <path d="M17 12a5 5 0 1 0-4.478-2.774l-3.118 2.057A5 5 0 1 0 7 16.899l3.418-2.257A5.007 5.007 0 0 0 12 17a5 5 0 0 0 5-5zm-5 3a3 3 0 1 1 0-6 3 3 0 0 1 0 6zM5 19a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-10a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
             </svg>
-            AI Assistant
+            AI Agent
           </div>
           <button class="ai-chat-header-close" onclick="toggleAiChat()" aria-label="Close">&times;</button>
         </div>
