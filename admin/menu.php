@@ -178,9 +178,11 @@
                 </li>
               </ul>
             </li>
-			 <li class="menu-item">
+
+            <!-- AI Agent -->
+            <li class="menu-item">
               <a href="ai-agent.php" class="menu-link">
-                <i class="fa-regular fa-flag fa-icon"></i>
+                <i class="fa-solid fa-robot fa-icon"></i>
                 <div data-i18n="Icons">AI Agent</div>
               </a>
             </li>
@@ -223,7 +225,7 @@
             <!-- Reports -->
             <li class="menu-item">
               <a href="reports.php" class="menu-link">
-                <i class="fa-regular fa-flag fa-icon"></i>
+                <i class="fa-solid fa-file-lines fa-icon"></i>
                 <div data-i18n="Icons">Reports</div>
               </a>
             </li>
