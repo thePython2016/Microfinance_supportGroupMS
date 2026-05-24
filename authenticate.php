@@ -33,12 +33,22 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $phone         = trim($_POST['phone']    ?? '');
 $plainPassword = trim($_POST['password'] ?? '');
 
-if ($phone === '' || $plainPassword === '') {
+// Normalize phone to digits only and enforce exactly 10 digits
+$phone_digits = preg_replace('/\D/', '', $phone);
+if ($phone_digits === '' || $plainPassword === '') {
     $_SESSION['login_error'] = 'Phone number and password are required.';
     ob_end_clean();
     header("Location: $base/index.php");
     exit;
 }
+if (strlen($phone_digits) !== 10) {
+    $_SESSION['login_error'] = 'Phone number must be exactly 10 digits.';
+    ob_end_clean();
+    header("Location: $base/index.php");
+    exit;
+}
+// use normalized phone for lookup
+$phone = $phone_digits;
 
 // ── Connect ────────────────────────────────────────────────────────────────────
 $host     = getenv('host')     ?: '';

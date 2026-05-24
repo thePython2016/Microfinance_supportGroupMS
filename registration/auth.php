@@ -47,8 +47,12 @@ function redirectWithError(string $message, string $phone, string $address): nev
 if (empty($phone))
     redirectWithError('Phone number is required.', $phone, $address);
 
-if (!preg_match('/^[0-9\s\+\-\(\)]{7,20}$/', $phone))
-    redirectWithError('Please enter a valid phone number.', $phone, $address);
+// Normalize phone to digits only and require exactly 10 digits
+$digits = preg_replace('/\D/', '', $phone);
+if (strlen($digits) !== 10) {
+    redirectWithError('Phone number must be exactly 10 digits.', $phone, $address);
+}
+$phone = $digits;
 
 if (empty($address))
     redirectWithError('Address is required.', $phone, $address);

@@ -98,7 +98,8 @@ if (!empty($_SESSION['success'])) {
             <label for="phoneInput">Phone Number</label>
             <div class="field-input-wrap">
               <input type="tel" id="phoneInput" name="phone"
-                     placeholder="Enter your phone number" required>
+                     placeholder="Enter your phone number" required maxlength="10" pattern="[0-9]{10}" inputmode="numeric"
+                     oninput="this.value = this.value.replace(/\D/g,'').slice(0,10);">
               <i class="fa-solid fa-phone field-icon"></i>
             </div>
           </div>

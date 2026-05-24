@@ -208,3 +208,28 @@ div.right-col {
   div.left-col { display: none; }
   div.right-col { flex: 1; padding: 40px 24px; min-height: auto; }
 }
+
+/* Register button — full width with background to match previous design */
+.btn-register {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 8px;
+  background: #d2740d;
+  color: #ffffff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  margin-top: 6px;
+  box-shadow: 0 4px 16px rgba(210,116,13,0.18);
+}
+
+.btn-register:hover {
+  background: #b76008;
+  box-shadow: 0 6px 20px rgba(210,116,13,0.22);
+  transform: translateY(-1px);
+}
+
+.btn-register:active { transform: translateY(0); }

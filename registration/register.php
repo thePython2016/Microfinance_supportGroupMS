@@ -82,7 +82,8 @@ unset($_SESSION['old_phone'], $_SESSION['old_address']);
               <input type="tel" id="phoneInput" name="phone"
                      placeholder="Enter your phone number"
                      value="<?= htmlspecialchars($oldPhone, ENT_QUOTES, 'UTF-8') ?>"
-                     required>
+                     required maxlength="10" pattern="[0-9]{10}" inputmode="numeric"
+                     oninput="this.value = this.value.replace(/\D/g,'').slice(0,10);">
               <i class="fa-solid fa-phone field-icon"></i>
             </div>
           </div>
@@ -119,7 +120,7 @@ unset($_SESSION['old_phone'], $_SESSION['old_address']);
             </div>
           </div>
 
-          <button type="submit" name="submit" class="btn-register">Register now</button>
+          <button type="submit" name="submit" class="btn-login">Register now</button>
         </form>
 
         <p class="form-footer">Already have an account? <a href="../index.php">Log in</a></p>
