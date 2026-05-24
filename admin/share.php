@@ -1,9 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) { session_start(); }
-if (!isset($_SESSION['username'])) {
-    echo "<script>window.location.href='../index.php';</script>";
-    exit;
-}
+require_once __DIR__ . '/auth.php';
 
 // Get phone and look up member BEFORE any HTML output
 $phone = $_GET['phone'] ?? '';
