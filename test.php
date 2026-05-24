@@ -5,7 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ── Dynamic base path ──────────────────────────────────────────────────────────
 $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
 
 // ── Load .env ──────────────────────────────────────────────────────────────────
@@ -15,10 +14,8 @@ if (file_exists($envFile)) {
         $line = trim($line);
         if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) continue;
         [$key, $value] = explode('=', $line, 2);
-        $key   = trim($key);
-        $value = trim($value);
-        putenv("$key=$value");
-        $_ENV[$key] = $value;
+        putenv(trim($key) . '=' . trim($value));
+        $_ENV[trim($key)] = trim($value);
     }
 }
 
@@ -49,11 +46,14 @@ $dbPass   = getenv('password') ?: '';
 $sslmode  = getenv('sslmode')  ?: 'require';
 
 try {
-    $dsn = "pgsql:host=$host;port=$port;dbname=$database;sslmode=$sslmode";
-    $pdo = new PDO($dsn, $dbUser, $dbPass, [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
+    $pdo = new PDO(
+        "pgsql:host=$host;port=$port;dbname=$database;sslmode=$sslmode",
+        $dbUser, $dbPass,
+        [
+            PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        ]
+    );
 } catch (PDOException $e) {
     error_log('DB connection failed: ' . $e->getMessage());
     $_SESSION['login_error'] = 'A server error occurred. Please try again later.';
@@ -80,9 +80,8 @@ try {
 // ── Verify & redirect ──────────────────────────────────────────────────────────
 if ($row && password_verify($plainPassword, $row['password'])) {
     session_regenerate_id(true);
-    $_SESSION['user_id']  = $row['id'];
-    $_SESSION['phone']    = $row['phone'];
-    $_SESSION['username'] = $row['phone']; // alias so admin.php works with either
+    $_SESSION['user_id'] = $row['id'];
+    $_SESSION['phone']   = $row['phone'];
     ob_end_clean();
     header("Location: $base/admin/admin.php");
     exit;

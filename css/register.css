@@ -1,0 +1,210 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  display: flex;
+  font-family: 'DM Sans', sans-serif;
+  overflow: hidden;
+}
+
+/* ── Left column ── */
+div.left-col {
+  flex: 0 0 50%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #d2740d;
+  justify-content: flex-start;
+  padding: 200px 56px 60px 56px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── MFGSMS brand label ── */
+div.left-col .mfgsms {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.8rem;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ffffff;
+  opacity: 0.85;
+  z-index: 3;
+}
+
+div.left-col .welcome-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 80px;
+  font-weight: 400;
+  color: #ffffff;
+  line-height: 1.2;
+  margin-bottom: 14px;
+  position: relative;
+  z-index: 2;
+}
+
+div.left-col .welcome-sub {
+  font-size: 60px;
+  color: rgba(255,255,255,0.7);
+  line-height: 1.75;
+  max-width: 400px;
+  font-weight: 200;
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+/* ── Right column ── */
+div.right-col {
+  flex: 0 0 50%;
+  min-height: 100vh;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 60px;
+  border-left: 1px solid #eef0f5;
+  overflow-y: auto;
+}
+
+.form-inner {
+  width: 100%;
+  max-width: 360px;
+}
+
+.form-headline {
+  font-family: 'DM Serif Display', serif;
+  padding-top: 20px;
+  font-size: 26px;
+  color: #0e1c36;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.form-sub {
+  font-size: 13px;
+  color: #8a93a8;
+  text-align: center;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.field-wrap {
+  margin-bottom: 16px;
+}
+
+.field-wrap label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #3d4560;
+  margin-bottom: 6px;
+}
+
+.field-input-wrap {
+  position: relative;
+}
+
+.field-wrap input,
+.field-wrap select {
+  width: 100%;
+  height: 46px;
+  border: 1.5px solid #e0e5f0;
+  border-radius: 8px;
+  padding: 0 42px 0 14px;
+  font-size: 14px;
+  font-family: 'DM Sans', sans-serif;
+  color: #0e1c36;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field-wrap input::placeholder {
+  color: #b8c0d0;
+}
+
+.field-wrap input:focus,
+.field-wrap select:focus {
+  border-color: #7c5cbf;
+  box-shadow: 0 0 0 3px rgba(124,92,191,0.1);
+}
+
+.field-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #b0bac9;
+  font-size: 14px;
+  pointer-events: none;
+}
+
+.toggle-pw {
+  pointer-events: all;
+  cursor: pointer;
+}
+
+.error-msg {
+  background: #fff1f0;
+  border: 1px solid #ffccc7;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 13px;
+  color: #cf1322;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-login {
+  width: 100%;
+  height: 48px;
+  border: none;
+  border-radius: 8px;
+  background: #3b82f6;
+  color: #fff;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  margin-top: 6px;
+  box-shadow: 0 4px 16px rgba(59,130,246,0.35);
+}
+
+.btn-login:hover {
+  background: #2563eb;
+  box-shadow: 0 6px 20px rgba(59,130,246,0.45);
+  transform: translateY(-1px);
+}
+
+.btn-login:active { transform: translateY(0); }
+
+.form-footer {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #8a93a8;
+  text-align: center;
+}
+
+.form-footer a {
+  color: #7c5cbf;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.form-footer a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+  body { flex-direction: column; overflow: auto; }
+  div.left-col { display: none; }
+  div.right-col { flex: 1; padding: 40px 24px; min-height: auto; }
+}
