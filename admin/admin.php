@@ -597,10 +597,9 @@ $amount = !empty($amount) ? $amount : [0];
           <button class="ai-chat-header-close" onclick="toggleAiChat()" aria-label="Close">&times;</button>
         </div>
         <div class="ai-chat-body">
-          <p>👋 Hello! I'm your <strong>MFSGMS AI Assistant</strong>.</p>
-          <p>I can help you analyse member data, track loan trends, monitor share deposits, and surface financial insights.</p>
+          <p>COMING SOON</P>
         </div>
-        <div class="ai-chat-footer">🔒 Powered by MFSGMS Intelligence</div>
+     
       </div>
 
       <button id="ai-assistant-btn" onclick="toggleAiChat()" title="AI Assistant" aria-label="Open AI Assistant">
