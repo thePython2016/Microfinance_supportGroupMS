@@ -19,14 +19,14 @@ This system allows microfinance organizations to:
 
 
 
-# ⚙️ Key Features
+#  Key Features
 
-- 👥 Member registration and management
-- 💰 Savings & loan tracking system
-- 📩 SMS notification integration
-- 🔐 Secure login & authentication system
-- 📊 Admin dashboard for monitoring group activities
-- 📱 Responsive and user-friendly interface
+-  Member registration and management
+- Savings & loan tracking system
+-  SMS notification integration
+-  Secure login & authentication system
+-  Admin dashboard for monitoring group activities
+-  Responsive and user-friendly interface
 
 
 
@@ -44,24 +44,24 @@ This system allows microfinance organizations to:
 - After successful registration, login to access system features
 
 
-# 🧠 Tech Stack
+#  Tech Stack
 
-### 💻 Frontend
+###  Frontend
 - HTML5
 - CSS3
 - JavaScript
 - TypeScript
 
-### ⚙️ Backend / Database Hosting
+###  Backend / Database Hosting
 - PHP (Core Backend Logic)
 
-### ☁️ Backend as a Service (BaaS)
+###  Backend as a Service (BaaS)
 - Supabase (Database Hosting & Backend Services)
 
-### 🗄️ Database
+###  Database
 - PostgreSQL (via Supabase)
 
-### 🐳 DevOps / Deployment
+###  DevOps / Deployment
 - Docker
 - Render (Hosting Platform)
 
@@ -69,4 +69,3 @@ This system allows microfinance organizations to:
 - SMS Gateway API 
 
 
-This project is open source and available under the **MIT License**.
