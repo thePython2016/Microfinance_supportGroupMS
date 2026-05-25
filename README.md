@@ -1,10 +1,11 @@
-#  Microfinance Support Group Management System
+# 🏦 Microfinance Support Group Management System
 
 A web-based **Microfinance Support Group Management System** integrated with **SMS functionality (G-Cash Point)** to manage member information, track financial activities, and improve communication through automated SMS notifications.
 
 The system helps microfinance groups digitize operations such as member registration, savings tracking, loan management, and communication.
 
-🔗 **Live Demo:** https://microfinance-support-management-system.onrender.com/
+🔗 ive Demo:** https://microfinance-support-management-system.onrender.com/
+
 
 
 #  System Overview
@@ -18,7 +19,7 @@ This system allows microfinance organizations to:
 
 
 
-#  Key Features
+# ⚙️ Key Features
 
 - 👥 Member registration and management
 - 💰 Savings & loan tracking system
@@ -42,56 +43,30 @@ This system allows microfinance organizations to:
 - Submit the form to create an account
 - After successful registration, login to access system features
 
-## 3. System Functionality
-After login, users can:
-- View and manage member information
-- Record financial transactions
-- Monitor savings and loans
-- Receive SMS alerts and notifications
 
+# 🧠 Tech Stack
 
-
-#  Tech Stack
-
-###  Frontend
+### 💻 Frontend
 - HTML5
 - CSS3
 - JavaScript
 - TypeScript
 
-###  Backend
-- PHP
+### ⚙️ Backend / Database Hosting
+- PHP (Core Backend Logic)
 
-###  Database
-- PostgreSQL
+### ☁️ Backend as a Service (BaaS)
+- Supabase (Database Hosting & Backend Services)
 
-###  DevOps / Deployment
+### 🗄️ Database
+- PostgreSQL (via Supabase)
+
+### 🐳 DevOps / Deployment
 - Docker
 - Render (Hosting Platform)
 
 ###  External Services
-- SMS Gateway API (G-Cash integration)
+- SMS Gateway API 
 
-
-
-# 🔐 Authentication Flow
-
-1. User registers an account
-2. Credentials are securely stored in PostgreSQL
-3. User logs in using email/username and password
-4. Session authentication is created
-5. Logout destroys session securely
-
-
-# 📊 System Benefits
-
-- Reduces manual bookkeeping
-- Improves financial transparency
-- Enhances communication through SMS alerts
-- Simplifies microfinance group management
-- Scalable and cloud-ready architecture
-
-
-# 👨‍💻 License
 
 This project is open source and available under the **MIT License**.
