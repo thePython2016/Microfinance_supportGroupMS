@@ -1,6 +1,6 @@
 #  Microfinance Support Group Management System
 
-A web-based **Microfinance Support Group Management System** integrated with **SMS functionality (G-Cash Point)** and an **AI Assistant** to manage member information, track financial activities, and improve communication through automated SMS notifications and smart assistance.
+A web-based Microfinance Support Group Management System integrated with SMS functionality  and an AI Assistant to manage member information, track financial activities, and improve communication through automated SMS notifications and smart assistance.
 
 The system helps microfinance groups digitize operations such as member registration, savings tracking, loan management, and communication.
 
@@ -18,17 +18,15 @@ This system allows microfinance organizations to:
 - Provide an easy-to-use admin dashboard
 
 
-
 #  Key Features
 
 -  Member registration and management
 -  Savings & loan tracking system
 -  SMS notification integration
 -  AI Assistant for smart support and user guidance
-- Secure login & authentication system
+-  Secure login & authentication system
 -  Admin dashboard for monitoring group activities
 -  Responsive and user-friendly interface
-
 
 
 #  How to Use the System
@@ -87,27 +85,5 @@ After logging in, users can:
 ###  AI Integration
 - AI Assistant (Smart support system for users and admins)
 
-#  Authentication Flow
 
-1. User registers an account
-2. Credentials are securely stored in PostgreSQL (Supabase)
-3. User logs in using email/username and password
-4. Session authentication is created
-5. Logout destroys session securely
 
----
-
-# 📊 System Benefits
-
-- Reduces manual bookkeeping
-- Improves financial transparency
-- Enhances communication via SMS alerts
-- Provides AI-powered assistance for users
-- Simplifies microfinance group management
-- Scalable and cloud-ready architecture
-
----
-
-# 👨‍💻 License
-
-This project is open source and available under the **MIT License**.
