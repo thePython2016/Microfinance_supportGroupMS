@@ -1,4 +1,4 @@
-# 🏦 Microfinance Support Group Management System
+#  Microfinance Support Group Management System
 
 A web-based **Microfinance Support Group Management System** integrated with **SMS functionality (G-Cash Point)** to manage member information, track financial activities, and improve communication through automated SMS notifications.
 
