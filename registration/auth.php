@@ -97,8 +97,11 @@ $_SESSION['phone']   = $phone;
 unset($_SESSION['old_phone'], $_SESSION['old_address']);
 $_SESSION['success'] = 'Account created successfully! Please log in.';
 
-// Works regardless of subfolder name
-$indexUrl = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-$indexUrl = dirname($indexUrl) . '/index.php';
+// Build a stable redirect path to the app root index.php.
+$indexDir = dirname($_SERVER['SCRIPT_NAME'], 2);
+if ($indexDir === '.' || $indexDir === '\\') {
+    $indexDir = '';
+}
+$indexUrl = ($indexDir === '' ? '/index.php' : rtrim($indexDir, '/\\') . '/index.php');
 header('Location: ' . $indexUrl);
 exit;
