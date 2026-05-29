@@ -3,25 +3,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ── Load .env ──────────────────────────────────────────────────────────────────
-$envFile = dirname(__DIR__) . '/.env';
-if (file_exists($envFile)) {
-    foreach (file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        if (str_starts_with(trim($line), '#')) continue;
-        [$key, $value] = explode('=', $line, 2);
-        putenv(trim($key) . '=' . trim($value));
-        $_ENV[trim($key)] = trim($value);
-    }
-}
-
-// ── DB config from .env ────────────────────────────────────────────────────────
-$host     = getenv('host');
-$port     = getenv('port');
-$database = getenv('database');
-$dbUser   = getenv('user');
-$dbPass   = getenv('password');
-$sslmode  = getenv('sslmode');
-
 // ── Only handle POST ───────────────────────────────────────────────────────────
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['submit'])) {
     header('Location: register.php');
@@ -66,15 +47,13 @@ if (strlen($password) < 6)
 if ($password !== $confirmPassword)
     redirectWithError('Passwords do not match.', $phone, $address);
 
-// ── Connect (PostgreSQL via .env) ──────────────────────────────────────────────
-$dsn = "pgsql:host=$host;port=$port;dbname=$database;sslmode=$sslmode";
+// ── Connect using the shared database helper (handles Render DATABASE_URL and local .env) ──
+require_once dirname(__DIR__) . '/includes/mysqli_pgsql.php';
 
 try {
-    $pdo = new PDO($dsn, $dbUser, $dbPass, [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-} catch (PDOException $e) {
+    $connection = finance_db_connect();
+    $pdo = $connection->pdo;
+} catch (Exception $e) {
     error_log('DB connection failed: ' . $e->getMessage());
     redirectWithError('Database connection failed. Please try again later.', $phone, $address);
 }
